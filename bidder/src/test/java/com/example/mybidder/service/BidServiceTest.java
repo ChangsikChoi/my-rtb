@@ -5,6 +5,7 @@ import com.example.mybidder.bidding.redis.BudgetWithLuaScriptService;
 import com.example.mybidder.bidding.redis.Campaign;
 import com.example.mybidder.bidding.redis.RedisService;
 import com.example.mybidder.bidding.service.BidService;
+import com.example.mybidder.bidding.service.KafkaProducerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -21,13 +22,15 @@ class BidServiceTest {
 
     private BudgetWithLuaScriptService budgetService;
     private RedisService redisService;
+    private KafkaProducerService kafkaProducerService;
     private BidService bidService;
 
     @BeforeEach
     void setUp() {
         budgetService = mock(BudgetWithLuaScriptService.class);
         redisService = mock(RedisService.class);
-        bidService = new BidService(budgetService, redisService);
+        kafkaProducerService = mock(KafkaProducerService.class);
+        bidService = new BidService(budgetService, redisService, kafkaProducerService);
     }
 
     @Test

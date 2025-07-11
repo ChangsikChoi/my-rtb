@@ -3,6 +3,7 @@ package com.example.mybidder.bidding.service;
 
 import com.example.mybidder.bidding.model.BidRequest;
 import com.example.mybidder.bidding.model.BidResponse;
+import com.example.mybidder.bidding.model.KafkaBidLog;
 import com.example.mybidder.bidding.redis.BudgetWithLuaScriptService;
 import com.example.mybidder.bidding.redis.Campaign;
 import com.example.mybidder.bidding.redis.RedisService;
@@ -19,31 +20,38 @@ public class BidService {
 
     private final BudgetWithLuaScriptService budgetWithLuaScriptService;
     private final RedisService redisService;
+    private final KafkaProducerService kafkaProducerService;
 
     public Mono<BidResponse> bid(BidRequest bidRequest) {
         Mono<Campaign> picked = redisService.getHighestCpmCampaign(bidRequest.region(), bidRequest.bidfloor());
 
         return picked
                 .flatMap(campaign ->
-                // 레디스 lua 스크립트를 사용한 예산 예약
-                budgetWithLuaScriptService.reserveBudget(
-                                campaign.id(),
-                                bidRequest.requestId(),
-                                campaign.targetCpmMicro() / 1000,
-                                Duration.ofSeconds(30))
-                        // 예산 예약 응답 생성
-                        .flatMap(success -> {
-                            if (success) {
-                                return Mono.just(new BidResponse(
+                        // 레디스 lua 스크립트를 사용한 예산 예약
+                        budgetWithLuaScriptService.reserveBudget(
+                                        campaign.id(),
                                         bidRequest.requestId(),
-                                        MicroConverter.convertMicroToCpm(campaign.targetCpmMicro()),
-                                        getAdMarkup(bidRequest),
-                                        getWinUrl(bidRequest)));
-                            } else {
-                                return Mono.empty();
-                            }
-                        })
-        );
+                                        campaign.targetCpmMicro() / 1000,
+                                        Duration.ofSeconds(30))
+                                // 예산 예약 응답 생성
+                                .flatMap(success -> {
+                                    if (success) {
+                                        kafkaProducerService.sendBidLog(
+                                                new KafkaBidLog(
+                                                        bidRequest.requestId(),
+                                                        campaign.id(),
+                                                        MicroConverter.convertMicroToCpm(campaign.targetCpmMicro())
+                                                ));
+                                        return Mono.just(new BidResponse(
+                                                bidRequest.requestId(),
+                                                MicroConverter.convertMicroToCpm(campaign.targetCpmMicro()),
+                                                getAdMarkup(bidRequest),
+                                                getWinUrl(bidRequest)));
+                                    } else {
+                                        return Mono.empty();
+                                    }
+                                })
+                );
     }
 
     private String getWinUrl(BidRequest bidRequest) {
