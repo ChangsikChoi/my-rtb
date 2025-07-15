@@ -1,4 +1,5 @@
-package com.example.mybidder.bidding.model;
+package com.example.mybidder.log_consumer.model;
+
 
 public record KafkaBidLog(
         String requestId,

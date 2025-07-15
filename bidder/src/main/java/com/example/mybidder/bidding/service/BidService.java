@@ -40,7 +40,7 @@ public class BidService {
                                                 new KafkaBidLog(
                                                         bidRequest.requestId(),
                                                         campaign.id(),
-                                                        MicroConverter.convertMicroToCpm(campaign.targetCpmMicro())
+                                                        MicroConverter.convertMicroToCpm(campaign.targetCpmMicro()).doubleValue()
                                                 ));
                                         return Mono.just(new BidResponse(
                                                 bidRequest.requestId(),
