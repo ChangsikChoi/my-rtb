@@ -1,0 +1,10 @@
+{
+  "namespace": "com.example",
+  "type": "record",
+  "name": "KafkaBiddingLog",
+  "fields": [
+    { "name": "requestId", "type": "string" },
+    { "name": "campaignId", "type": "string" },
+    { "name": "price", "type": "double" }
+  ]
+}
