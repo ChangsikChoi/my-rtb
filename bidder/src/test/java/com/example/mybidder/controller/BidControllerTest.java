@@ -1,9 +1,9 @@
 package com.example.mybidder.controller;
 
-import com.example.mybidder.bidding.controller.BidController;
-import com.example.mybidder.bidding.model.BidRequest;
-import com.example.mybidder.bidding.model.BidResponse;
-import com.example.mybidder.bidding.service.BidService;
+import com.example.bidder.adapter.in.web.BidController;
+import com.example.bidder.application.BidRequestVo;
+import com.example.bidder.application.BidResponseVo;
+import com.example.bidder.application.service.BidService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -26,13 +26,13 @@ public class BidControllerTest {
 
     @Test
     void 입찰_성공() {
-        BidResponse bidResponse = new BidResponse(
+        BidResponseVo bidResponse = new BidResponseVo(
                 "test",
                 new BigDecimal(100),
                 "http://localhost:8080/dsp/win?rid=test",
                 "<img src='http://localhost:8080/dsp/imp?rid=test />"
         );
-        BidRequest bidRequest = new BidRequest("test", "seoul", new BigDecimal(99));
+        BidRequestVo bidRequest = new BidRequestVo("test", "seoul", new BigDecimal(99));
         when(bidService.bid(bidRequest)).thenReturn(Mono.just(bidResponse));
 
         webTestClient.post().uri("/dsp/bid")
@@ -43,7 +43,7 @@ public class BidControllerTest {
 
     @Test
     void 입찰_실패() {
-        BidRequest bidRequest = new BidRequest("test", "seoul", new BigDecimal(99));
+        BidRequestVo bidRequest = new BidRequestVo("test", "seoul", new BigDecimal(99));
         when(bidService.bid(bidRequest)).thenReturn(Mono.empty());
 
         webTestClient.post().uri("/dsp/bid")
