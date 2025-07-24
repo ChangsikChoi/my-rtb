@@ -29,9 +29,9 @@ public class BidResultKafkaAdapter implements SendBidResultPort {
     @Override
     public void sendBidResult(Bid bidResult) {
         KafkaBiddingLog message = KafkaBiddingLog.newBuilder()
-                .setRequestId(bidResult.getRequestId())
-                .setCampaignId(bidResult.getCampaignId())
-                .setPrice(bidResult.getPrice().doubleValue())
+                .setRequestId(bidResult.requestId())
+                .setCampaignId(bidResult.campaignId())
+                .setPrice(bidResult.price().doubleValue())
                 .build();
 
         CompletableFuture<SendResult<String, KafkaBiddingLog>> future = kafkaTemplate.send("bidding-log", message);

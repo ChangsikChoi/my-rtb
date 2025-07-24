@@ -16,7 +16,7 @@ public class RedisService {
 
     private final ReactiveStringRedisTemplate redisTemplate;
 
-    public Flux<Campaign> getCampaignFlux() {
+    public Flux<CampaignEntity> getCampaignFlux() {
         return redisTemplate.opsForSet()
                 .members(RedisKeys.CAMPAIGN_LIST_KEY)
                 .flatMap(id -> redisTemplate.opsForHash()
@@ -25,18 +25,18 @@ public class RedisService {
                                 entry -> entry.getKey().toString(),
                                 entry -> entry.getValue().toString()
                         )
-                        .map(data -> Campaign.fromRedis(id, data))
+                        .map(data -> CampaignEntity.fromRedis(id, data))
                 );
     }
 
-    public Mono<Campaign> getHighestCpmCampaign(String region, BigDecimal bidfloor) {
+    public Mono<CampaignEntity> getHighestCpmCampaign(String region, BigDecimal bidfloor) {
         return getCampaignFlux()
                 .filter(campaign ->
                         campaign.hasSufficientBudget() &&
                                 campaign.matchRegion(region) &&
                                 campaign.targetCpmMicro() >= MicroConverter.convertCpmToMicro(bidfloor)
                 )
-                .sort(Comparator.comparingLong(Campaign::targetCpmMicro))
+                .sort(Comparator.comparingLong(CampaignEntity::targetCpmMicro))
                 .next();
     }
 }

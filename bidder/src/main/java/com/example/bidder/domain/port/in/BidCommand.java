@@ -1,4 +1,9 @@
 package com.example.bidder.domain.port.in;
 
-public class BidCommand {
-}
+import java.math.BigDecimal;
+
+public record BidCommand(
+    String requestId,
+    String region,
+    BigDecimal bidfloor
+) {}

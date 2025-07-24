@@ -1,5 +1,12 @@
 package com.example.bidder.domain.model;
 
-public class Bid {
-//TODO: 객체 내용 채우기
+import java.math.BigDecimal;
+
+public record Bid(
+    String requestId,
+    String campaignId,
+    BigDecimal price,
+    String adMarkup,
+    String winUrl
+) {
 }

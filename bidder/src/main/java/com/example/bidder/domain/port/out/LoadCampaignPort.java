@@ -1,6 +1,6 @@
 package com.example.bidder.domain.port.out;
 
-import com.example.bidder.adapter.out.redis.Campaign;
+import com.example.bidder.domain.model.Campaign;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;

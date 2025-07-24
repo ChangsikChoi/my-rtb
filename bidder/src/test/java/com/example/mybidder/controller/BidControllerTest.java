@@ -1,7 +1,7 @@
 package com.example.mybidder.controller;
 
 import com.example.bidder.adapter.in.web.BidController;
-import com.example.bidder.application.BidRequestVo;
+import com.example.bidder.application.BidRequestCommand;
 import com.example.bidder.application.BidResponseVo;
 import com.example.bidder.application.service.BidService;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ public class BidControllerTest {
                 "http://localhost:8080/dsp/win?rid=test",
                 "<img src='http://localhost:8080/dsp/imp?rid=test />"
         );
-        BidRequestVo bidRequest = new BidRequestVo("test", "seoul", new BigDecimal(99));
+        BidRequestCommand bidRequest = new BidRequestCommand("test", "seoul", new BigDecimal(99));
         when(bidService.bid(bidRequest)).thenReturn(Mono.just(bidResponse));
 
         webTestClient.post().uri("/dsp/bid")
@@ -43,7 +43,7 @@ public class BidControllerTest {
 
     @Test
     void 입찰_실패() {
-        BidRequestVo bidRequest = new BidRequestVo("test", "seoul", new BigDecimal(99));
+        BidRequestCommand bidRequest = new BidRequestCommand("test", "seoul", new BigDecimal(99));
         when(bidService.bid(bidRequest)).thenReturn(Mono.empty());
 
         webTestClient.post().uri("/dsp/bid")

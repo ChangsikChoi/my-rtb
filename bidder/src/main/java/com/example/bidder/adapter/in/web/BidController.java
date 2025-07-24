@@ -1,9 +1,5 @@
 package com.example.bidder.adapter.in.web;
 
-import com.example.bidder.application.BidRequestVo;
-import com.example.bidder.application.BidResponseVo;
-import com.example.bidder.application.service.BidService;
-import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.port.in.BidCommand;
 import com.example.bidder.domain.port.in.BidUseCase;
 import lombok.RequiredArgsConstructor;
@@ -16,23 +12,24 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class BidController {
 
-    private final BidUseCase bidUseCase;
+  private final BidUseCase bidUseCase;
 
-    @PostMapping
-    public Mono<ResponseEntity<BidResponseDto>> handleBid(@RequestBody BidRequestVo bidRequest) {
-        // 1. Web DTO를 Application 계층이 이해하는 Command 객체로 변환
-        BidCommand command = new BidCommand(
-                new CampaignId(requestDto.getCampaignId()),
-                requestDto.getPrice()
-        );
+  @PostMapping
+  public Mono<ResponseEntity<BidResponseDto>> handleBid(@RequestBody BidRequestDto bidRequest) {
+    BidCommand command = new BidCommand(
+        bidRequest.getRequestId(),
+        bidRequest.getRegion(),
+        bidRequest.getBidfloor()
+    );
 
-        // 2. UseCase 실행
-        return bidUseCase.handleBidRequest(command)
-                //TODO: Application 결과를 Web DTO로 변환하여 응답
-//                .map(response -> ResponseEntity.ok().body(response))
-                .map(response -> ResponseEntity.ok().body(new BidResponseDto()))
-                .defaultIfEmpty(ResponseEntity.noContent().build());;
-
-    }
+    return bidUseCase.handleBidRequest(command)
+        .map(response -> ResponseEntity.ok().body(
+            new BidResponseDto(
+                response.requestId(),
+                response.price(),
+                response.adMarkup(),
+                response.winUrl())))
+        .defaultIfEmpty(ResponseEntity.noContent().build());
+  }
 
 }

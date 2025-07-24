@@ -2,7 +2,7 @@ package com.example.bidder.application;
 
 import java.math.BigDecimal;
 
-public record BidRequestVo(
+public record BidRequestCommand(
         String requestId,
         String region,
         BigDecimal bidfloor
