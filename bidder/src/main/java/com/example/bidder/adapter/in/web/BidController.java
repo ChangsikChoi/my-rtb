@@ -13,22 +13,14 @@ import reactor.core.publisher.Mono;
 public class BidController {
 
   private final BidUseCase bidUseCase;
+  private final BidWebMapper bidWebMapper;
 
   @PostMapping
   public Mono<ResponseEntity<BidResponseDto>> handleBid(@RequestBody BidRequestDto bidRequest) {
-    BidCommand command = new BidCommand(
-        bidRequest.getRequestId(),
-        bidRequest.getRegion(),
-        bidRequest.getBidfloor()
-    );
+    BidCommand command = bidWebMapper.toCommand(bidRequest);
 
     return bidUseCase.handleBidRequest(command)
-        .map(response -> ResponseEntity.ok().body(
-            new BidResponseDto(
-                response.requestId(),
-                response.price(),
-                response.adMarkup(),
-                response.winUrl())))
+        .map(response -> ResponseEntity.ok().body(bidWebMapper.toDto(response)))
         .defaultIfEmpty(ResponseEntity.noContent().build());
   }
 

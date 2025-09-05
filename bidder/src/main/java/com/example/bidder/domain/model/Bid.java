@@ -1,11 +1,13 @@
 package com.example.bidder.domain.model;
 
-import java.math.BigDecimal;
+import lombok.Builder;
 
+@Builder
 public record Bid(
     String requestId,
     String campaignId,
-    BigDecimal price,
+    String creativeId,
+    Long bidPriceCpmMicro,
     String adMarkup,
     String winUrl
 ) {
