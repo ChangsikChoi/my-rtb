@@ -19,48 +19,54 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class CampaignEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String id;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(nullable = false)
-    private String region;
+  @Column(nullable = false, precision = 15, scale = 6)
+  private BigDecimal targetCpm;
 
-    @Column(nullable = false, precision = 15, scale = 6)
-    private BigDecimal targetCpm;
+  @Column(nullable = false, precision = 15, scale = 6)
+  private BigDecimal budget;
 
-    @Column(nullable = false, precision = 15, scale = 6)
-    private BigDecimal budget;
+  @Column(nullable = false)
+  private LocalDateTime startDate;
 
-    @Column(nullable = false)
-    private LocalDateTime startDate;
+  @Column(nullable = false)
+  private LocalDateTime endDate;
 
-    @Column(nullable = false)
-    private LocalDateTime endDate;
+  private boolean active;
 
-    private boolean active;
+  private String owner;
 
-    private String owner;
+  @CreatedDate
+  private LocalDateTime createdAt;
+  @LastModifiedDate
+  private LocalDateTime updatedAt;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "target_id", referencedColumnName = "id")
+  private TargetEntity target;
 
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "creative_id", referencedColumnName = "id")
+  private CreativeEntity creative;
 
-    @Builder
-    public CampaignEntity(String name, String region, BigDecimal targetCpm, BigDecimal budget, LocalDateTime startDate,
-                          LocalDateTime endDate, boolean active, String owner) {
-        this.name = name;
-        this.region = region;
-        this.targetCpm = targetCpm;
-        this.budget = budget;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.active = active;
-        this.owner = owner;
-    }
+  @Builder
+  public CampaignEntity(String name, BigDecimal targetCpm, BigDecimal budget,
+      LocalDateTime startDate, LocalDateTime endDate, boolean active, String owner,
+      TargetEntity target, CreativeEntity creative) {
+    this.name = name;
+    this.targetCpm = targetCpm;
+    this.budget = budget;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.active = active;
+    this.owner = owner;
+    this.target = target;
+    this.creative = creative;
+  }
 }
