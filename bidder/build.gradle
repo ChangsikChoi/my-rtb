@@ -23,7 +23,7 @@ configurations {
 repositories {
     mavenCentral()
     maven {
-        url "https://packages.confluent.io/maven/"
+        url = "https://packages.confluent.io/maven/"
     }
 }
 
@@ -45,6 +45,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
+    testImplementation "org.springframework.boot:spring-boot-testcontainers"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:kafka"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

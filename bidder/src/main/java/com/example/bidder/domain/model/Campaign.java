@@ -17,15 +17,21 @@ public record Campaign(
 ) {
   public boolean isBiddable(BidRequest bidRequest) {
     LocalDateTime now = LocalDateTime.now();
+    Impression impression = bidRequest.impression();
+    long reqBidFloor = impression != null ? impression.bidFloorMicro() : 0L;
+
+    long remainingBudget = this.remainingBudgetMicro != null ? this.remainingBudgetMicro : 0L;
+    long targetCpm = this.targetCpmMicro != null ? this.targetCpmMicro : 0L;
+
     if (this.startDate.isAfter(now) || this.endDate.isBefore(now)) {
       return false;
     }
-    //캠페인 남은 예산 확인
-    if (this.remainingBudgetMicro <= bidRequest.impression().bidFloorMicro()) {
+    //캠페인 남은 예산 확인 (입찰가보다 작거나 같으면 제외)
+    if (remainingBudget <= reqBidFloor) {
       return false;
     }
     //켐페인 목표 CPM 확인
-    if (this.targetCpmMicro >= bidRequest.impression().bidFloorMicro()) {
+    if (targetCpm <= reqBidFloor) {
       return false;
     }
     return true;

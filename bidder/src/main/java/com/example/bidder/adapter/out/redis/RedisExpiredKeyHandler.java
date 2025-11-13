@@ -1,12 +1,14 @@
 package com.example.bidder.adapter.out.redis;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisExpiredKeyHandler {
@@ -25,10 +27,11 @@ public class RedisExpiredKeyHandler {
                 RedisScript.of(refundScript, Boolean.class),
                 List.of(reservationBackupKey));
         if (success) {
-            System.out.println("Budget Refund Lua Script Executed Successfully");
+          //TODO: 카프카 토픽 생성 후 이벤트 발행 로직 추가
+          log.info("Budget Refund Lua Script Executed Successfully");
         } else {
-            System.out.println("Budget Refund Lua Script Execution Failed");
+          log.info("Budget Refund Lua Script Execution Failed");
         }
-        System.out.println("Budget Refund Lua is Done");
+        log.info("Budget Refund Lua is Done");
     }
 }

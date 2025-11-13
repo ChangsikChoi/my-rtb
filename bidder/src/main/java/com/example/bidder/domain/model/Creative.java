@@ -11,12 +11,17 @@ public record Creative (
     String clickUrl
 ){
   public boolean isSizeMatched(BidRequest bidRequest) {
+    Impression impression = bidRequest.impression();
+
+    Integer requestWidth = impression != null ? impression.width() : null;
+    Integer requestHeight = impression != null ? impression.height() : null;
+
     // 비딩 요청 너비 비교
-    if (bidRequest.impression().width() != null) {
+    if (requestWidth != null) {
       if (this.width == null) {
         return false;
       }
-      if (!bidRequest.impression().width().equals(this.width)) {
+      if (!requestWidth.equals(this.width)) {
         return false;
       }
     } else if (this.width != null) {
@@ -24,11 +29,11 @@ public record Creative (
       return false;
     }
     // 비딩 요청 높이 비교
-    if (bidRequest.impression().height() != null) {
+    if (requestHeight != null) {
       if (this.height == null) {
         return false;
       }
-      if (!bidRequest.impression().height().equals(this.height)) {
+      if (!requestHeight.equals(this.height)) {
         return false;
       }
     } else if (this.height != null) {

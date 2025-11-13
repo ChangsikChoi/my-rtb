@@ -12,38 +12,57 @@ public record Target(
 ) {
 
   public boolean isTargeted(BidRequest bidRequest) {
-    // os 타게팅 확인
-    if (this.os != null
-        && !this.os.equals(bidRequest.device().os())) {
+    Device device = bidRequest.device();
+    User user = bidRequest.user();
+
+    String requestOs = device != null ? device.os() : null;
+    String requestCountry = device != null ? device.country() : null;
+    Gender requestGender = user != null ? user.gender() : null;
+    Integer requestAge = user != null ? user.age() : null;
+
+    if (isExcludedByOs(requestOs)) {
       return false;
     }
-    // 국가 타게팅 확인
-    if (this.country != null
-        && !this.country.equals(bidRequest.device().country())) {
+    if (isExcludedByCountry(requestCountry)) {
       return false;
     }
-    // 성별 타게팅 확인
-    if (this.gender != bidRequest.user().gender()) {
+    if (isExcludedByGender(requestGender)) {
       return false;
     }
-    // 나이 타게팅 확인
-    // 최소 나이 확인
-    if (this.minAge != null) {
-      if (bidRequest.user().age() == null) {
-        return false;
-      } else if (this.minAge > bidRequest.user().age()) {
-        return false;
-      }
-    }
-    // 최대 나이 확인
-    if (this.maxAge != null) {
-      if (bidRequest.user().age() == null) {
-        return false;
-      } else if (this.maxAge < bidRequest.user().age()) {
-        return false;
-      }
+    if (isExcludedByAge(requestAge)) {
+      return false;
     }
 
     return true;
+  }
+
+  private boolean isExcludedByAge(Integer age) {
+
+    if (age == null) {
+      // 요청에 나이가 없으면 타겟에 나이 제한이 존재하는 경우 제외
+      return this.minAge != null || this.maxAge != null;
+    }
+    if (this.minAge != null && age < this.minAge) {
+      return true;
+    }
+    if (this.maxAge != null && age > this.maxAge) {
+      return true;
+    }
+    return false;
+  }
+
+  private boolean isExcludedByGender(Gender gender) {
+    return this.gender != null
+        && this.gender != gender;
+  }
+
+  private boolean isExcludedByCountry(String country) {
+    return this.country != null
+        && !this.country.equals(country);
+  }
+
+  private boolean isExcludedByOs(String os) {
+    return this.os != null
+        && !this.os.equals(os);
   }
 }
