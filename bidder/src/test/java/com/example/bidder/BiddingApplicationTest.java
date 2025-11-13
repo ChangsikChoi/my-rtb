@@ -1,4 +1,4 @@
-package com.example.mybidder;
+package com.example.bidder;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
