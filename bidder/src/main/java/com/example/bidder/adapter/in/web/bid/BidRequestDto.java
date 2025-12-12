@@ -1,4 +1,4 @@
-package com.example.bidder.adapter.in.web;
+package com.example.bidder.adapter.in.web.bid;
 
 import java.math.BigDecimal;
 

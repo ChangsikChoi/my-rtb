@@ -1,4 +1,4 @@
-package com.example.bidder.adapter.in.web;
+package com.example.bidder.adapter.in.web.bid;
 
 import com.example.bidder.domain.port.in.BidCommand;
 import com.example.bidder.domain.port.in.BidUseCase;

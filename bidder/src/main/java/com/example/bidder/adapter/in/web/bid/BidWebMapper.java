@@ -1,4 +1,4 @@
-package com.example.bidder.adapter.in.web;
+package com.example.bidder.adapter.in.web.bid;
 
 import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.model.Device;
