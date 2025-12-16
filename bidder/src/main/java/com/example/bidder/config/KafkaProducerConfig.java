@@ -1,7 +1,7 @@
 package com.example.bidder.config;
 
-import com.example.KafkaBiddingLog;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +24,7 @@ public class KafkaProducerConfig {
     private String schemaRegistryUrl;
 
     @Bean
-    public ProducerFactory<String, KafkaBiddingLog> producerFactory() {
+    public ProducerFactory<String, SpecificRecordBase> producerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -35,7 +35,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, KafkaBiddingLog> kafkaTemplate() {
+    public KafkaTemplate<String, SpecificRecordBase> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

@@ -4,5 +4,5 @@ import reactor.core.publisher.Mono;
 
 public interface BudgetConfirmPort {
 
-  Mono<Boolean> confirmBudget(String requestId);
+  Mono<Boolean> confirmBudget(String requestId, String campaignId);
 }
