@@ -6,6 +6,7 @@ import com.example.bidder.domain.port.out.SendBidResultPort;
 import com.example.bidder.utils.MicroConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class BidResultKafkaAdapter implements SendBidResultPort {
 
-  private final KafkaTemplate<String, KafkaBiddingLog> kafkaTemplate;
+  private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
 
   @Override
   public void sendBidResult(Bid bidResult) {
@@ -32,8 +33,8 @@ public class BidResultKafkaAdapter implements SendBidResultPort {
         .setPrice(bidPrice)
         .build();
 
-    CompletableFuture<SendResult<String, KafkaBiddingLog>> future =
-        kafkaTemplate.send("bidding-log", message);
+    CompletableFuture<SendResult<String, SpecificRecordBase>> future =
+        kafkaTemplate.send("bidding-log", bidResult.requestId(), message);
 
     future.whenComplete((result, ex) -> {
       if (ex != null) {
