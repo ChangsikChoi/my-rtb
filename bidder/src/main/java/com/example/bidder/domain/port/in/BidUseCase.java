@@ -4,5 +4,6 @@ import com.example.bidder.domain.model.Bid;
 import reactor.core.publisher.Mono;
 
 public interface BidUseCase {
-    Mono<Bid> handleBidRequest(BidCommand command);
+
+  Mono<Bid> handleBidRequest(BidCommand command);
 }

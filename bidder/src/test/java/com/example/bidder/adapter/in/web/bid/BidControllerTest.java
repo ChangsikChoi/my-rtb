@@ -1,10 +1,8 @@
-package com.example.bidder.adapter.in.web;
+package com.example.bidder.adapter.in.web.bid;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.example.bidder.adapter.in.web.bid.BidController;
-import com.example.bidder.adapter.in.web.bid.BidWebMapper;
 import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.port.in.BidCommand;
 import com.example.bidder.domain.port.in.BidUseCase;

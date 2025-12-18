@@ -32,21 +32,11 @@ public class BidService implements BidUseCase {
     // 입찰 승자 캠페인 선정
     Mono<Campaign> winner = decisionService.selectWinner(campaignFlux, bidRequest);
     return winner
-        .flatMap(campaign ->
-            // 레디스 lua 스크립트를 사용한 예산 예약
+        .filterWhen(campaign ->
             budgetHandlePort.reserveBudget(campaign.id(), bidRequest.id(),
-                    campaign.targetCpmMicro())
-                .flatMap(success -> {
-                  // 예산 예약 결과 메시지 전송 및 응답 생성
-                  if (success) {
-                    Bid bidResult = buildBidResult(bidRequest, campaign);
-                    sendBidResultPort.sendBidResult(bidResult);
-                    return Mono.just(bidResult);
-                  } else {
-                    return Mono.empty();
-                  }
-                })
-        );
+                campaign.targetCpmMicro()))
+        .map(campaign -> buildBidResult(bidRequest, campaign))
+        .doOnNext(sendBidResultPort::sendBidResult);
   }
 
   private Bid buildBidResult(BidRequest bidRequest, Campaign campaign) {
