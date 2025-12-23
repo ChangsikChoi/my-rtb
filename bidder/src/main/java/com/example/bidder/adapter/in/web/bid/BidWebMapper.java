@@ -4,7 +4,7 @@ import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.model.Device;
 import com.example.bidder.domain.model.Device.DeviceBuilder;
 import com.example.bidder.domain.model.Gender;
-import com.example.bidder.domain.model.Impression;
+import com.example.bidder.domain.model.Imp;
 import com.example.bidder.domain.model.User;
 import com.example.bidder.domain.model.User.UserBuilder;
 import com.example.bidder.domain.port.in.BidCommand;
@@ -25,7 +25,7 @@ public class BidWebMapper {
       throw new IllegalArgumentException("imp is required");
     }
 
-    Impression impression = Impression.builder()
+    Imp imp = Imp.builder()
         .bidFloorMicro(MicroConverter.toMicro(
             dto.imp().bidFloor() != null ? dto.imp().bidFloor() : BigDecimal.ZERO))
         .placementId(impDto.placementId())
@@ -52,7 +52,7 @@ public class BidWebMapper {
     userBuilder.gender(Gender.fromCode(userGender));
     User user = userBuilder.build();
 
-    return new BidCommand(dto.id(), impression, device, user);
+    return new BidCommand(dto.id(), imp, device, user);
   }
 
   public BidResponseDto toDto(Bid domain) {

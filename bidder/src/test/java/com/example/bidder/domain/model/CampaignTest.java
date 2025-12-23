@@ -50,7 +50,7 @@ class CampaignTest {
           .build();
 
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder().bidFloorMicro(50_000L).build())
+          .imp(Imp.builder().bidFloorMicro(50_000L).build())
           .build();
 
       assertFalse(campaign.isBiddable(bidRequest));
@@ -66,7 +66,7 @@ class CampaignTest {
           .build();
 
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder().bidFloorMicro(50_000L).build())
+          .imp(Imp.builder().bidFloorMicro(50_000L).build())
           .build();
 
       assertFalse(campaign.isBiddable(bidRequest));
@@ -84,7 +84,7 @@ class CampaignTest {
         .build();
 
     BidRequest bidRequest = BidRequest.builder()
-        .impression(Impression.builder().bidFloorMicro(50_000L).build())
+        .imp(Imp.builder().bidFloorMicro(50_000L).build())
         .build();
 
     assertTrue(campaign.isBiddable(bidRequest));

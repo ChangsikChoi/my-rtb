@@ -11,10 +11,10 @@ public record Creative (
     String clickUrl
 ){
   public boolean isSizeMatched(BidRequest bidRequest) {
-    Impression impression = bidRequest.impression();
+    Imp imp = bidRequest.imp();
 
-    Integer requestWidth = impression != null ? impression.width() : null;
-    Integer requestHeight = impression != null ? impression.height() : null;
+    Integer requestWidth = imp != null ? imp.width() : null;
+    Integer requestHeight = imp != null ? imp.height() : null;
 
     // 비딩 요청 너비 비교
     if (requestWidth != null) {

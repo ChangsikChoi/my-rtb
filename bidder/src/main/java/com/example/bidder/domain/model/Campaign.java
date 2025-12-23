@@ -17,8 +17,8 @@ public record Campaign(
 ) {
   public boolean isBiddable(BidRequest bidRequest) {
     LocalDateTime now = LocalDateTime.now();
-    Impression impression = bidRequest.impression();
-    long reqBidFloor = impression != null ? impression.bidFloorMicro() : 0L;
+    Imp imp = bidRequest.imp();
+    long reqBidFloor = imp != null ? imp.bidFloorMicro() : 0L;
 
     long remainingBudget = this.remainingBudgetMicro != null ? this.remainingBudgetMicro : 0L;
     long targetCpm = this.targetCpmMicro != null ? this.targetCpmMicro : 0L;

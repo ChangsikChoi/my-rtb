@@ -1,7 +1,6 @@
 package com.example.bidder.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -16,7 +15,7 @@ import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.model.BidRequest;
 import com.example.bidder.domain.model.Campaign;
 import com.example.bidder.domain.model.Creative;
-import com.example.bidder.domain.model.Impression;
+import com.example.bidder.domain.model.Imp;
 import com.example.bidder.domain.model.Target;
 import com.example.bidder.domain.port.in.BidCommand;
 import com.example.bidder.domain.port.out.BudgetReservePort;
@@ -49,7 +48,7 @@ class BidServiceTest {
   void givenEligibleCampaign_whenReserveBudgetSuccess_thenReturnBidAndSendResult() {
     BidRequest bidRequest = BidRequest.builder()
         .id("req_test")
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(300)
             .height(250)
             .bidFloorMicro(50_000L)
@@ -97,7 +96,7 @@ class BidServiceTest {
     // given
     BidRequest bidRequest = BidRequest.builder()
         .id("req_test")
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(300)
             .height(250)
             .bidFloorMicro(50_000L)

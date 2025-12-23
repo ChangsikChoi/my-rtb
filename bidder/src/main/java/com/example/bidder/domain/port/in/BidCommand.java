@@ -2,12 +2,12 @@ package com.example.bidder.domain.port.in;
 
 import com.example.bidder.domain.model.BidRequest;
 import com.example.bidder.domain.model.Device;
-import com.example.bidder.domain.model.Impression;
+import com.example.bidder.domain.model.Imp;
 import com.example.bidder.domain.model.User;
 
 public record BidCommand(
     String requestId,
-    Impression impression,
+    Imp imp,
     Device device,
     User user
 ) {
@@ -15,7 +15,7 @@ public record BidCommand(
   public BidRequest toDomain() {
     return BidRequest.builder()
         .id(this.requestId())
-        .impression(this.impression())
+        .imp(this.imp())
         .device(this.device())
         .user(this.user())
         .build();

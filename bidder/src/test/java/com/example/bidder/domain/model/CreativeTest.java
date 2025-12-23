@@ -13,7 +13,7 @@ class CreativeTest {
     void width_requestExistButCreativeNot_returnFalse() {
       Creative creative = Creative.builder().build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .width(300)
               .build())
           .build();
@@ -27,7 +27,7 @@ class CreativeTest {
           .width(320)
           .build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .width(300)
               .build())
           .build();
@@ -41,7 +41,7 @@ class CreativeTest {
           .width(320)
           .build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .build())
           .build();
 
@@ -54,7 +54,7 @@ class CreativeTest {
           .width(320)
           .build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .width(320)
               .build())
           .build();
@@ -70,7 +70,7 @@ class CreativeTest {
       Creative creative = Creative.builder()
           .build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .height(100)
               .build())
           .build();
@@ -84,7 +84,7 @@ class CreativeTest {
           .height(150)
           .build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .height(100)
               .build())
           .build();
@@ -98,7 +98,7 @@ class CreativeTest {
           .height(150)
           .build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .build())
           .build();
 
@@ -111,7 +111,7 @@ class CreativeTest {
           .height(150)
           .build();
       BidRequest bidRequest = BidRequest.builder()
-          .impression(Impression.builder()
+          .imp(Imp.builder()
               .height(150)
               .build())
           .build();
@@ -127,7 +127,7 @@ class CreativeTest {
         .height(250)
         .build();
     BidRequest bidRequest = BidRequest.builder()
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(300)
             .height(250)
             .build())
@@ -143,7 +143,7 @@ class CreativeTest {
         .height(250)
         .build();
     BidRequest bidRequest = BidRequest.builder()
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(320)
             .height(200)
             .build())
@@ -159,7 +159,7 @@ class CreativeTest {
         .height(200)
         .build();
     BidRequest bidRequest = BidRequest.builder()
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(320)
             .height(200)
             .build())
@@ -175,7 +175,7 @@ class CreativeTest {
         .height(250)
         .build();
     BidRequest bidRequest = BidRequest.builder()
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(300)
             .height(200)
             .build())

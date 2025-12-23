@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record BidRequest(
     String id,
-    Impression impression,
+    Imp imp,
     Device device,
     User user
 ) {

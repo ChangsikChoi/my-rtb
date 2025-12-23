@@ -3,7 +3,7 @@ package com.example.bidder.domain.service;
 import com.example.bidder.domain.model.BidRequest;
 import com.example.bidder.domain.model.Campaign;
 import com.example.bidder.domain.model.Creative;
-import com.example.bidder.domain.model.Impression;
+import com.example.bidder.domain.model.Imp;
 import com.example.bidder.domain.model.Target;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class BiddingDecisionServiceTest {
   @Test
   void selectWinner_multiEligibleCampaigns_returnHighestCpmCampaign() {
     BidRequest bidRequest = BidRequest.builder()
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(300)
             .height(250)
             .bidFloorMicro(50_000L)
@@ -84,7 +84,7 @@ class BiddingDecisionServiceTest {
   @Test
   void selectWinner_singleEligibleCampaign_returnThatCampaign() {
     BidRequest bidRequest = BidRequest.builder()
-        .impression(Impression.builder()
+        .imp(Imp.builder()
             .width(300)
             .height(250)
             .bidFloorMicro(50_000L)
