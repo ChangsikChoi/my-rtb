@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.bidder.domain.model.Win;
@@ -46,6 +48,8 @@ class WinServiceTest {
           assertThat(win.creativeId()).isEqualTo(command.creativeId());
         })
         .verifyComplete();
+
+    verify(sendWinResultPort, times(1)).sendWinResult(any());
   }
 
   @Test
@@ -59,6 +63,8 @@ class WinServiceTest {
     StepVerifier.create(winResult)
         .expectNextCount(0)
         .verifyComplete();
+
+    verify(sendWinResultPort, times(0)).sendWinResult(any());
   }
 
 }
