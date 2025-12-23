@@ -67,7 +67,7 @@ public class BidService implements BidUseCase {
         .append(campaign.id())
         .append("&crid=")
         .append(campaign.creative().id())
-        .append("' />");
+        .append("' height=1 width=1 style='display:none;'/>");
     // div > a 태그 오픈 (클릭 링크 설정)
     adMarkupBuilder.append("<a href='http://localhost:8080/dsp/redirect?url=")
         .append(campaign.creative().clickUrl())
