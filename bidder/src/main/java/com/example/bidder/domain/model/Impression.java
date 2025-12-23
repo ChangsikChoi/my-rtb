@@ -4,10 +4,8 @@ import lombok.Builder;
 
 @Builder
 public record Impression(
-    Long bidFloorMicro,
-    String placementId,
-    Integer width,
-    Integer height
+    String id,
+    String campaignId,
+    String creativeId
 ) {
-
 }
