@@ -1,0 +1,10 @@
+{
+  "namespace": "com.example",
+  "type": "record",
+  "name": "KafkaClickLog",
+  "fields": [
+    { "name": "requestId", "type": "string" },
+    { "name": "campaignId", "type": "string" },
+    { "name": "creativeId", "type": "string" }
+  ]
+}
