@@ -7,12 +7,14 @@ import com.example.bidder.domain.port.out.SendImpressionPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
 
 @Service
 @RequiredArgsConstructor
 public class ImpressionService implements ImpressionUseCase {
 
   private final SendImpressionPort sendImpressionPort;
+  private final Scheduler kafkaScheduler;
 
   @Override
   public Mono<Impression> handleImpression(ImpressionCommand command) {
@@ -20,6 +22,9 @@ public class ImpressionService implements ImpressionUseCase {
         .filter(cmd -> cmd.requestId() != null && !cmd.requestId().isBlank())
         .map(cmd -> new Impression(cmd.requestId(), cmd.campaignId(),
             cmd.creativeId()))
-        .doOnNext(sendImpressionPort::sendImpression);
+        .doOnNext(
+            impression -> Mono.fromRunnable(() -> sendImpressionPort.sendImpression(impression))
+                .subscribeOn(kafkaScheduler)
+                .subscribe());
   }
 }

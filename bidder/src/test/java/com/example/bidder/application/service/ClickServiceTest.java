@@ -10,12 +10,14 @@ import static org.mockito.Mockito.verify;
 import com.example.bidder.domain.model.Click;
 import com.example.bidder.domain.port.in.ClickCommand;
 import com.example.bidder.domain.port.out.SendClickPort;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,9 +26,14 @@ class ClickServiceTest {
   @Mock
   private SendClickPort sendClickPort;
 
-  @InjectMocks
+  private final Scheduler kafkaScheduler = Schedulers.immediate();
+
   private ClickService clickService;
 
+  @BeforeEach
+  void setUp() {
+    clickService = new ClickService(sendClickPort, kafkaScheduler);
+  }
 
   @Test
   void whenRequestIdIsEmpty_thenReturnEmptyMono() {

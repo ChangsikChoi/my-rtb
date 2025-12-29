@@ -10,12 +10,14 @@ import static org.mockito.Mockito.verify;
 import com.example.bidder.domain.model.Impression;
 import com.example.bidder.domain.port.in.ImpressionCommand;
 import com.example.bidder.domain.port.out.SendImpressionPort;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,8 +26,14 @@ class ImpressionServiceTest {
   @Mock
   private SendImpressionPort sendImpressionPort;
 
-  @InjectMocks
+  private final Scheduler kafkaScheduler = Schedulers.immediate();
+
   private ImpressionService impressionService;
+
+  @BeforeEach
+  void setUp() {
+    impressionService = new ImpressionService(sendImpressionPort, kafkaScheduler);
+  }
 
   @Test
   void whenRequestIdIsEmpty_thenReturnEmptyMono() {

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class BidService implements BidUseCase {
   private final BudgetReservePort budgetHandlePort;
   private final LoadCampaignPort loadCampaignPort;
   private final SendBidResultPort sendBidResultPort;
+  private final Scheduler kafkaScheduler;
 
   private final BiddingDecisionService decisionService = new BiddingDecisionService();
 
@@ -36,7 +38,9 @@ public class BidService implements BidUseCase {
             budgetHandlePort.reserveBudget(campaign.id(), bidRequest.id(),
                 campaign.targetCpmMicro()))
         .map(campaign -> buildBidResult(bidRequest, campaign))
-        .doOnNext(sendBidResultPort::sendBidResult);
+        .doOnNext(bid -> Mono.fromRunnable(() -> sendBidResultPort.sendBidResult(bid))
+            .subscribeOn(kafkaScheduler)
+            .subscribe());
   }
 
   private Bid buildBidResult(BidRequest bidRequest, Campaign campaign) {

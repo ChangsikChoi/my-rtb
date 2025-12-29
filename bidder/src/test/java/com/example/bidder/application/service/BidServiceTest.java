@@ -22,13 +22,15 @@ import com.example.bidder.domain.port.out.BudgetReservePort;
 import com.example.bidder.domain.port.out.LoadCampaignPort;
 import com.example.bidder.domain.port.out.SendBidResultPort;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,8 +43,14 @@ class BidServiceTest {
   @Mock
   private SendBidResultPort sendBidResultPort;
 
-  @InjectMocks
+  private final Scheduler kafkaScheduler = Schedulers.immediate();
+
   private BidService bidService;
+
+  @BeforeEach
+  void setUp() {
+    bidService = new BidService(budgetReservePort, loadCampaignPort, sendBidResultPort, kafkaScheduler);
+  }
 
   @Test
   void givenEligibleCampaign_whenReserveBudgetSuccess_thenReturnBidAndSendResult() {
