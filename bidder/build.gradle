@@ -46,6 +46,8 @@ dependencies {
     // https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing-bridge-otel
     implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.6.1'
 
+    implementation 'io.projectreactor.tools:blockhound:1.0.8.RELEASE'
+
     runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.119.Final:osx-aarch_64'
 
     compileOnly 'org.projectlombok:lombok'
