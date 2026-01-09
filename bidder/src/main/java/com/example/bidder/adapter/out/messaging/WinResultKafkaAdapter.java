@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
+import org.slf4j.MDC;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class WinResultKafkaAdapter implements SendWinResultPort {
 
   private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
+  private static final String topicName = "win-log";
 
   @Override
   public void sendWinResult(Win winResult) {
@@ -31,11 +33,12 @@ public class WinResultKafkaAdapter implements SendWinResultPort {
 
     future.whenComplete((result, ex) -> {
       if (ex != null) {
-        log.info("Failed to send message: {}", ex.getMessage());
-        log.info(result.getProducerRecord().value().toString());
+        MDC.put("topicName", topicName);
+        log.info("Failed to send message:{}", ex.getMessage());
+        log.warn(result.getProducerRecord().value().toString());
+        MDC.remove("topicName");
       } else {
         log.info("Message sent successfully: {}", result.getProducerRecord().value());
-        log.info(result.toString());
       }
     });
   }

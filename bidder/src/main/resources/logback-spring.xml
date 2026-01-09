@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} %X{traceId:-} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="TOTAL_INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/application.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/application-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder><pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%X{traceId:-}] - %msg%n</pattern></encoder>
+  </appender>
+
+  <appender name="MESSAGING_SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>topicName</key>
+      <defaultValue>unknown</defaultValue>
+    </discriminator>
+    <sift>
+      <appender name="FILE-${topicName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+          <level>WARN</level>
+        </filter>
+        <file>logs/fail_${topicName}.jsonl</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+          <fileNamePattern>logs/fail_${topicName}-%d{yyyy-MM-dd}.%i.jsonl</fileNamePattern>
+          <maxFileSize>50MB</maxFileSize>
+          <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+          <pattern>{"timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}", "traceId":"%X{traceId:-}", "level":"%level", "message":%msg}%n</pattern>
+        </encoder>
+      </appender>
+    </sift>
+  </appender>
+
+  <appender name="ASYNC_TOTAL" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="TOTAL_INFO_FILE" />
+    <neverBlock>true</neverBlock>
+  </appender>
+
+  <appender name="ASYNC_MESSAGING" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="MESSAGING_SIFT" />
+    <neverBlock>true</neverBlock>
+  </appender>
+
+  <logger name="com.example.bidder.adapter.out.messaging">
+    <appender-ref ref="ASYNC_MESSAGING" />
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="ASYNC_TOTAL" />
+  </root>
+</configuration>

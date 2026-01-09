@@ -7,6 +7,7 @@ import com.example.bidder.utils.MicroConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
+import org.slf4j.MDC;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 public class BidResultKafkaAdapter implements SendBidResultPort {
 
   private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
+  private static final String topicName = "bidding-log";
 
   @Override
   public void sendBidResult(Bid bidResult) {
@@ -34,15 +36,16 @@ public class BidResultKafkaAdapter implements SendBidResultPort {
         .build();
 
     CompletableFuture<SendResult<String, SpecificRecordBase>> future =
-        kafkaTemplate.send("bidding-log", bidResult.requestId(), message);
+        kafkaTemplate.send(topicName, bidResult.requestId(), message);
 
     future.whenComplete((result, ex) -> {
       if (ex != null) {
-        log.info("Failed to send message: {}", ex.getMessage());
-        log.info(result.getProducerRecord().value().toString());
+        MDC.put("topicName", topicName);
+        log.info("Failed to send message:{}", ex.getMessage());
+        log.warn(result.getProducerRecord().value().toString());
+        MDC.remove("topicName");
       } else {
         log.info("Message sent successfully: {}", result.getProducerRecord().value());
-        log.info(result.toString());
       }
     });
   }
