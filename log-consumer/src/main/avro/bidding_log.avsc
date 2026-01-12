@@ -6,6 +6,6 @@
     { "name": "requestId", "type": "string" },
     { "name": "campaignId", "type": "string" },
     { "name": "creativeId", "type": "string" },
-    { "name": "price", "type": "double" }
+    { "name": "priceMicro", "type": "long" }
   ]
 }

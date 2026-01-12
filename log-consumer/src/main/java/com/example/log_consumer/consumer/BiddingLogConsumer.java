@@ -18,7 +18,7 @@ public class BiddingLogConsumer {
                 null,
                 message.getRequestId(),
                 message.getCampaignId(),
-                message.getPrice());
+                message.getPriceMicro());
 
         System.out.println("message = " + message);
         BiddingLog save = biddingLogRepository.save(log);

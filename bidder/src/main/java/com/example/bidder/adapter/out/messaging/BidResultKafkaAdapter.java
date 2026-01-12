@@ -3,7 +3,6 @@ package com.example.bidder.adapter.out.messaging;
 import com.example.KafkaBiddingLog;
 import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.port.out.SendBidResultPort;
-import com.example.bidder.utils.MicroConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
@@ -26,13 +25,12 @@ public class BidResultKafkaAdapter implements SendBidResultPort {
   public void sendBidResult(Bid bidResult) {
     // cpm 단위 가격을 단일 가격으로 변환
     long bidPriceMicro = bidResult.bidPriceCpmMicro() / 1000;
-    double bidPrice = MicroConverter.fromMirco(bidPriceMicro).doubleValue();
 
     KafkaBiddingLog message = KafkaBiddingLog.newBuilder()
         .setRequestId(bidResult.requestId())
         .setCampaignId(bidResult.campaignId())
         .setCreativeId(bidResult.creativeId())
-        .setPrice(bidPrice)
+        .setPriceMicro(bidPriceMicro)
         .build();
 
     CompletableFuture<SendResult<String, SpecificRecordBase>> future =
