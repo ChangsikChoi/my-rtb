@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BiddingLog {
+public class ImpressionLog {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,5 @@ public class BiddingLog {
   private String requestId;
   private String campaignId;
   private String creativeId;
-  private Long priceMicro;
 
 }

@@ -1,5 +1,6 @@
 package com.example.log_consumer.model;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BiddingLog {
+public class ClickLog {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,5 @@ public class BiddingLog {
   private String requestId;
   private String campaignId;
   private String creativeId;
-  private Long priceMicro;
 
 }

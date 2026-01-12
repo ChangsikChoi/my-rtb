@@ -18,6 +18,7 @@ public class BiddingLogConsumer {
                 null,
                 message.getRequestId(),
                 message.getCampaignId(),
+                message.getCreativeId(),
                 message.getPriceMicro());
 
         System.out.println("message = " + message);

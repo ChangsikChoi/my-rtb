@@ -1,8 +1,8 @@
 package com.example.log_consumer.config;
 
-import com.example.KafkaBiddingLog;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,7 @@ import java.util.Map;
 @EnableKafka
 public class KafkaConsumerConfig {
     @Bean
-    public ConsumerFactory<String, KafkaBiddingLog> consumerFactory() {
+    public ConsumerFactory<String, SpecificRecordBase> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "bidding-log-group");
@@ -35,8 +35,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, KafkaBiddingLog> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, KafkaBiddingLog> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
