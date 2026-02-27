@@ -8,9 +8,13 @@ import reactor.core.publisher.Hooks;
 @SpringBootApplication
 public class BiddingApplication {
     public static void main(String[] args) {
-        BlockHound.install(builder ->
-            builder.allowBlockingCallsInside("io.lettuce.core.RedisClient", "connect")
-        );
+        boolean disableBlockHound =
+            Boolean.parseBoolean(System.getenv().getOrDefault("DISABLE_BLOCKHOUND", "false"));
+        if (!disableBlockHound) {
+            BlockHound.install(builder ->
+                builder.allowBlockingCallsInside("io.lettuce.core.RedisClient", "connect")
+            );
+        }
         SpringApplication.run(BiddingApplication.class, args);
         Hooks.enableAutomaticContextPropagation();
     }
