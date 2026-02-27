@@ -166,6 +166,6 @@ class BidResultKafkaAdapterTest {
 
     ConsumerRecord<String, KafkaBiddingLog> receivedRecord = records.iterator().next();
     assertThat(receivedRecord.value().getCampaignId()).isEqualTo("c123");
-    assertThat(receivedRecord.value().getPrice()).isEqualTo(1.0);
+    assertThat(receivedRecord.value().getPriceMicro()).isEqualTo(1_000_000L);
   }
 }
