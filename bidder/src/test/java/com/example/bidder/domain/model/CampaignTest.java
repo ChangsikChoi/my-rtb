@@ -38,14 +38,14 @@ class CampaignTest {
   }
 
   @Nested
-  class BudgetTest {
+  class BidEligibilityTest {
 
     @Test
-    void remainingBudget_lessThanOrEqualToBidFloor_returnFalse() {
+    void remainingBudgetSnapshot_isIgnoredInBiddableCheck() {
       Campaign campaign = Campaign.builder()
           .startDate(LocalDateTime.now().minusDays(1))
           .endDate(LocalDateTime.now().plusDays(1))
-          .remainingBudgetMicro(50_000L)
+          .remainingBudgetMicro(0L)
           .targetCpmMicro(1_000_000L)
           .build();
 
@@ -53,7 +53,7 @@ class CampaignTest {
           .imp(Imp.builder().bidFloorMicro(50_000L).build())
           .build();
 
-      assertFalse(campaign.isBiddable(bidRequest));
+      assertTrue(campaign.isBiddable(bidRequest));
     }
 
     @Test

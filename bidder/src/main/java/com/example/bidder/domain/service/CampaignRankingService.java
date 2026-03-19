@@ -3,15 +3,13 @@ package com.example.bidder.domain.service;
 import com.example.bidder.domain.model.BidRequest;
 import com.example.bidder.domain.model.Campaign;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-public class BiddingDecisionService {
+public class CampaignRankingService {
 
-  public Mono<Campaign> selectWinner(Flux<Campaign> campaignFlux, BidRequest bidRequest) {
+  public Flux<Campaign> rankEligibleCampaigns(Flux<Campaign> campaignFlux, BidRequest bidRequest) {
     return campaignFlux
         .filter(campaign -> isCampaignEligible(campaign, bidRequest))
-        .sort((c1, c2) -> Long.compare(c2.targetCpmMicro(), c1.targetCpmMicro()))
-        .next();
+        .sort((c1, c2) -> Long.compare(c2.targetCpmMicro(), c1.targetCpmMicro()));
   }
 
   private boolean isCampaignEligible(Campaign campaign, BidRequest bidRequest) {

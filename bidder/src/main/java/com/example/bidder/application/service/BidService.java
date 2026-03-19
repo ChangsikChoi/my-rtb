@@ -8,7 +8,7 @@ import com.example.bidder.domain.port.in.BidUseCase;
 import com.example.bidder.domain.port.out.BudgetReservePort;
 import com.example.bidder.domain.port.out.LoadCampaignPort;
 import com.example.bidder.domain.port.out.SendBidResultPort;
-import com.example.bidder.domain.service.BiddingDecisionService;
+import com.example.bidder.domain.service.CampaignRankingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -24,23 +24,38 @@ public class BidService implements BidUseCase {
   private final SendBidResultPort sendBidResultPort;
   private final Scheduler kafkaScheduler;
 
-  private final BiddingDecisionService decisionService = new BiddingDecisionService();
+  private final CampaignRankingService campaignRankingService = new CampaignRankingService();
 
   @Override
   public Mono<Bid> handleBidRequest(BidCommand command) {
     BidRequest bidRequest = command.toDomain();
-    // 캠페인 목록 조회
-    Flux<Campaign> campaignFlux = loadCampaignPort.loadCampaign();
-    // 입찰 승자 캠페인 선정
-    Mono<Campaign> winner = decisionService.selectWinner(campaignFlux, bidRequest);
-    return winner
-        .filterWhen(campaign ->
-            budgetHandlePort.reserveBudget(campaign.id(), bidRequest.id(),
-                campaign.targetCpmMicro()))
-        .map(campaign -> buildBidResult(bidRequest, campaign))
-        .doOnNext(bid -> Mono.fromRunnable(() -> sendBidResultPort.sendBidResult(bid))
-            .subscribeOn(kafkaScheduler)
-            .subscribe());
+    return rankedCampaigns(bidRequest)
+        .concatMap(campaign -> reserveAndBuildBid(campaign, bidRequest), 1)
+        .next()
+        .doOnNext(this::publishBidResultAsync);
+  }
+
+  private Flux<Campaign> rankedCampaigns(BidRequest bidRequest) {
+    return campaignRankingService.rankEligibleCampaigns(
+        loadCampaignPort.loadCampaign(),
+        bidRequest
+    );
+  }
+
+  private Mono<Bid> reserveAndBuildBid(Campaign campaign, BidRequest bidRequest) {
+    return budgetHandlePort.reserveBudget(
+            campaign.id(),
+            bidRequest.id(),
+            campaign.impressionPriceMicro()
+        )
+        .filter(Boolean::booleanValue)
+        .map(ignored -> buildBidResult(bidRequest, campaign));
+  }
+
+  private void publishBidResultAsync(Bid bid) {
+    Mono.fromRunnable(() -> sendBidResultPort.sendBidResult(bid))
+        .subscribeOn(kafkaScheduler)
+        .subscribe();
   }
 
   private Bid buildBidResult(BidRequest bidRequest, Campaign campaign) {

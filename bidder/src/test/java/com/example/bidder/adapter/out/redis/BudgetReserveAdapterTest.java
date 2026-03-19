@@ -40,6 +40,7 @@ class BudgetReserveAdapterTest {
   void reserveBudget_budgetIsSufficient_returnTrue() {
     String requestId = "r1";
     String campaignId = "c1";
+    String reserveBudgetMicro = "150000";
     // 저장 결과 조회용 키 생성
     String totalKey = RedisKeys.campaignTotalBudgetKey(campaignId);
     String reservedKey = RedisKeys.campaignReservedBudgetKey(campaignId);
@@ -47,7 +48,7 @@ class BudgetReserveAdapterTest {
     String reservationBackupKey = RedisKeys.reservationBackupKey(requestId);
 
     // 초기 예산 설정
-    redisTemplate.opsForValue().set(totalKey, "10000").block();
+    redisTemplate.opsForValue().set(totalKey, "1000000").block();
     redisTemplate.opsForValue().set(reservedKey, "0").block();
 
     // 예산 예약 실행
@@ -74,18 +75,18 @@ class BudgetReserveAdapterTest {
         .verifyComplete();
 
     StepVerifier.create(totalBudget)
-        .expectNext("9850")
+        .expectNext("850000")
         .verifyComplete();
 
     StepVerifier.create(reservedBudget)
-        .expectNext("150")
+        .expectNext(reserveBudgetMicro)
         .verifyComplete();
 
     StepVerifier.create(reservation)
         .assertNext(
             row -> {
               assertThat(row.get("campaignId")).isEqualTo(campaignId);
-              assertThat(row.get("amount")).isEqualTo("150");
+              assertThat(row.get("amount")).isEqualTo(reserveBudgetMicro);
             }
         )
         .verifyComplete();
@@ -94,7 +95,7 @@ class BudgetReserveAdapterTest {
         .assertNext(
             row -> {
               assertThat(row.get("campaignId")).isEqualTo(campaignId);
-              assertThat(row.get("amount")).isEqualTo("150");
+              assertThat(row.get("amount")).isEqualTo(reserveBudgetMicro);
             }
         )
         .verifyComplete();
@@ -112,7 +113,7 @@ class BudgetReserveAdapterTest {
     String reservationBackupKey = RedisKeys.reservationBackupKey(requestId);
 
     // 초기 예산 설정
-    redisTemplate.opsForValue().set(totalKey, "100").block();
+    redisTemplate.opsForValue().set(totalKey, "100000").block();
     redisTemplate.opsForValue().set(reservedKey, "0").block();
 
     // 예산 예약 실행
@@ -139,7 +140,7 @@ class BudgetReserveAdapterTest {
         .verifyComplete();
 
     StepVerifier.create(totalBudget)
-        .expectNext("100")
+        .expectNext("100000")
         .verifyComplete();
 
     StepVerifier.create(reservedBudget)

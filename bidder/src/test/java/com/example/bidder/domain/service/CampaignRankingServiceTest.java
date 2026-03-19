@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-class BiddingDecisionServiceTest {
+class CampaignRankingServiceTest {
 
-  private final BiddingDecisionService service = new BiddingDecisionService();
+  private final CampaignRankingService service = new CampaignRankingService();
 
   @Test
-  void selectWinner_noEligibleCampaigns_returnEmpty() {
+  void rankEligibleCampaigns_noEligibleCampaigns_returnEmpty() {
     BidRequest bidRequest = BidRequest.builder().build();
 
     Campaign campaignA = Campaign.builder()
@@ -28,12 +28,12 @@ class BiddingDecisionServiceTest {
         .endDate(LocalDateTime.now().minusDays(1))
         .build();
 
-    StepVerifier.create(service.selectWinner(Flux.just(campaignA, campaignB), bidRequest))
+    StepVerifier.create(service.rankEligibleCampaigns(Flux.just(campaignA, campaignB), bidRequest))
         .verifyComplete();
   }
 
   @Test
-  void selectWinner_multiEligibleCampaigns_returnHighestCpmCampaign() {
+  void rankEligibleCampaigns_multiEligibleCampaigns_returnDescendingOrder() {
     BidRequest bidRequest = BidRequest.builder()
         .imp(Imp.builder()
             .width(300)
@@ -76,13 +76,15 @@ class BiddingDecisionServiceTest {
         .build();
 
     StepVerifier.create(
-            service.selectWinner(Flux.just(campaignA, campaignB, campaignC), bidRequest))
+            service.rankEligibleCampaigns(Flux.just(campaignA, campaignB, campaignC), bidRequest))
         .expectNext(campaignB)
+        .expectNext(campaignC)
+        .expectNext(campaignA)
         .verifyComplete();
   }
 
   @Test
-  void selectWinner_singleEligibleCampaign_returnThatCampaign() {
+  void rankEligibleCampaigns_filtersOutBidFloorFailures() {
     BidRequest bidRequest = BidRequest.builder()
         .imp(Imp.builder()
             .width(300)
@@ -114,7 +116,7 @@ class BiddingDecisionServiceTest {
         .creative(creative)
         .build();
 
-    StepVerifier.create(service.selectWinner(Flux.just(campaignA, campaignB), bidRequest))
+    StepVerifier.create(service.rankEligibleCampaigns(Flux.just(campaignA, campaignB), bidRequest))
         .expectNext(campaignA)
         .verifyComplete();
   }

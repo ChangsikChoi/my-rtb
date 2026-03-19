@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.inOrder;
 
 import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.model.BidRequest;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
@@ -95,7 +97,7 @@ class BidServiceTest {
         .verifyComplete();
 
     verify(budgetReservePort, times(1))
-        .reserveBudget("camp_test", "req_test", 100_000L);
+        .reserveBudget("camp_test", "req_test", 100L);
     verify(sendBidResultPort, times(1)).sendBidResult(any());
   }
 
@@ -138,6 +140,124 @@ class BidServiceTest {
         .verifyComplete(); // 결과 없음
 
     verify(sendBidResultPort, never()).sendBidResult(any());
+  }
+
+  @Test
+  void givenTopCampaignReserveFails_whenNextCampaignReserveSucceeds_thenReturnFallbackBid() {
+    BidRequest bidRequest = BidRequest.builder()
+        .id("req_test")
+        .imp(Imp.builder()
+            .width(300)
+            .height(250)
+            .bidFloorMicro(50_000L)
+            .build())
+        .build();
+
+    Target target = Target.builder().build();
+    Creative creative = Creative.builder()
+        .width(300)
+        .height(250)
+        .build();
+
+    Campaign secondCampaign = Campaign.builder()
+        .id("camp_second")
+        .startDate(LocalDateTime.now().minusDays(1))
+        .endDate(LocalDateTime.now().plusDays(1))
+        .remainingBudgetMicro(1_000_000L)
+        .targetCpmMicro(150_000L)
+        .target(target)
+        .creative(creative)
+        .build();
+
+    Campaign topCampaign = Campaign.builder()
+        .id("camp_top")
+        .startDate(LocalDateTime.now().minusDays(1))
+        .endDate(LocalDateTime.now().plusDays(1))
+        .remainingBudgetMicro(1_000_000L)
+        .targetCpmMicro(200_000L)
+        .target(target)
+        .creative(creative)
+        .build();
+
+    when(loadCampaignPort.loadCampaign()).thenReturn(Flux.just(secondCampaign, topCampaign));
+    when(budgetReservePort.reserveBudget("camp_top", "req_test", 200L))
+        .thenReturn(Mono.just(false));
+    when(budgetReservePort.reserveBudget("camp_second", "req_test", 150L))
+        .thenReturn(Mono.just(true));
+    doNothing().when(sendBidResultPort).sendBidResult(any());
+
+    BidCommand command = mock(BidCommand.class);
+    when(command.toDomain()).thenReturn(bidRequest);
+
+    Mono<Bid> result = bidService.handleBidRequest(command);
+
+    StepVerifier.create(result)
+        .assertNext(bid -> {
+          assertThat(bid.campaignId()).isEqualTo("camp_second");
+          assertThat(bid.bidPriceCpmMicro()).isEqualTo(150_000L);
+        })
+        .verifyComplete();
+
+    InOrder inOrder = inOrder(budgetReservePort);
+    inOrder.verify(budgetReservePort).reserveBudget("camp_top", "req_test", 200L);
+    inOrder.verify(budgetReservePort).reserveBudget("camp_second", "req_test", 150L);
+    verify(sendBidResultPort, times(1)).sendBidResult(any());
+  }
+
+  @Test
+  void givenTopCampaignReserveSucceeds_whenOtherCampaignsExist_thenDoNotReserveOthers() {
+    BidRequest bidRequest = BidRequest.builder()
+        .id("req_test")
+        .imp(Imp.builder()
+            .width(300)
+            .height(250)
+            .bidFloorMicro(50_000L)
+            .build())
+        .build();
+
+    Target target = Target.builder().build();
+    Creative creative = Creative.builder()
+        .width(300)
+        .height(250)
+        .build();
+
+    Campaign lowerCampaign = Campaign.builder()
+        .id("camp_lower")
+        .startDate(LocalDateTime.now().minusDays(1))
+        .endDate(LocalDateTime.now().plusDays(1))
+        .remainingBudgetMicro(1_000_000L)
+        .targetCpmMicro(150_000L)
+        .target(target)
+        .creative(creative)
+        .build();
+
+    Campaign topCampaign = Campaign.builder()
+        .id("camp_top")
+        .startDate(LocalDateTime.now().minusDays(1))
+        .endDate(LocalDateTime.now().plusDays(1))
+        .remainingBudgetMicro(1_000_000L)
+        .targetCpmMicro(200_000L)
+        .target(target)
+        .creative(creative)
+        .build();
+
+    when(loadCampaignPort.loadCampaign()).thenReturn(Flux.just(lowerCampaign, topCampaign));
+    when(budgetReservePort.reserveBudget("camp_top", "req_test", 200L))
+        .thenReturn(Mono.just(true));
+    doNothing().when(sendBidResultPort).sendBidResult(any());
+
+    BidCommand command = mock(BidCommand.class);
+    when(command.toDomain()).thenReturn(bidRequest);
+
+    Mono<Bid> result = bidService.handleBidRequest(command);
+
+    StepVerifier.create(result)
+        .assertNext(bid -> assertThat(bid.campaignId()).isEqualTo("camp_top"))
+        .verifyComplete();
+
+    verify(budgetReservePort, times(1)).reserveBudget("camp_top", "req_test", 200L);
+    verify(budgetReservePort, never()).reserveBudget("camp_lower", "req_test", 150L);
+    verify(sendBidResultPort, times(1)).sendBidResult(any());
   }
 
 

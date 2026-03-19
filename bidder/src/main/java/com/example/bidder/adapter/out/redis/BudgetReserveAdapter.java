@@ -30,7 +30,7 @@ public class BudgetReserveAdapter implements BudgetReservePort {
             // keys
             List.of(totalKey, reservedKey, reservationKey, reservationBackupKey),
             // args
-            String.valueOf(reserveAmountMicro / 1000),
+            String.valueOf(reserveAmountMicro),
             campaignId,
             String.valueOf(System.currentTimeMillis()),
             BUDGET_RESERVATION_SECONDES)
