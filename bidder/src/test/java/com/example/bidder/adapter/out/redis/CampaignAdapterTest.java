@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bidder.domain.model.Campaign;
 import com.example.bidder.domain.model.Creative;
-import com.example.bidder.domain.model.Gender;
 import com.example.bidder.domain.model.Target;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -76,7 +75,6 @@ class CampaignAdapterTest {
               Target target = c.target();
               assertThat(target.os()).isEqualTo("Android");
               assertThat(target.country()).isEqualTo("KR");
-              assertThat(target.gender()).isEqualTo(Gender.MALE);
               assertThat(target.minAge()).isEqualTo(25);
               assertThat(target.maxAge()).isEqualTo(34);
               // 소재 데이터 검증
@@ -103,7 +101,6 @@ class CampaignAdapterTest {
     campaignData.put("remainingBudgetMicro", "10000000");
     campaignData.put("target.os", "Android");
     campaignData.put("target.country", "KR");
-    campaignData.put("target.gender", "M");
     campaignData.put("target.minAge", "25");
     campaignData.put("target.maxAge", "34");
     campaignData.put("creative.id", "creative_1");

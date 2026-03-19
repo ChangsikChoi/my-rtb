@@ -3,7 +3,6 @@ package com.example.bidder.adapter.out.redis;
 import com.example.bidder.domain.model.Campaign;
 import com.example.bidder.domain.model.Creative;
 import com.example.bidder.domain.model.Creative.CreativeBuilder;
-import com.example.bidder.domain.model.Gender;
 import com.example.bidder.domain.model.Target;
 import com.example.bidder.domain.model.Target.TargetBuilder;
 import com.example.bidder.domain.port.out.LoadCampaignPort;
@@ -40,8 +39,7 @@ public class CampaignAdapter implements LoadCampaignPort {
   private Campaign mapToDomain(Map<String, String> hash) {
     TargetBuilder targetBuilder = Target.builder()
         .os(hash.get("target.os"))
-        .country(hash.get("target.country"))
-        .gender(Gender.fromCode(hash.get("target.gender")));
+        .country(hash.get("target.country"));
 
     if (hash.get("target.minAge") != null) {
       targetBuilder.minAge(Integer.parseInt(hash.get("target.minAge")));

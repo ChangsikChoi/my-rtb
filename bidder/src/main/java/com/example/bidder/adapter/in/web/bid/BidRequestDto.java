@@ -27,7 +27,6 @@ public record BidRequestDto(
   }
 
   public record UserDto(
-      String gender,
       Integer age
   ) {
 

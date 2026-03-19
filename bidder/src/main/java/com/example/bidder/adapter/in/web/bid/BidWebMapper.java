@@ -3,7 +3,6 @@ package com.example.bidder.adapter.in.web.bid;
 import com.example.bidder.domain.model.Bid;
 import com.example.bidder.domain.model.Device;
 import com.example.bidder.domain.model.Device.DeviceBuilder;
-import com.example.bidder.domain.model.Gender;
 import com.example.bidder.domain.model.Imp;
 import com.example.bidder.domain.model.User;
 import com.example.bidder.domain.model.User.UserBuilder;
@@ -43,13 +42,10 @@ public class BidWebMapper {
     Device device = deviceBuilder.build();
 
     UserBuilder userBuilder = User.builder();
-    String userGender = null;
     if (dto.user() != null) {
       userBuilder
           .age(dto.user().age());
-      userGender = dto.user().gender();
     }
-    userBuilder.gender(Gender.fromCode(userGender));
     User user = userBuilder.build();
 
     return new BidCommand(dto.id(), imp, device, user);

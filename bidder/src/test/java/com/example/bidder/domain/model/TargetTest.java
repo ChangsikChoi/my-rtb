@@ -18,7 +18,6 @@ class TargetTest {
             .build())
         .user(User.builder()
             .age(25)
-            .gender(Gender.OTHER)
             .build())
         .build();
 
@@ -146,53 +145,6 @@ class TargetTest {
     }
 
   }
-
-  @Nested
-  class GenderTest {
-
-    @Test
-    void gender_notMatched_returnFalse() {
-      Target target = Target.builder()
-          .gender(Gender.MALE)
-          .build();
-      BidRequest bidRequest = BidRequest.builder()
-          .user(User.builder()
-              .gender(Gender.FEMALE)
-              .build())
-          .build();
-
-      assertFalse(target.isTargeted(bidRequest));
-    }
-
-    @Test
-    void gender_targetExistButRequestIsNull_returnFalse() {
-      Target target = Target.builder()
-          .gender(Gender.MALE)
-          .build();
-      BidRequest bidRequest = BidRequest.builder()
-          .user(User.builder()
-              .gender(null)
-              .build())
-          .build();
-
-      assertFalse(target.isTargeted(bidRequest));
-    }
-
-    @Test
-    void gender_matched_returnTrue() {
-      Target target = Target.builder()
-          .gender(Gender.MALE)
-          .build();
-      BidRequest bidRequest = BidRequest.builder()
-          .user(User.builder()
-              .gender(Gender.MALE)
-              .build())
-          .build();
-
-      assertTrue(target.isTargeted(bidRequest));
-    }
-  }
-
   @Nested
   class OsTest {
 

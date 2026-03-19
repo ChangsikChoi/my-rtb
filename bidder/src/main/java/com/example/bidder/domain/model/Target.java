@@ -6,7 +6,6 @@ import lombok.Builder;
 public record Target(
     String os,
     String country,
-    Gender gender,
     Integer minAge,
     Integer maxAge
 ) {
@@ -17,16 +16,12 @@ public record Target(
 
     String requestOs = device != null ? device.os() : null;
     String requestCountry = device != null ? device.country() : null;
-    Gender requestGender = user != null ? user.gender() : null;
     Integer requestAge = user != null ? user.age() : null;
 
     if (isExcludedByOs(requestOs)) {
       return false;
     }
     if (isExcludedByCountry(requestCountry)) {
-      return false;
-    }
-    if (isExcludedByGender(requestGender)) {
       return false;
     }
     if (isExcludedByAge(requestAge)) {
@@ -49,11 +44,6 @@ public record Target(
       return true;
     }
     return false;
-  }
-
-  private boolean isExcludedByGender(Gender gender) {
-    return this.gender != null
-        && this.gender != gender;
   }
 
   private boolean isExcludedByCountry(String country) {
