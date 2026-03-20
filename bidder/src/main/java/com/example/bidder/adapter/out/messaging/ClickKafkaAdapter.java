@@ -32,13 +32,16 @@ public class ClickKafkaAdapter implements SendClickPort {
         kafkaTemplate.send(topicName, click.id(), message);
 
     future.whenComplete((result, ex) -> {
+      SpecificRecordBase logMessage = result != null && result.getProducerRecord() != null
+          ? result.getProducerRecord().value()
+          : message;
       if (ex != null) {
         MDC.put("topicName", topicName);
         log.info("Failed to send message:{}", ex.getMessage());
-        log.warn(result.getProducerRecord().value().toString());
+        log.warn(logMessage.toString());
         MDC.remove("topicName");
       } else {
-        log.info("Message sent successfully: {}", result.getProducerRecord().value());
+        log.info("Message sent successfully: {}", logMessage);
       }
     });
   }
