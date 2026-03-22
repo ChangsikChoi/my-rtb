@@ -1,0 +1,4 @@
+bidder:
+  redis:
+    key-expiration:
+      enabled: false
