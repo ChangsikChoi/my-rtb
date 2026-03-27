@@ -1,6 +1,7 @@
 package com.example.ad_manager.service;
 
 import com.example.ad_manager.entity.CampaignEntity;
+import com.example.ad_manager.exception.DuplicateCampaignNameException;
 import com.example.ad_manager.mapper.CampaignMapper;
 import com.example.ad_manager.model.dto.CampaignCreateReqDto;
 import com.example.ad_manager.model.dto.CampaignCreateResDto;
@@ -21,7 +22,7 @@ public class CampaignService {
 
   public CampaignCreateResDto createCampaign(CampaignCreateReqDto dto) {
     if (campaignRepository.existsByName(dto.name())) {
-      throw new IllegalArgumentException("campaign name is already exists");
+      throw new DuplicateCampaignNameException(dto.name());
     }
     // rdb 저장
     CampaignEntity savedCampaign = campaignRepository.save(campaignMapper.dtoToEntity(dto));

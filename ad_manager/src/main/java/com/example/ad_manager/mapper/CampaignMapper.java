@@ -17,6 +17,7 @@ import com.example.ad_manager.redis.CampaignRedisEntity;
 import com.example.ad_manager.redis.CreativeRedisEntity;
 import com.example.ad_manager.redis.TargetRedisEntity;
 import com.example.ad_manager.utils.MicroConverter;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +30,8 @@ public class CampaignMapper {
         .name(request.name())
         .targetCpm(request.targetCpm())
         .budget(request.budget())
-        .startDate(request.startDate())
-        .endDate(request.endDate())
+        .startDate(request.startDate().atStartOfDay())
+        .endDate(request.endDate().atTime(LocalTime.of(23, 59, 59)))
         .target(TargetCreateReqDto.builder()
             .os(request.target().os())
             .country(request.target().country())
@@ -140,8 +141,8 @@ public class CampaignMapper {
         .name(dto.name())
         .targetCpm(dto.targetCpm())
         .budget(dto.budget())
-        .startDate(dto.startDate())
-        .endDate(dto.endDate())
+        .startDate(dto.startDate().toLocalDate())
+        .endDate(dto.endDate().toLocalDate())
         .active(dto.active())
         .owner(dto.owner())
         .target(TargetCreateResponse.builder()

@@ -6,6 +6,7 @@ import com.example.ad_manager.model.dto.CampaignCreateReqDto;
 import com.example.ad_manager.model.dto.CampaignCreateResDto;
 import com.example.ad_manager.model.request.CampaignCreateRequest;
 import com.example.ad_manager.model.response.CampaignCreateResponse;
+import jakarta.validation.Valid;
 import com.example.ad_manager.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class CampaignController {
 
   @PostMapping
   public ResponseEntity<CampaignCreateResponse> createCampaign(
-      @RequestBody CampaignCreateRequest request) {
+      @Valid @RequestBody CampaignCreateRequest request) {
     //TODO: get user name from security context
     String userName = "test";
 
