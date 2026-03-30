@@ -16,6 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity(name = "campaign")
+@Table(
+    uniqueConstraints = @UniqueConstraint(
+        name = CampaignConstraints.NAME_UNIQUE_CONSTRAINT,
+        columnNames = "name"
+    )
+)
 @EntityListeners(AuditingEntityListener.class)
 public class CampaignEntity {
 

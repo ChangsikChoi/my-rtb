@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CampaignRepository extends JpaRepository<CampaignEntity, String> {
-    boolean existsByName(String name);
+
+  boolean existsByName(String name);
 }
