@@ -75,4 +75,12 @@ public class CampaignEntity {
     this.target = target;
     this.creative = creative;
   }
+
+  public void activate() {
+    this.active = true;
+  }
+
+  public void deactivate() {
+    this.active = false;
+  }
 }

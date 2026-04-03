@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(new ApiErrorResponse(
         "INVALID_REQUEST_BODY",
         "Request body is invalid or malformed",
-        List.of(),
+        null,
         LocalDateTime.now()
     ));
   }
@@ -49,10 +49,40 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(DuplicateCampaignNameException.class)
   public ResponseEntity<ApiErrorResponse> handleDuplicateCampaignName(
       DuplicateCampaignNameException exception) {
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiErrorResponse(
-        "DUPLICATE_CAMPAIGN_NAME",
+    return buildApiErrorResponse(HttpStatus.CONFLICT, exception);
+  }
+
+  @ExceptionHandler(CampaignNotFoundException.class)
+  public ResponseEntity<ApiErrorResponse> handleCampaignNotFound(
+      CampaignNotFoundException exception) {
+    return buildApiErrorResponse(HttpStatus.NOT_FOUND, exception);
+  }
+
+  @ExceptionHandler(CampaignStateConflictException.class)
+  public ResponseEntity<ApiErrorResponse> handleCampaignStateConflict(
+      CampaignStateConflictException exception) {
+    return buildApiErrorResponse(HttpStatus.CONFLICT, exception);
+  }
+
+  @ExceptionHandler(CampaignRedisSyncException.class)
+  public ResponseEntity<ApiErrorResponse> handleCampaignRedisSync(
+      CampaignRedisSyncException exception) {
+    return buildApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception);
+  }
+
+  @ExceptionHandler(CampaignTransactionException.class)
+  public ResponseEntity<ApiErrorResponse> handleCampaignTransaction(
+      CampaignTransactionException exception) {
+    return buildApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception);
+  }
+
+  private ResponseEntity<ApiErrorResponse> buildApiErrorResponse(
+      HttpStatus status,
+      ApiException exception) {
+    return ResponseEntity.status(status).body(new ApiErrorResponse(
+        exception.getCode(),
         exception.getMessage(),
-        List.of(),
+        null,
         LocalDateTime.now()
     ));
   }

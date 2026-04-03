@@ -12,19 +12,20 @@ public class CampaignRedisService {
   private final StringRedisTemplate redisTemplate;
   private final CampaignRedisRepository campaignRedisRepository;
 
-  public void save(CampaignRedisEntity campaign) {
+  public void activate(CampaignRedisEntity campaign) {
     campaignRedisRepository.save(campaign);
 
     String totalKey = RedisKeys.campaignTotalBudgetKey(campaign.getId());
     String reservedKey = RedisKeys.campaignReservedBudgetKey(campaign.getId());
 
-    redisTemplate.opsForValue().set(totalKey, String.valueOf(campaign.getRemainingBudgetMicro()));
-    redisTemplate.opsForValue().set(reservedKey, String.valueOf(0));
+    // 재활성화 시 기존 예산 유지
+    redisTemplate.opsForValue().setIfAbsent(totalKey, String.valueOf(campaign.getRemainingBudgetMicro()));
+    redisTemplate.opsForValue().setIfAbsent(reservedKey, String.valueOf(0));
 
-    // TODO: 활성상태에 따른 목록 관리 로직 추가 시점에 이동
-    // 캠페인 ID 세트
     redisTemplate.opsForSet().add(RedisKeys.CAMPAIGN_LIST_KEY, campaign.getId());
   }
 
-
+  public void deactivate(String campaignId) {
+    redisTemplate.opsForSet().remove(RedisKeys.CAMPAIGN_LIST_KEY, campaignId);
+  }
 }

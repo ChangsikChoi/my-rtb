@@ -1,10 +1,8 @@
 package com.example.ad_manager.repository;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static com.example.ad_manager.fixture.CampaignTestFixtures.persistableCampaignEntity;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.example.ad_manager.entity.CampaignEntity;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -29,21 +27,10 @@ class CampaignRepositoryTest {
 
   @Test
   void givenSameNameCampaigns_whenSaveAndFlush_thenThrowDataIntegrityViolationException() {
-    campaignRepository.saveAndFlush(createCampaign("test-campaign-duplicate"));
+    campaignRepository.saveAndFlush(persistableCampaignEntity("test-campaign-duplicate", false));
 
-    assertThatThrownBy(() -> campaignRepository.saveAndFlush(createCampaign("test-campaign-duplicate")))
-        .isInstanceOf(DataIntegrityViolationException.class);
-  }
-
-  private CampaignEntity createCampaign(String name) {
-    return CampaignEntity.builder()
-        .name(name)
-        .targetCpm(BigDecimal.valueOf(10.5))
-        .budget(BigDecimal.valueOf(100))
-        .startDate(LocalDateTime.of(2026, 3, 23, 0, 0))
-        .endDate(LocalDateTime.of(2026, 3, 24, 23, 59, 59))
-        .active(true)
-        .owner("test")
-        .build();
+    assertThrows(DataIntegrityViolationException.class, () -> campaignRepository.saveAndFlush(
+        persistableCampaignEntity("test-campaign-duplicate", false)
+    ));
   }
 }
