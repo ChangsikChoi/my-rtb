@@ -1,31 +1,55 @@
 package com.example.ad_manager.redis;
 
-import com.example.ad_manager.repository.CampaignRedisRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CampaignRedisService {
 
+  private static final String INITIAL_RESERVED_BUDGET = "0";
+
   private final StringRedisTemplate redisTemplate;
-  private final CampaignRedisRepository campaignRedisRepository;
+  private final DefaultRedisScript<Long> activateCampaignLuaScript;
+  private final CampaignRedisHashMapper campaignRedisHashMapper;
 
   public void activate(CampaignRedisEntity campaign) {
-    campaignRedisRepository.save(campaign);
+    Long result = redisTemplate.execute(
+        activateCampaignLuaScript,
+        buildActivationKeys(campaign.getId()),
+        buildActivationArgs(campaign).toArray()
+    );
 
-    String totalKey = RedisKeys.campaignTotalBudgetKey(campaign.getId());
-    String reservedKey = RedisKeys.campaignReservedBudgetKey(campaign.getId());
-
-    // 재활성화 시 기존 예산 유지
-    redisTemplate.opsForValue().setIfAbsent(totalKey, String.valueOf(campaign.getRemainingBudgetMicro()));
-    redisTemplate.opsForValue().setIfAbsent(reservedKey, String.valueOf(0));
-
-    redisTemplate.opsForSet().add(RedisKeys.CAMPAIGN_LIST_KEY, campaign.getId());
+    if (!Long.valueOf(1L).equals(result)) {
+      throw new IllegalStateException(
+          "campaign activation lua script did not complete successfully: " + campaign.getId()
+      );
+    }
   }
 
   public void deactivate(String campaignId) {
     redisTemplate.opsForSet().remove(RedisKeys.CAMPAIGN_LIST_KEY, campaignId);
+  }
+
+  private List<String> buildActivationKeys(String campaignId) {
+    return List.of(
+        RedisKeys.campaignKey(campaignId),
+        RedisKeys.campaignTotalBudgetKey(campaignId),
+        RedisKeys.campaignReservedBudgetKey(campaignId),
+        RedisKeys.CAMPAIGN_LIST_KEY
+    );
+  }
+
+  private List<String> buildActivationArgs(CampaignRedisEntity campaign) {
+    List<String> args = new ArrayList<>();
+    args.add(campaign.getId());
+    args.add(String.valueOf(campaign.getRemainingBudgetMicro()));
+    args.add(INITIAL_RESERVED_BUDGET);
+    args.addAll(campaignRedisHashMapper.toHashArgs(campaign));
+    return args;
   }
 }

@@ -10,6 +10,8 @@ import com.example.ad_manager.model.dto.CreativeCreateResDto;
 import com.example.ad_manager.model.dto.TargetCreateReqDto;
 import com.example.ad_manager.model.dto.TargetCreateResDto;
 import com.example.ad_manager.redis.CampaignRedisEntity;
+import com.example.ad_manager.redis.CreativeRedisEntity;
+import com.example.ad_manager.redis.TargetRedisEntity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -132,6 +134,19 @@ public final class CampaignTestFixtures {
         .remainingBudgetMicro(100_000_000L)
         .startDate("20260323000000")
         .endDate("20260324235959")
+        .target(TargetRedisEntity.builder()
+            .os("Android")
+            .country("KR")
+            .minAge(20)
+            .maxAge(40)
+            .build())
+        .creative(CreativeRedisEntity.builder()
+            .id("creative-1")
+            .imageUrl("https://example.com/a.png")
+            .clickUrl("https://example.com")
+            .width(300)
+            .height(250)
+            .build())
         .build();
   }
 }
