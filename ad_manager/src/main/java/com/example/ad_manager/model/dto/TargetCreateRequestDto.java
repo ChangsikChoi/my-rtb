@@ -3,7 +3,7 @@ package com.example.ad_manager.model.dto;
 import lombok.Builder;
 
 @Builder
-public record TargetCreateReqDto(
+public record TargetCreateRequestDto(
     String os,
     String country,
     Integer minAge,

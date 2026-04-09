@@ -9,8 +9,6 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -28,27 +26,12 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest(classes = CampaignRedisServiceIntegrationTest.TestApplication.class)
 class CampaignRedisServiceIntegrationTest {
 
-  @SpringBootApplication(exclude = {
-      DataSourceAutoConfiguration.class,
-      HibernateJpaAutoConfiguration.class,
-      JpaRepositoriesAutoConfiguration.class
-  })
-  @Import({
-      CampaignRedisService.class,
-      CampaignRedisHashMapper.class,
-      RedisLuaScriptConfig.class
-  })
-  static class TestApplication {
-  }
-
   @Container
   @ServiceConnection
   static GenericContainer<?> redis = new GenericContainer<>("redis:7")
       .withExposedPorts(6379);
-
   @Autowired
   private CampaignRedisService campaignRedisService;
-
   @Autowired
   private StringRedisTemplate redisTemplate;
 
@@ -117,5 +100,19 @@ class CampaignRedisServiceIntegrationTest {
     assertThat(totalBudget).isEqualTo("777");
     assertThat(reservedBudget).isEqualTo("111");
     assertThat(campaignIds).contains("campaign-1");
+  }
+
+  @SpringBootApplication(exclude = {
+      DataSourceAutoConfiguration.class,
+      HibernateJpaAutoConfiguration.class,
+      JpaRepositoriesAutoConfiguration.class
+  })
+  @Import({
+      CampaignRedisService.class,
+      CampaignRedisHashMapper.class,
+      RedisLuaScriptConfig.class
+  })
+  static class TestApplication {
+
   }
 }

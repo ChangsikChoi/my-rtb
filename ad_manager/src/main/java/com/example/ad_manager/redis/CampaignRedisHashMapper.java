@@ -1,8 +1,8 @@
 package com.example.ad_manager.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.data.redis.hash.Jackson2HashMapper;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +15,18 @@ public class CampaignRedisHashMapper {
     this.hashMapper = new Jackson2HashMapper(objectMapper.copy(), true);
   }
 
-  public List<String> toHashArgs(CampaignRedisEntity campaign) {
-    List<String> hashArgs = new ArrayList<>();
-    hashMapper.toHash(campaign).forEach((field, value) -> addHashField(hashArgs, field, value));
-    return hashArgs;
+  public Map<String, String> toHash(CampaignRedisEntity campaign) {
+    Map<String, String> hash = new LinkedHashMap<>();
+    hashMapper.toHash(campaign).forEach(
+        (field, value) -> addHashField(hash, String.valueOf(field), value)
+    );
+    return hash;
   }
 
-  private void addHashField(List<String> hashArgs, String field, Object value) {
+  private void addHashField(Map<String, String> hash, String field, Object value) {
     if (value == null) {
       return;
     }
-    hashArgs.add(field);
-    hashArgs.add(String.valueOf(value));
+    hash.put(field, String.valueOf(value));
   }
 }

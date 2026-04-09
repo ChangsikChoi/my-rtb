@@ -4,8 +4,6 @@ import static com.example.ad_manager.fixture.CampaignTestFixtures.campaignRedisE
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +13,10 @@ class CampaignRedisHashMapperTest {
       new CampaignRedisHashMapper(new ObjectMapper());
 
   @Test
-  void givenCampaignRedisEntity_whenToHashArgs_thenReturnFlattenedProjectionHashArgs() {
+  void givenCampaignRedisEntity_whenToHash_thenReturnFlattenedProjectionHash() {
     CampaignRedisEntity campaign = campaignRedisEntity("campaign-1");
 
-    List<String> hashArgs = campaignRedisHashMapper.toHashArgs(campaign);
-    Map<String, String> hash = toHashMap(hashArgs);
+    Map<String, String> hash = campaignRedisHashMapper.toHash(campaign);
 
     assertThat(hash)
         .containsEntry("id", "campaign-1")
@@ -38,13 +35,5 @@ class CampaignRedisHashMapperTest {
         .containsEntry("creative.clickUrl", "https://example.com")
         .containsEntry("creative.width", "300")
         .containsEntry("creative.height", "250");
-  }
-
-  private Map<String, String> toHashMap(List<String> hashArgs) {
-    Map<String, String> hash = new LinkedHashMap<>();
-    for (int index = 0; index < hashArgs.size(); index += 2) {
-      hash.put(hashArgs.get(index), hashArgs.get(index + 1));
-    }
-    return hash;
   }
 }

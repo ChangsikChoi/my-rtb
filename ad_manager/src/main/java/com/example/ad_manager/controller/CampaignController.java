@@ -1,17 +1,17 @@
 package com.example.ad_manager.controller;
 
-
 import com.example.ad_manager.mapper.CampaignMapper;
-import com.example.ad_manager.model.dto.CampaignCreateReqDto;
-import com.example.ad_manager.model.dto.CampaignCreateResDto;
+import com.example.ad_manager.model.dto.CampaignCreateRequestDto;
+import com.example.ad_manager.model.dto.CampaignResponseDto;
 import com.example.ad_manager.model.request.CampaignCreateRequest;
-import com.example.ad_manager.model.response.CampaignCreateResponse;
-import jakarta.validation.Valid;
+import com.example.ad_manager.model.response.CampaignResponse;
 import com.example.ad_manager.service.CampaignService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,40 +26,31 @@ public class CampaignController {
   private final CampaignMapper campaignMapper;
 
   @PostMapping
-  public ResponseEntity<CampaignCreateResponse> createCampaign(
+  public ResponseEntity<CampaignResponse> createCampaign(
       @Valid @RequestBody CampaignCreateRequest request) {
-    //TODO: get user name from security context
-    String userName = "test";
+    CampaignCreateRequestDto campaignCreateReqDto = campaignMapper.createRequestToDto(request);
 
-    CampaignCreateReqDto campaignCreateReqDto =
-        campaignMapper.requestToDto(request, false, userName);
+    CampaignResponseDto campaignResponseDto = campaignService.createCampaign(campaignCreateReqDto);
+    CampaignResponse campaignResponse = campaignMapper.responseDtoToResponse(campaignResponseDto);
 
-    CampaignCreateResDto campaignCreateResDto =
-        campaignService.createCampaign(campaignCreateReqDto);
-
-    CampaignCreateResponse campaignCreateResponse =
-        campaignMapper.dtoToResponse(campaignCreateResDto);
-
-    return ResponseEntity.ok(campaignCreateResponse);
+    return ResponseEntity.status(HttpStatus.CREATED).body(campaignResponse);
   }
 
   @PatchMapping("/{campaignId}/activate")
-  public ResponseEntity<CampaignCreateResponse> activateCampaign(
+  public ResponseEntity<CampaignResponse> activateCampaign(
       @PathVariable String campaignId) {
-    CampaignCreateResDto campaignCreateResDto = campaignService.activateCampaign(campaignId);
-    CampaignCreateResponse campaignCreateResponse =
-        campaignMapper.dtoToResponse(campaignCreateResDto);
+    CampaignResponseDto campaignResponseDto = campaignService.activateCampaign(campaignId);
+    CampaignResponse campaignResponse = campaignMapper.responseDtoToResponse(campaignResponseDto);
 
-    return ResponseEntity.ok(campaignCreateResponse);
+    return ResponseEntity.ok(campaignResponse);
   }
 
   @PatchMapping("/{campaignId}/deactivate")
-  public ResponseEntity<CampaignCreateResponse> deactivateCampaign(
+  public ResponseEntity<CampaignResponse> deactivateCampaign(
       @PathVariable String campaignId) {
-    CampaignCreateResDto campaignCreateResDto = campaignService.deactivateCampaign(campaignId);
-    CampaignCreateResponse campaignCreateResponse =
-        campaignMapper.dtoToResponse(campaignCreateResDto);
+    CampaignResponseDto campaignResponseDto = campaignService.deactivateCampaign(campaignId);
+    CampaignResponse campaignResponse = campaignMapper.responseDtoToResponse(campaignResponseDto);
 
-    return ResponseEntity.ok(campaignCreateResponse);
+    return ResponseEntity.ok(campaignResponse);
   }
 }

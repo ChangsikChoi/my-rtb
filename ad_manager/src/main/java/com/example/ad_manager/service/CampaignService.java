@@ -8,8 +8,8 @@ import com.example.ad_manager.exception.CampaignStateConflictException;
 import com.example.ad_manager.exception.CampaignTransactionException;
 import com.example.ad_manager.exception.DuplicateCampaignNameException;
 import com.example.ad_manager.mapper.CampaignMapper;
-import com.example.ad_manager.model.dto.CampaignCreateReqDto;
-import com.example.ad_manager.model.dto.CampaignCreateResDto;
+import com.example.ad_manager.model.dto.CampaignCreateRequestDto;
+import com.example.ad_manager.model.dto.CampaignResponseDto;
 import com.example.ad_manager.redis.CampaignRedisService;
 import com.example.ad_manager.repository.CampaignRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -49,16 +49,17 @@ public class CampaignService {
   }
 
   @Transactional
-  public CampaignCreateResDto createCampaign(CampaignCreateReqDto dto) {
+  public CampaignResponseDto createCampaign(CampaignCreateRequestDto dto) {
     if (campaignRepository.existsByName(dto.name())) {
       throw new DuplicateCampaignNameException(dto.name());
     }
     try {
-      CampaignEntity savedCampaign = campaignRepository.saveAndFlush(
-          campaignMapper.dtoToEntity(dto)
-      );
+      CampaignEntity campaign = campaignMapper.dtoToEntity(dto);
+      campaign.deactivate();
 
-      return campaignMapper.entityToDto(savedCampaign);
+      CampaignEntity savedCampaign = campaignRepository.saveAndFlush(campaign);
+
+      return campaignMapper.entityToResponseDto(savedCampaign);
     } catch (DataIntegrityViolationException e) {
       if (isDuplicateCampaignNameViolation(e)) {
         throw new DuplicateCampaignNameException(dto.name());
@@ -67,15 +68,12 @@ public class CampaignService {
     }
   }
 
-  public CampaignCreateResDto activateCampaign(String campaignId) {
-    CampaignEntity campaign = requireTransactionResult(
-        transactionTemplate.execute(status -> activateCampaignInDatabase(campaignId)),
-        "activation"
-    );
+  public CampaignResponseDto activateCampaign(String campaignId) {
+    CampaignEntity campaign = activateCampaignInTransaction(campaignId);
 
     try {
       campaignRedisService.activate(campaignMapper.entityToRedisEntity(campaign));
-      return campaignMapper.entityToDto(campaign);
+      return campaignMapper.entityToResponseDto(campaign);
     } catch (RuntimeException exception) {
       log.warn("campaign activation redis sync failed. campaignId={}", campaignId, exception);
       compensateActivation(campaignId, exception);
@@ -83,15 +81,12 @@ public class CampaignService {
     }
   }
 
-  public CampaignCreateResDto deactivateCampaign(String campaignId) {
-    CampaignEntity campaign = requireTransactionResult(
-        transactionTemplate.execute(status -> deactivateCampaignInDatabase(campaignId)),
-        "deactivation"
-    );
+  public CampaignResponseDto deactivateCampaign(String campaignId) {
+    CampaignEntity campaign = deactivateCampaignInTransaction(campaignId);
 
     try {
       campaignRedisService.deactivate(campaignId);
-      return campaignMapper.entityToDto(campaign);
+      return campaignMapper.entityToResponseDto(campaign);
     } catch (RuntimeException exception) {
       log.warn("campaign deactivation redis sync failed. campaignId={}", campaignId, exception);
       compensateDeactivation(campaignId, exception);
@@ -133,16 +128,27 @@ public class CampaignService {
     return campaign;
   }
 
-  /**
-   * 트랜잭션 결과가 null인 경우 예외를 던지는 헬퍼 메서드
-   */
-  private CampaignEntity requireTransactionResult(CampaignEntity campaign, String operation) {
+  private CampaignEntity activateCampaignInTransaction(String campaignId) {
+    CampaignEntity campaign = transactionTemplate.execute(
+        status -> activateCampaignInDatabase(campaignId)
+    );
+
     if (campaign == null) {
-      if ("activation".equals(operation)) {
-        throw CampaignTransactionException.activationFailed();
-      }
+      throw CampaignTransactionException.activationFailed();
+    }
+
+    return campaign;
+  }
+
+  private CampaignEntity deactivateCampaignInTransaction(String campaignId) {
+    CampaignEntity campaign = transactionTemplate.execute(
+        status -> deactivateCampaignInDatabase(campaignId)
+    );
+
+    if (campaign == null) {
       throw CampaignTransactionException.deactivationFailed();
     }
+
     return campaign;
   }
 

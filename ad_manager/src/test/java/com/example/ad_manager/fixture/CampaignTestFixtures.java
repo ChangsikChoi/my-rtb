@@ -3,12 +3,12 @@ package com.example.ad_manager.fixture;
 import com.example.ad_manager.entity.CampaignEntity;
 import com.example.ad_manager.entity.CreativeEntity;
 import com.example.ad_manager.entity.TargetEntity;
-import com.example.ad_manager.model.dto.CampaignCreateReqDto;
-import com.example.ad_manager.model.dto.CampaignCreateResDto;
-import com.example.ad_manager.model.dto.CreativeCreateReqDto;
-import com.example.ad_manager.model.dto.CreativeCreateResDto;
-import com.example.ad_manager.model.dto.TargetCreateReqDto;
-import com.example.ad_manager.model.dto.TargetCreateResDto;
+import com.example.ad_manager.model.dto.CampaignCreateRequestDto;
+import com.example.ad_manager.model.dto.CreativeCreateRequestDto;
+import com.example.ad_manager.model.dto.TargetCreateRequestDto;
+import com.example.ad_manager.model.dto.CampaignResponseDto;
+import com.example.ad_manager.model.dto.CreativeResponseDto;
+import com.example.ad_manager.model.dto.TargetResponseDto;
 import com.example.ad_manager.redis.CampaignRedisEntity;
 import com.example.ad_manager.redis.CreativeRedisEntity;
 import com.example.ad_manager.redis.TargetRedisEntity;
@@ -39,7 +39,6 @@ public final class CampaignTestFixtures {
         .startDate(DEFAULT_START_DATE)
         .endDate(DEFAULT_END_DATE)
         .active(active)
-        .owner("test")
         .build();
 
     if (campaignId != null) {
@@ -56,7 +55,6 @@ public final class CampaignTestFixtures {
         .startDate(DEFAULT_START_DATE)
         .endDate(DEFAULT_END_DATE)
         .active(active)
-        .owner("test")
         .target(TargetEntity.builder()
             .os("Android")
             .country("KR")
@@ -73,8 +71,8 @@ public final class CampaignTestFixtures {
         .build();
   }
 
-  public static CampaignCreateResDto campaignResponse(String campaignId, boolean active) {
-    return CampaignCreateResDto.builder()
+  public static CampaignResponseDto campaignResponse(String campaignId, boolean active) {
+    return CampaignResponseDto.builder()
         .id(campaignId)
         .name("test-campaign-success")
         .targetCpm(DEFAULT_TARGET_CPM)
@@ -82,8 +80,7 @@ public final class CampaignTestFixtures {
         .startDate(DEFAULT_START_DATE)
         .endDate(DEFAULT_END_DATE)
         .active(active)
-        .owner("test")
-        .target(TargetCreateResDto.builder()
+        .target(TargetResponseDto.builder()
             .id("target-1")
             .os("Android")
             .country("KR")
@@ -92,7 +89,7 @@ public final class CampaignTestFixtures {
             .createdAt(DEFAULT_TIMESTAMP)
             .updatedAt(DEFAULT_TIMESTAMP)
             .build())
-        .creative(CreativeCreateResDto.builder()
+        .creative(CreativeResponseDto.builder()
             .id("creative-1")
             .name("test-creative-success")
             .imageUrl("https://example.com/a.png")
@@ -107,21 +104,19 @@ public final class CampaignTestFixtures {
         .build();
   }
 
-  public static CampaignCreateReqDto campaignRequest(String name) {
-    return CampaignCreateReqDto.builder()
+  public static CampaignCreateRequestDto campaignRequest(String name) {
+    return CampaignCreateRequestDto.builder()
         .name(name)
         .targetCpm(DEFAULT_TARGET_CPM)
         .budget(DEFAULT_BUDGET)
         .startDate(DEFAULT_START_DATE)
         .endDate(LocalDateTime.of(2026, 3, 24, 0, 0, 0))
-        .target(TargetCreateReqDto.builder().build())
-        .creative(CreativeCreateReqDto.builder()
-            .name("test-creative-duplicate")
+        .target(TargetCreateRequestDto.builder().build())
+        .creative(CreativeCreateRequestDto.builder()
+            .name("test-creative")
             .imageUrl("https://example.com/a.png")
             .clickUrl("https://example.com")
             .build())
-        .active(false)
-        .owner("test")
         .build();
   }
 

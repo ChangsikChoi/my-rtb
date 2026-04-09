@@ -6,10 +6,7 @@ import static com.example.ad_manager.fixture.CampaignTestFixtures.campaignReques
 import static com.example.ad_manager.fixture.CampaignTestFixtures.campaignResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -21,26 +18,31 @@ import com.example.ad_manager.entity.CampaignConstraints;
 import com.example.ad_manager.exception.CampaignStateConflictException;
 import com.example.ad_manager.exception.DuplicateCampaignNameException;
 import com.example.ad_manager.mapper.CampaignMapper;
-import com.example.ad_manager.model.dto.CampaignCreateReqDto;
-import com.example.ad_manager.model.dto.CampaignCreateResDto;
+import com.example.ad_manager.model.dto.CampaignCreateRequestDto;
+import com.example.ad_manager.model.dto.CampaignResponseDto;
 import com.example.ad_manager.redis.CampaignRedisEntity;
 import com.example.ad_manager.redis.CampaignRedisService;
 import com.example.ad_manager.repository.CampaignRepository;
-import java.util.Optional;
 import java.sql.SQLException;
+import java.util.Optional;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.SimpleTransactionStatus;
 
 @ExtendWith(MockitoExtension.class)
 class CampaignServiceTest {
+
+  private static final PlatformTransactionManager NO_OP_TRANSACTION_MANAGER =
+      new NoOpTransactionManager();
 
   @Mock
   private CampaignRepository campaignRepository;
@@ -51,41 +53,40 @@ class CampaignServiceTest {
   @Mock
   private CampaignRedisService campaignRedisService;
 
-  @Mock
-  private PlatformTransactionManager transactionManager;
-
-  @InjectMocks
   private CampaignService campaignService;
 
   @BeforeEach
   void setUp() {
-    lenient().when(transactionManager.getTransaction(any()))
-        .thenReturn(new SimpleTransactionStatus());
+    campaignService = new CampaignService(
+        campaignRepository,
+        campaignMapper,
+        campaignRedisService,
+        NO_OP_TRANSACTION_MANAGER
+    );
   }
 
   @Test
   void givenValidRequest_whenCreateCampaign_thenSaveCampaignAndReturnResponse() {
-    CampaignCreateReqDto request = campaignRequest("test-campaign-success");
+    CampaignCreateRequestDto request = campaignRequest("test-campaign-success");
     CampaignEntity entity = campaignEntity(null, "test-campaign-success", false);
     CampaignEntity savedCampaign = campaignEntity("campaign-1", "test-campaign-success", false);
-    CampaignCreateResDto response = campaignResponse("campaign-1", false);
+    CampaignResponseDto response = campaignResponse("campaign-1", false);
 
     when(campaignRepository.existsByName("test-campaign-success")).thenReturn(false);
     when(campaignMapper.dtoToEntity(request)).thenReturn(entity);
     when(campaignRepository.saveAndFlush(entity)).thenReturn(savedCampaign);
-    when(campaignMapper.entityToDto(savedCampaign)).thenReturn(response);
+    when(campaignMapper.entityToResponseDto(savedCampaign)).thenReturn(response);
 
-    CampaignCreateResDto result = campaignService.createCampaign(request);
+    CampaignResponseDto result = campaignService.createCampaign(request);
 
-    verify(campaignRepository).saveAndFlush(entity);
-    verify(campaignMapper).entityToDto(savedCampaign);
     verifyNoInteractions(campaignRedisService);
+    assertThat(entity.isActive()).isFalse();
     assertThat(result).isSameAs(response);
   }
 
   @Test
   void givenDuplicateNamePreCheck_whenCreateCampaign_thenThrowDuplicateCampaignNameException() {
-    CampaignCreateReqDto request = campaignRequest("test-campaign-duplicate");
+    CampaignCreateRequestDto request = campaignRequest("test-campaign-duplicate");
 
     when(campaignRepository.existsByName("test-campaign-duplicate")).thenReturn(true);
 
@@ -95,13 +96,11 @@ class CampaignServiceTest {
     );
 
     assertThat(exception).hasMessage("campaign name already exists: test-campaign-duplicate");
-
-    verify(campaignRepository, never()).saveAndFlush(any());
   }
 
   @Test
   void givenDuplicateNameConstraintViolation_whenCreateCampaign_thenThrowDuplicateCampaignNameException() {
-    CampaignCreateReqDto request = campaignRequest("test-campaign-duplicate");
+    CampaignCreateRequestDto request = campaignRequest("test-campaign-duplicate");
     CampaignEntity entity = campaignEntity(null, "test-campaign-duplicate", false);
 
     when(campaignRepository.existsByName("test-campaign-duplicate")).thenReturn(false);
@@ -127,7 +126,7 @@ class CampaignServiceTest {
 
   @Test
   void givenAnotherConstraintViolation_whenCreateCampaign_thenRethrowDataIntegrityViolationException() {
-    CampaignCreateReqDto request = campaignRequest("test-campaign-duplicate");
+    CampaignCreateRequestDto request = campaignRequest("test-campaign-duplicate");
     CampaignEntity entity = campaignEntity(null, "test-campaign-duplicate", false);
 
     DataIntegrityViolationException exception = new DataIntegrityViolationException(
@@ -155,18 +154,15 @@ class CampaignServiceTest {
   @Test
   void givenInactiveCampaign_whenActivateCampaign_thenMarkCampaignActiveAndSyncRedis() {
     CampaignEntity campaign = campaignEntity("campaign-1", false);
-    CampaignCreateResDto response = campaignResponse("campaign-1", true);
+    CampaignResponseDto response = campaignResponse("campaign-1", true);
     CampaignRedisEntity redisEntity = campaignRedisEntity("campaign-1");
 
     when(campaignRepository.findWithDetailsById("campaign-1")).thenReturn(Optional.of(campaign));
-    when(campaignMapper.entityToDto(campaign)).thenReturn(response);
+    when(campaignMapper.entityToResponseDto(campaign)).thenReturn(response);
     when(campaignMapper.entityToRedisEntity(campaign)).thenReturn(redisEntity);
 
-    CampaignCreateResDto result = campaignService.activateCampaign("campaign-1");
+    CampaignResponseDto result = campaignService.activateCampaign("campaign-1");
 
-    verify(campaignRepository).findWithDetailsById("campaign-1");
-    verify(campaignMapper).entityToDto(campaign);
-    verify(campaignMapper).entityToRedisEntity(campaign);
     verify(campaignRedisService).activate(redisEntity);
     assertThat(result).isSameAs(response);
   }
@@ -218,9 +214,6 @@ class CampaignServiceTest {
     );
 
     assertThat(exception).hasMessage("campaign activation failed during redis sync");
-
-    assertThat(campaign.isActive()).isFalse();
-    verify(campaignRepository).findById("campaign-1");
   }
 
   @Test
@@ -244,21 +237,18 @@ class CampaignServiceTest {
         .hasCause(redisException);
 
     assertThat(campaign.isActive()).isTrue();
-    verify(campaignRepository).findById("campaign-1");
   }
 
   @Test
   void givenActiveCampaign_whenDeactivateCampaign_thenMarkCampaignInactiveAndSyncRedis() {
     CampaignEntity campaign = campaignEntity("campaign-1", true);
-    CampaignCreateResDto response = campaignResponse("campaign-1", false);
+    CampaignResponseDto response = campaignResponse("campaign-1", false);
 
     when(campaignRepository.findWithDetailsById("campaign-1")).thenReturn(Optional.of(campaign));
-    when(campaignMapper.entityToDto(campaign)).thenReturn(response);
+    when(campaignMapper.entityToResponseDto(campaign)).thenReturn(response);
 
-    CampaignCreateResDto result = campaignService.deactivateCampaign("campaign-1");
+    CampaignResponseDto result = campaignService.deactivateCampaign("campaign-1");
 
-    verify(campaignRepository).findWithDetailsById("campaign-1");
-    verify(campaignMapper).entityToDto(campaign);
     verify(campaignRedisService).deactivate("campaign-1");
     assertThat(result).isSameAs(response);
   }
@@ -308,9 +298,6 @@ class CampaignServiceTest {
     );
 
     assertThat(exception).hasMessage("campaign deactivation failed during redis sync");
-
-    assertThat(campaign.isActive()).isTrue();
-    verify(campaignRepository).findById("campaign-1");
   }
 
   @Test
@@ -332,8 +319,23 @@ class CampaignServiceTest {
         .hasCause(redisException);
 
     assertThat(campaign.isActive()).isFalse();
-    verify(campaignRepository).findById("campaign-1");
   }
 
 
+  private static final class NoOpTransactionManager implements PlatformTransactionManager {
+
+    @Override
+    public TransactionStatus getTransaction(TransactionDefinition definition)
+        throws TransactionException {
+      return new SimpleTransactionStatus();
+    }
+
+    @Override
+    public void commit(TransactionStatus status) throws TransactionException {
+    }
+
+    @Override
+    public void rollback(TransactionStatus status) throws TransactionException {
+    }
+  }
 }

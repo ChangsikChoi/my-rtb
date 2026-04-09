@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record TargetCreateResponse(
+public record TargetResponse(
     String id,
     String os,
     String country,

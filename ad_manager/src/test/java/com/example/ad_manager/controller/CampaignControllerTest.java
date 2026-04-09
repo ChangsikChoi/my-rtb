@@ -80,7 +80,7 @@ class CampaignControllerTest {
     mockMvc.perform(post("/api/campaigns")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestJson))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.active").value(false))
         .andExpect(jsonPath("$.startDate").value("2026-03-23"))
         .andExpect(jsonPath("$.endDate").value("2026-03-24"));

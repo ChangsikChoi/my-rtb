@@ -3,16 +3,16 @@ package com.example.ad_manager.mapper;
 import com.example.ad_manager.entity.CampaignEntity;
 import com.example.ad_manager.entity.CreativeEntity;
 import com.example.ad_manager.entity.TargetEntity;
-import com.example.ad_manager.model.dto.CampaignCreateReqDto;
-import com.example.ad_manager.model.dto.CampaignCreateResDto;
-import com.example.ad_manager.model.dto.CreativeCreateResDto;
-import com.example.ad_manager.model.dto.TargetCreateResDto;
+import com.example.ad_manager.model.dto.CampaignCreateRequestDto;
+import com.example.ad_manager.model.dto.CampaignResponseDto;
+import com.example.ad_manager.model.dto.CreativeCreateRequestDto;
+import com.example.ad_manager.model.dto.CreativeResponseDto;
+import com.example.ad_manager.model.dto.TargetCreateRequestDto;
+import com.example.ad_manager.model.dto.TargetResponseDto;
 import com.example.ad_manager.model.request.CampaignCreateRequest;
-import com.example.ad_manager.model.dto.CreativeCreateReqDto;
-import com.example.ad_manager.model.dto.TargetCreateReqDto;
-import com.example.ad_manager.model.response.CampaignCreateResponse;
-import com.example.ad_manager.model.response.CreativeCreateResponse;
-import com.example.ad_manager.model.response.TargetCreateResponse;
+import com.example.ad_manager.model.response.CampaignResponse;
+import com.example.ad_manager.model.response.CreativeResponse;
+import com.example.ad_manager.model.response.TargetResponse;
 import com.example.ad_manager.redis.CampaignRedisEntity;
 import com.example.ad_manager.redis.CreativeRedisEntity;
 import com.example.ad_manager.redis.TargetRedisEntity;
@@ -24,41 +24,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class CampaignMapper {
 
-  public CampaignCreateReqDto requestToDto(CampaignCreateRequest request, boolean active,
-      String owner) {
-    return CampaignCreateReqDto.builder()
+  public CampaignCreateRequestDto createRequestToDto(CampaignCreateRequest request) {
+    return CampaignCreateRequestDto.builder()
         .name(request.name())
         .targetCpm(request.targetCpm())
         .budget(request.budget())
         .startDate(request.startDate().atStartOfDay())
         .endDate(request.endDate().atTime(LocalTime.of(23, 59, 59)))
-        .target(TargetCreateReqDto.builder()
+        .target(TargetCreateRequestDto.builder()
             .os(request.target().os())
             .country(request.target().country())
             .minAge(request.target().minAge())
             .maxAge(request.target().maxAge())
             .build())
-        .creative(CreativeCreateReqDto.builder()
+        .creative(CreativeCreateRequestDto.builder()
             .name(request.creative().name())
             .imageUrl(request.creative().imageUrl())
             .clickUrl(request.creative().clickUrl())
             .width(request.creative().width())
             .height(request.creative().height())
             .build())
-        .active(active)
-        .owner(owner)
         .build();
   }
 
-  public CampaignEntity dtoToEntity(CampaignCreateReqDto dto) {
+  public CampaignEntity dtoToEntity(CampaignCreateRequestDto dto) {
     return CampaignEntity.builder()
         .name(dto.name())
         .targetCpm(dto.targetCpm())
         .budget(dto.budget())
         .startDate(dto.startDate())
         .endDate(dto.endDate())
-        .active(dto.active())
-        .owner(dto.owner())
         .target(TargetEntity.builder()
             .os(dto.target().os())
             .country(dto.target().country())
@@ -101,8 +96,8 @@ public class CampaignMapper {
         .build();
   }
 
-  public CampaignCreateResDto entityToDto(CampaignEntity entity) {
-    return CampaignCreateResDto.builder()
+  public CampaignResponseDto entityToResponseDto(CampaignEntity entity) {
+    return CampaignResponseDto.builder()
         .id(entity.getId())
         .name(entity.getName())
         .targetCpm(entity.getTargetCpm())
@@ -110,8 +105,7 @@ public class CampaignMapper {
         .startDate(entity.getStartDate())
         .endDate(entity.getEndDate())
         .active(entity.isActive())
-        .owner(entity.getOwner())
-        .target(TargetCreateResDto.builder()
+        .target(TargetResponseDto.builder()
             .id(entity.getTarget().getId())
             .os(entity.getTarget().getOs())
             .country(entity.getTarget().getCountry())
@@ -120,7 +114,7 @@ public class CampaignMapper {
             .createdAt(entity.getTarget().getCreatedAt())
             .updatedAt(entity.getTarget().getUpdatedAt())
             .build())
-        .creative(CreativeCreateResDto.builder()
+        .creative(CreativeResponseDto.builder()
             .id(entity.getCreative().getId())
             .name(entity.getCreative().getName())
             .imageUrl(entity.getCreative().getImageUrl())
@@ -135,8 +129,8 @@ public class CampaignMapper {
         .build();
   }
 
-  public CampaignCreateResponse dtoToResponse(CampaignCreateResDto dto) {
-    return CampaignCreateResponse.builder()
+  public CampaignResponse responseDtoToResponse(CampaignResponseDto dto) {
+    return CampaignResponse.builder()
         .id(dto.id())
         .name(dto.name())
         .targetCpm(dto.targetCpm())
@@ -144,8 +138,7 @@ public class CampaignMapper {
         .startDate(dto.startDate().toLocalDate())
         .endDate(dto.endDate().toLocalDate())
         .active(dto.active())
-        .owner(dto.owner())
-        .target(TargetCreateResponse.builder()
+        .target(TargetResponse.builder()
             .id(dto.target().id())
             .os(dto.target().os())
             .country(dto.target().country())
@@ -154,7 +147,7 @@ public class CampaignMapper {
             .createdAt(dto.target().createdAt())
             .updatedAt(dto.target().updatedAt())
             .build())
-        .creative(CreativeCreateResponse.builder()
+        .creative(CreativeResponse.builder()
             .id(dto.creative().id())
             .name(dto.creative().name())
             .imageUrl(dto.creative().imageUrl())

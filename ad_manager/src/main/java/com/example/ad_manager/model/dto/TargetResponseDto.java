@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record TargetCreateResDto(
+public record TargetResponseDto(
     String id,
     String os,
     String country,

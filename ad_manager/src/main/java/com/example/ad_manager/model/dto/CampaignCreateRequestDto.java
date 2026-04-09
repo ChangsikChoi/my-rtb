@@ -5,19 +5,14 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record CampaignCreateResDto(
-    String id,
+public record CampaignCreateRequestDto(
     String name,
     BigDecimal targetCpm,
     BigDecimal budget,
     LocalDateTime startDate,
     LocalDateTime endDate,
-    TargetCreateResDto target,
-    CreativeCreateResDto creative,
-    boolean active,
-    String owner,
-    LocalDateTime createdAt,
-    LocalDateTime updatedAt
+    TargetCreateRequestDto target,
+    CreativeCreateRequestDto creative
 ) {
 
 }

@@ -8,7 +8,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,15 +44,17 @@ class CampaignRedisServiceTest {
         .id("campaign-1")
         .remainingBudgetMicro(100000000L)
         .build();
-    List<String> hashArgs = List.of("id", "campaign-1", "name", "test-campaign");
+    Map<String, String> hash = new LinkedHashMap<>();
+    hash.put("id", "campaign-1");
+    hash.put("name", "test-campaign");
 
-    when(campaignRedisHashMapper.toHashArgs(campaign)).thenReturn(hashArgs);
+    when(campaignRedisHashMapper.toHash(campaign)).thenReturn(hash);
     when(redisTemplate.execute(eq(activateCampaignLuaScript), anyList(), any(Object[].class)))
         .thenReturn(1L);
 
     campaignRedisService.activate(campaign);
 
-    verify(campaignRedisHashMapper).toHashArgs(campaign);
+    verify(campaignRedisHashMapper).toHash(campaign);
     verify(redisTemplate).execute(
         eq(activateCampaignLuaScript),
         eq(List.of(
@@ -76,7 +80,7 @@ class CampaignRedisServiceTest {
         .remainingBudgetMicro(100000000L)
         .build();
 
-    when(campaignRedisHashMapper.toHashArgs(campaign)).thenReturn(List.of());
+    when(campaignRedisHashMapper.toHash(campaign)).thenReturn(Map.of());
     when(redisTemplate.execute(eq(activateCampaignLuaScript), anyList(), any(Object[].class)))
         .thenReturn(0L);
 

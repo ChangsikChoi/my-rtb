@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record CampaignCreateResponse(
+public record CampaignResponse(
     String id,
     String name,
     BigDecimal targetCpm,
@@ -16,10 +16,9 @@ public record CampaignCreateResponse(
     LocalDate startDate,
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate endDate,
-    TargetCreateResponse target,
-    CreativeCreateResponse creative,
+    TargetResponse target,
+    CreativeResponse creative,
     boolean active,
-    String owner,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime createdAt,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

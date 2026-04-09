@@ -21,7 +21,7 @@ public class CampaignRedisService {
     Long result = redisTemplate.execute(
         activateCampaignLuaScript,
         buildActivationKeys(campaign.getId()),
-        buildActivationArgs(campaign).toArray()
+        buildActivationArgs(campaign)
     );
 
     if (!Long.valueOf(1L).equals(result)) {
@@ -44,12 +44,15 @@ public class CampaignRedisService {
     );
   }
 
-  private List<String> buildActivationArgs(CampaignRedisEntity campaign) {
+  private Object[] buildActivationArgs(CampaignRedisEntity campaign) {
     List<String> args = new ArrayList<>();
     args.add(campaign.getId());
     args.add(String.valueOf(campaign.getRemainingBudgetMicro()));
     args.add(INITIAL_RESERVED_BUDGET);
-    args.addAll(campaignRedisHashMapper.toHashArgs(campaign));
-    return args;
+    campaignRedisHashMapper.toHash(campaign).forEach((field, value) -> {
+      args.add(field);
+      args.add(value);
+    });
+    return args.toArray();
   }
 }
