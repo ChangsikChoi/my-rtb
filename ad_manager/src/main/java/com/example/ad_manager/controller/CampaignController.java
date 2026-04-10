@@ -1,6 +1,6 @@
 package com.example.ad_manager.controller;
 
-import com.example.ad_manager.mapper.CampaignMapper;
+import com.example.ad_manager.mapper.web.CampaignWebMapper;
 import com.example.ad_manager.model.dto.CampaignCreateRequestDto;
 import com.example.ad_manager.model.dto.CampaignResponseDto;
 import com.example.ad_manager.model.request.CampaignCreateRequest;
@@ -23,15 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CampaignController {
 
   private final CampaignService campaignService;
-  private final CampaignMapper campaignMapper;
+  private final CampaignWebMapper campaignWebMapper;
 
   @PostMapping
   public ResponseEntity<CampaignResponse> createCampaign(
       @Valid @RequestBody CampaignCreateRequest request) {
-    CampaignCreateRequestDto campaignCreateReqDto = campaignMapper.createRequestToDto(request);
+    CampaignCreateRequestDto campaignCreateReqDto = campaignWebMapper.createRequestToDto(request);
 
     CampaignResponseDto campaignResponseDto = campaignService.createCampaign(campaignCreateReqDto);
-    CampaignResponse campaignResponse = campaignMapper.responseDtoToResponse(campaignResponseDto);
+    CampaignResponse campaignResponse = campaignWebMapper.responseDtoToResponse(
+        campaignResponseDto);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(campaignResponse);
   }
@@ -40,7 +41,8 @@ public class CampaignController {
   public ResponseEntity<CampaignResponse> activateCampaign(
       @PathVariable String campaignId) {
     CampaignResponseDto campaignResponseDto = campaignService.activateCampaign(campaignId);
-    CampaignResponse campaignResponse = campaignMapper.responseDtoToResponse(campaignResponseDto);
+    CampaignResponse campaignResponse = campaignWebMapper.responseDtoToResponse(
+        campaignResponseDto);
 
     return ResponseEntity.ok(campaignResponse);
   }
@@ -49,7 +51,8 @@ public class CampaignController {
   public ResponseEntity<CampaignResponse> deactivateCampaign(
       @PathVariable String campaignId) {
     CampaignResponseDto campaignResponseDto = campaignService.deactivateCampaign(campaignId);
-    CampaignResponse campaignResponse = campaignMapper.responseDtoToResponse(campaignResponseDto);
+    CampaignResponse campaignResponse = campaignWebMapper.responseDtoToResponse(
+        campaignResponseDto);
 
     return ResponseEntity.ok(campaignResponse);
   }

@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
 
 import com.example.ad_manager.entity.CampaignEntity;
 import com.example.ad_manager.exception.CampaignRedisSyncException;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -33,7 +36,7 @@ class CampaignServiceIntegrationTest {
   @Autowired
   private CampaignService campaignService;
 
-  @Autowired
+  @MockitoSpyBean
   private CampaignRepository campaignRepository;
 
   @MockitoBean
@@ -98,6 +101,33 @@ class CampaignServiceIntegrationTest {
   }
 
   @Test
+  void givenCompensationFailure_whenActivateCampaign_thenLeaveCommittedActiveStateInDatabase() {
+    CampaignEntity savedCampaign = campaignRepository.saveAndFlush(
+        persistableCampaignEntity("activation-compensation-failure-campaign", false)
+    );
+    doThrow(new RuntimeException("redis down"))
+        .when(campaignRedisService)
+        .activate(any(CampaignRedisEntity.class));
+    doReturn(java.util.Optional.empty())
+        .when(campaignRepository)
+        .findById(savedCampaign.getId());
+
+    CampaignRedisSyncException exception = assertThrows(
+        CampaignRedisSyncException.class,
+        () -> campaignService.activateCampaign(savedCampaign.getId())
+    );
+
+    assertThat(exception)
+        .hasMessage("campaign activation failed during redis sync and compensation failed");
+
+    reset(campaignRepository);
+
+    CampaignEntity inconsistentCampaign = campaignRepository.findById(savedCampaign.getId())
+        .orElseThrow();
+    assertThat(inconsistentCampaign.isActive()).isTrue();
+  }
+
+  @Test
   void givenActiveCampaign_whenDeactivateCampaign_thenCampaignIsCommittedBeforeRedisSync() {
     CampaignEntity savedCampaign = campaignRepository.saveAndFlush(
         persistableCampaignEntity("deactivation-transaction-separation-campaign", true)
@@ -111,5 +141,31 @@ class CampaignServiceIntegrationTest {
     }).when(campaignRedisService).deactivate(savedCampaign.getId());
 
     campaignService.deactivateCampaign(savedCampaign.getId());
+  }
+
+  @Test
+  void givenCompensationFailure_whenDeactivateCampaign_thenLeaveCommittedInactiveStateInDatabase() {
+    CampaignEntity savedCampaign = campaignRepository.saveAndFlush(
+        persistableCampaignEntity("deactivation-compensation-failure-campaign", true)
+    );
+    doThrow(new RuntimeException("redis down"))
+        .when(campaignRedisService).deactivate(savedCampaign.getId());
+    doReturn(java.util.Optional.empty())
+        .when(campaignRepository)
+        .findById(savedCampaign.getId());
+
+    CampaignRedisSyncException exception = assertThrows(
+        CampaignRedisSyncException.class,
+        () -> campaignService.deactivateCampaign(savedCampaign.getId())
+    );
+
+    assertThat(exception)
+        .hasMessage("campaign deactivation failed during redis sync and compensation failed");
+
+    reset(campaignRepository);
+
+    CampaignEntity inconsistentCampaign = campaignRepository.findById(savedCampaign.getId())
+        .orElseThrow();
+    assertThat(inconsistentCampaign.isActive()).isFalse();
   }
 }

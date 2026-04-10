@@ -7,7 +7,8 @@ import com.example.ad_manager.exception.CampaignRedisSyncException;
 import com.example.ad_manager.exception.CampaignStateConflictException;
 import com.example.ad_manager.exception.CampaignTransactionException;
 import com.example.ad_manager.exception.DuplicateCampaignNameException;
-import com.example.ad_manager.mapper.CampaignMapper;
+import com.example.ad_manager.mapper.entity.CampaignEntityMapper;
+import com.example.ad_manager.mapper.redis.CampaignRedisProjectionMapper;
 import com.example.ad_manager.model.dto.CampaignCreateRequestDto;
 import com.example.ad_manager.model.dto.CampaignResponseDto;
 import com.example.ad_manager.redis.CampaignRedisService;
@@ -26,19 +27,22 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class CampaignService {
 
   private final CampaignRepository campaignRepository;
-  private final CampaignMapper campaignMapper;
+  private final CampaignEntityMapper campaignEntityMapper;
+  private final CampaignRedisProjectionMapper campaignRedisProjectionMapper;
   private final CampaignRedisService campaignRedisService;
   private final TransactionTemplate transactionTemplate;
   private final TransactionTemplate requiresNewTransactionTemplate;
 
   public CampaignService(
       CampaignRepository campaignRepository,
-      CampaignMapper campaignMapper,
+      CampaignEntityMapper campaignEntityMapper,
+      CampaignRedisProjectionMapper campaignRedisProjectionMapper,
       CampaignRedisService campaignRedisService,
       PlatformTransactionManager transactionManager
   ) {
     this.campaignRepository = campaignRepository;
-    this.campaignMapper = campaignMapper;
+    this.campaignEntityMapper = campaignEntityMapper;
+    this.campaignRedisProjectionMapper = campaignRedisProjectionMapper;
     this.campaignRedisService = campaignRedisService;
 
     this.transactionTemplate = new TransactionTemplate(transactionManager);
@@ -54,12 +58,12 @@ public class CampaignService {
       throw new DuplicateCampaignNameException(dto.name());
     }
     try {
-      CampaignEntity campaign = campaignMapper.dtoToEntity(dto);
+      CampaignEntity campaign = campaignEntityMapper.dtoToEntity(dto);
       campaign.deactivate();
 
       CampaignEntity savedCampaign = campaignRepository.saveAndFlush(campaign);
 
-      return campaignMapper.entityToResponseDto(savedCampaign);
+      return campaignEntityMapper.entityToResponseDto(savedCampaign);
     } catch (DataIntegrityViolationException e) {
       if (isDuplicateCampaignNameViolation(e)) {
         throw new DuplicateCampaignNameException(dto.name());
@@ -72,8 +76,8 @@ public class CampaignService {
     CampaignEntity campaign = activateCampaignInTransaction(campaignId);
 
     try {
-      campaignRedisService.activate(campaignMapper.entityToRedisEntity(campaign));
-      return campaignMapper.entityToResponseDto(campaign);
+      campaignRedisService.activate(campaignRedisProjectionMapper.entityToRedisEntity(campaign));
+      return campaignEntityMapper.entityToResponseDto(campaign);
     } catch (RuntimeException exception) {
       log.warn("campaign activation redis sync failed. campaignId={}", campaignId, exception);
       compensateActivation(campaignId, exception);
@@ -86,7 +90,7 @@ public class CampaignService {
 
     try {
       campaignRedisService.deactivate(campaignId);
-      return campaignMapper.entityToResponseDto(campaign);
+      return campaignEntityMapper.entityToResponseDto(campaign);
     } catch (RuntimeException exception) {
       log.warn("campaign deactivation redis sync failed. campaignId={}", campaignId, exception);
       compensateDeactivation(campaignId, exception);
@@ -181,5 +185,4 @@ public class CampaignService {
       throw CampaignRedisSyncException.deactivationCompensationFailed(redisException);
     }
   }
-
 }

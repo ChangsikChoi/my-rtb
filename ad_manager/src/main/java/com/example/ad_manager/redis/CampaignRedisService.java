@@ -18,17 +18,11 @@ public class CampaignRedisService {
   private final CampaignRedisHashMapper campaignRedisHashMapper;
 
   public void activate(CampaignRedisEntity campaign) {
-    Long result = redisTemplate.execute(
+    redisTemplate.execute(
         activateCampaignLuaScript,
         buildActivationKeys(campaign.getId()),
         buildActivationArgs(campaign)
     );
-
-    if (!Long.valueOf(1L).equals(result)) {
-      throw new IllegalStateException(
-          "campaign activation lua script did not complete successfully: " + campaign.getId()
-      );
-    }
   }
 
   public void deactivate(String campaignId) {

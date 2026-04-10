@@ -74,23 +74,23 @@ class CampaignRedisServiceTest {
   }
 
   @Test
-  void givenLuaExecutionFailure_whenActivate_thenThrowIllegalStateException() {
+  void givenLuaExecutionFailure_whenActivate_thenRethrowExecutionException() {
     CampaignRedisEntity campaign = CampaignRedisEntity.builder()
         .id("campaign-1")
         .remainingBudgetMicro(100000000L)
         .build();
+    RuntimeException exception = new RuntimeException("redis down");
 
     when(campaignRedisHashMapper.toHash(campaign)).thenReturn(Map.of());
     when(redisTemplate.execute(eq(activateCampaignLuaScript), anyList(), any(Object[].class)))
-        .thenReturn(0L);
+        .thenThrow(exception);
 
-    IllegalStateException exception = assertThrows(
-        IllegalStateException.class,
+    RuntimeException thrown = assertThrows(
+        RuntimeException.class,
         () -> campaignRedisService.activate(campaign)
     );
 
-    assertThat(exception)
-        .hasMessage("campaign activation lua script did not complete successfully: campaign-1");
+    assertThat(thrown).isSameAs(exception);
   }
 
   @Test

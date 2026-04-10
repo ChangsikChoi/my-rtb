@@ -30,8 +30,10 @@ class CampaignRedisServiceIntegrationTest {
   @ServiceConnection
   static GenericContainer<?> redis = new GenericContainer<>("redis:7")
       .withExposedPorts(6379);
+
   @Autowired
   private CampaignRedisService campaignRedisService;
+
   @Autowired
   private StringRedisTemplate redisTemplate;
 
@@ -113,6 +115,5 @@ class CampaignRedisServiceIntegrationTest {
       RedisLuaScriptConfig.class
   })
   static class TestApplication {
-
   }
 }

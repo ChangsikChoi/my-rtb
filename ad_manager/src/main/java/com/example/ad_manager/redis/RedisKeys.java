@@ -18,5 +18,4 @@ public class RedisKeys {
   public static String campaignReservedBudgetKey(String id) {
     return CAMPAIGN_PREFIX + id + CAMPAIGN_RESERVED_BUDGET_SUFFIX;
   }
-
 }
