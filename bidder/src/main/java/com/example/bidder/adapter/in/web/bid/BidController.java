@@ -17,7 +17,8 @@ public class BidController {
 
   @PostMapping
   public Mono<ResponseEntity<BidResponseDto>> handleBid(@RequestBody BidRequestDto bidRequest) {
-    BidCommand command = bidWebMapper.toCommand(bidRequest);
+    long receivedAt = System.currentTimeMillis();
+    BidCommand command = bidWebMapper.toCommand(bidRequest, receivedAt);
 
     return bidUseCase.handleBidRequest(command)
         .map(response -> ResponseEntity.ok().body(bidWebMapper.toDto(response)))

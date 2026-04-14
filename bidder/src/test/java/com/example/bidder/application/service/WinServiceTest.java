@@ -28,6 +28,8 @@ import reactor.test.StepVerifier;
 @ExtendWith(MockitoExtension.class)
 class WinServiceTest {
 
+  private static final long RECEIVED_AT = 1_712_966_400_000L;
+
   @Mock
   private BudgetConfirmPort budgetConfirmPort;
   @Mock
@@ -51,7 +53,7 @@ class WinServiceTest {
 
   @Test
   void whenConfirmBudgetSuccess_thenReturnWinAndSendResult() {
-    WinCommand command = new WinCommand("aid1");
+    WinCommand command = new WinCommand("aid1", RECEIVED_AT);
 
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
         .thenReturn(Mono.just(AuctionTracking.builder()
@@ -71,9 +73,9 @@ class WinServiceTest {
         .assertNext(win -> {
           assertThat(win.auctionId()).isEqualTo("aid1");
           assertThat(win.requestId()).isEqualTo("rid1");
-          assertThat(win.id()).isEqualTo("rid1");
           assertThat(win.campaignId()).isEqualTo("cid1");
           assertThat(win.creativeId()).isEqualTo("crid1");
+          assertThat(win.receivedAt()).isEqualTo(RECEIVED_AT);
         })
         .verifyComplete();
 
@@ -82,7 +84,7 @@ class WinServiceTest {
 
   @Test
   void whenConfirmBudgetFailed_thenReturnEmptyMono() {
-    WinCommand command = new WinCommand("aid1");
+    WinCommand command = new WinCommand("aid1", RECEIVED_AT);
 
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
         .thenReturn(Mono.just(AuctionTracking.builder()
@@ -106,7 +108,7 @@ class WinServiceTest {
 
   @Test
   void whenTrackingDoesNotExist_thenReturnEmptyMono() {
-    WinCommand command = new WinCommand("aid1");
+    WinCommand command = new WinCommand("aid1", RECEIVED_AT);
 
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1")).thenReturn(Mono.empty());
 

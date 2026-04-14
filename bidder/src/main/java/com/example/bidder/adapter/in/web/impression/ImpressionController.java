@@ -19,7 +19,7 @@ public class ImpressionController {
 
   @GetMapping
   public Mono<ResponseEntity<Object>> handleImpression(@RequestParam("aid") String auctionId) {
-    return impressionUseCase.handleImpression(new ImpressionCommand(auctionId))
+    return impressionUseCase.handleImpression(new ImpressionCommand(auctionId, System.currentTimeMillis()))
         .thenReturn(ResponseEntity.noContent().build())
         .onErrorReturn(ResponseEntity.noContent().build());
 

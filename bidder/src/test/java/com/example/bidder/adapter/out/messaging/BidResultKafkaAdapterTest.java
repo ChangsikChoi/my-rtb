@@ -101,10 +101,12 @@ class BidResultKafkaAdapterTest {
         + "  \"name\": \"KafkaBiddingLog\","
         + "  \"namespace\": \"com.example\","
         + "  \"fields\": ["
+        + "    {\"name\": \"auctionId\", \"type\": \"string\"},"
         + "    {\"name\": \"requestId\", \"type\": \"string\"},"
         + "    {\"name\": \"campaignId\", \"type\": \"string\"},"
         + "    {\"name\": \"creativeId\", \"type\": \"string\"},"
-        + "    {\"name\": \"price\", \"type\": \"double\"}"
+        + "    {\"name\": \"priceMicro\", \"type\": \"long\"},"
+        + "    {\"name\": \"receivedAt\", \"type\": \"long\"}"
         + "  ]"
         + "}";
     try (CachedSchemaRegistryClient schemaRegistryClient = new CachedSchemaRegistryClient(
@@ -148,12 +150,16 @@ class BidResultKafkaAdapterTest {
   @Test
   @DisplayName("Adapter가 Avro 스키마를 포함한 메시지를 Kafka에 성공적으로 발행한다")
   void shouldProduceMessageWithSchema() {
+    long receivedAt = 1_712_966_400_000L;
+
     // given: Avro로 생성된 도메인 객체
     Bid bid = Bid.builder()
+        .auctionId("aid123")
         .bidPriceCpmMicro(1_000_000_000L)
         .campaignId("c123")
         .creativeId("cr456")
         .requestId("req789")
+        .receivedAt(receivedAt)
         .build();
 
     // when: 테스트 대상 어댑터의 send 메서드 호출
@@ -165,7 +171,12 @@ class BidResultKafkaAdapterTest {
     assertThat(records.isEmpty()).isFalse();
 
     ConsumerRecord<String, KafkaBiddingLog> receivedRecord = records.iterator().next();
+    assertThat(receivedRecord.key()).isEqualTo("aid123");
+    assertThat(receivedRecord.value().getAuctionId()).isEqualTo("aid123");
+    assertThat(receivedRecord.value().getRequestId()).isEqualTo("req789");
     assertThat(receivedRecord.value().getCampaignId()).isEqualTo("c123");
+    assertThat(receivedRecord.value().getCreativeId()).isEqualTo("cr456");
     assertThat(receivedRecord.value().getPriceMicro()).isEqualTo(1_000_000L);
+    assertThat(receivedRecord.value().getReceivedAt()).isEqualTo(receivedAt);
   }
 }

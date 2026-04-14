@@ -23,12 +23,14 @@ public class BiddingLogConsumer {
     )
     @KafkaListener(topics = "bidding-log", groupId = "bidding-log-group")
     public void consume(KafkaBiddingLog message) {
-        BiddingLog log = new BiddingLog(
-                null,
-                message.getRequestId(),
-                message.getCampaignId(),
-                message.getCreativeId(),
-                message.getPriceMicro());
+        BiddingLog log = BiddingLog.builder()
+                .auctionId(message.getAuctionId())
+                .requestId(message.getRequestId())
+                .campaignId(message.getCampaignId())
+                .creativeId(message.getCreativeId())
+                .priceMicro(message.getPriceMicro())
+                .receivedAt(message.getReceivedAt())
+                .build();
 
         System.out.println("message = " + message);
         BiddingLog save = biddingLogRepository.save(log);

@@ -23,18 +23,17 @@ public class BidResultKafkaAdapter implements SendBidResultPort {
 
   @Override
   public void sendBidResult(Bid bidResult) {
-    // cpm 단위 가격을 단일 가격으로 변환
-    long bidPriceMicro = bidResult.bidPriceCpmMicro() / 1000;
-
     KafkaBiddingLog message = KafkaBiddingLog.newBuilder()
+        .setAuctionId(bidResult.auctionId())
         .setRequestId(bidResult.requestId())
         .setCampaignId(bidResult.campaignId())
         .setCreativeId(bidResult.creativeId())
-        .setPriceMicro(bidPriceMicro)
+        .setPriceMicro(bidResult.impressionPriceMicro())
+        .setReceivedAt(bidResult.receivedAt())
         .build();
 
     CompletableFuture<SendResult<String, SpecificRecordBase>> future =
-        kafkaTemplate.send(topicName, bidResult.requestId(), message);
+        kafkaTemplate.send(topicName, bidResult.auctionId(), message);
 
     future.whenComplete((result, ex) -> {
       SpecificRecordBase logMessage = result != null && result.getProducerRecord() != null

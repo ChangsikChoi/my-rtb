@@ -26,6 +26,8 @@ import reactor.test.StepVerifier;
 @ExtendWith(MockitoExtension.class)
 class ClickServiceTest {
 
+  private static final long RECEIVED_AT = 1_712_966_400_000L;
+
   @Mock
   private LoadAuctionTrackingPort loadAuctionTrackingPort;
   @Mock
@@ -62,7 +64,7 @@ class ClickServiceTest {
 
   @Test
   void whenTrackingAndClickUrlExist_thenReturnClickUrl() {
-    ClickCommand command = new ClickCommand("aid1");
+    ClickCommand command = new ClickCommand("aid1", RECEIVED_AT);
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
         .thenReturn(Mono.just(AuctionTracking.builder()
             .auctionId("aid1")
@@ -85,7 +87,7 @@ class ClickServiceTest {
 
   @Test
   void whenTrackingDoesNotExist_thenReturnEmptyMono() {
-    ClickCommand command = new ClickCommand("aid1");
+    ClickCommand command = new ClickCommand("aid1", RECEIVED_AT);
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1")).thenReturn(Mono.empty());
 
     StepVerifier.create(clickService.handleClick(command))
@@ -96,7 +98,7 @@ class ClickServiceTest {
 
   @Test
   void whenClickUrlDoesNotExist_thenReturnEmptyMono() {
-    ClickCommand command = new ClickCommand("aid1");
+    ClickCommand command = new ClickCommand("aid1", RECEIVED_AT);
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
         .thenReturn(Mono.just(AuctionTracking.builder()
             .auctionId("aid1")

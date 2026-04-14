@@ -24,7 +24,7 @@ public class ClickController {
       ServerWebExchange exchange,
       @RequestParam("aid") String auctionId
   ) {
-    return clickUseCase.handleClick(new ClickCommand(auctionId))
+    return clickUseCase.handleClick(new ClickCommand(auctionId, System.currentTimeMillis()))
         .flatMap(clickUrl -> redirect(exchange, clickUrl))
         .switchIfEmpty(noContent(exchange))
         .onErrorResume(e -> noContent(exchange));

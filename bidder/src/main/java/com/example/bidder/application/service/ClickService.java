@@ -29,7 +29,8 @@ public class ClickService implements ClickUseCase {
                 cmd.auctionId(),
                 tracking.requestId(),
                 tracking.campaignId(),
-                tracking.creativeId()
+                tracking.creativeId(),
+                cmd.receivedAt()
             )))
         .doOnNext(click -> Mono.fromRunnable(() -> sendClickPort.sendClick(click))
             .subscribeOn(kafkaScheduler)

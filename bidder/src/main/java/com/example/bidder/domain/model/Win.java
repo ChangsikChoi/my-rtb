@@ -7,14 +7,7 @@ public record Win(
     String auctionId,
     String requestId,
     String campaignId,
-    String creativeId
+    String creativeId,
+    Long receivedAt
 ) {
-
-  public Win(String requestId, String campaignId, String creativeId) {
-    this(null, requestId, campaignId, creativeId);
-  }
-
-  public String id() {
-    return requestId;
-  }
 }

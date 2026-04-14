@@ -26,6 +26,8 @@ import reactor.test.StepVerifier;
 @ExtendWith(MockitoExtension.class)
 class ImpressionServiceTest {
 
+  private static final long RECEIVED_AT = 1_712_966_400_000L;
+
   @Mock
   private LoadAuctionTrackingPort loadAuctionTrackingPort;
   @Mock
@@ -55,7 +57,7 @@ class ImpressionServiceTest {
 
   @Test
   void whenAuctionIdExistsAndTrackingIsFound_thenReturnImpressionMono() {
-    ImpressionCommand command = new ImpressionCommand("aid1");
+    ImpressionCommand command = new ImpressionCommand("aid1", RECEIVED_AT);
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
         .thenReturn(Mono.just(AuctionTracking.builder()
             .auctionId("aid1")
@@ -72,9 +74,9 @@ class ImpressionServiceTest {
         .assertNext(impression -> {
           assertThat(impression.auctionId()).isEqualTo("aid1");
           assertThat(impression.requestId()).isEqualTo("rid1");
-          assertThat(impression.id()).isEqualTo("rid1");
           assertThat(impression.campaignId()).isEqualTo("cid1");
           assertThat(impression.creativeId()).isEqualTo("crid1");
+          assertThat(impression.receivedAt()).isEqualTo(RECEIVED_AT);
         })
         .verifyComplete();
 
@@ -83,7 +85,7 @@ class ImpressionServiceTest {
 
   @Test
   void whenTrackingDoesNotExist_thenReturnEmptyMono() {
-    ImpressionCommand command = new ImpressionCommand("aid1");
+    ImpressionCommand command = new ImpressionCommand("aid1", RECEIVED_AT);
     when(loadAuctionTrackingPort.loadAuctionTracking("aid1")).thenReturn(Mono.empty());
 
     StepVerifier.create(impressionService.handleImpression(command))

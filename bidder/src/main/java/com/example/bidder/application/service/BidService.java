@@ -35,12 +35,11 @@ public class BidService implements BidUseCase {
   public Mono<Bid> handleBidRequest(BidCommand command) {
     BidRequest bidRequest = command.toDomain();
     String auctionId = auctionIdGenerator.generate();
-    long receivedAt = System.currentTimeMillis();
 
     return rankedCampaigns(bidRequest)
-        .concatMap(campaign -> reserveAndBuildBid(campaign, bidRequest, auctionId), 1)
+        .concatMap(campaign -> reserveAndBuildBid(campaign, bidRequest, auctionId, command.receivedAt()), 1)
         .next()
-        .flatMap(bid -> storeAuctionTracking(buildAuctionTracking(bid, receivedAt)).thenReturn(bid))
+        .flatMap(bid -> storeAuctionTracking(buildAuctionTracking(bid)).thenReturn(bid))
         .doOnNext(this::publishBidResultAsync);
   }
 
@@ -51,12 +50,17 @@ public class BidService implements BidUseCase {
     );
   }
 
-  private Mono<Bid> reserveAndBuildBid(Campaign campaign, BidRequest bidRequest, String auctionId) {
+  private Mono<Bid> reserveAndBuildBid(
+      Campaign campaign,
+      BidRequest bidRequest,
+      String auctionId,
+      long receivedAt
+  ) {
     long priceMicro = campaign.impressionPriceMicro();
 
     return budgetHandlePort.reserveBudget(campaign.id(), auctionId, priceMicro)
         .flatMap(reserved -> reserved
-            ? Mono.just(buildBidResult(auctionId, bidRequest, campaign))
+            ? Mono.just(buildBidResult(auctionId, bidRequest, campaign, receivedAt))
             : Mono.empty());
   }
 
@@ -70,18 +74,18 @@ public class BidService implements BidUseCase {
     return storeAuctionTrackingPort.storeAuctionTracking(auctionTracking);
   }
 
-  private AuctionTracking buildAuctionTracking(Bid bid, long receivedAt) {
+  private AuctionTracking buildAuctionTracking(Bid bid) {
     return AuctionTracking.builder()
         .auctionId(bid.auctionId())
         .requestId(bid.requestId())
         .campaignId(bid.campaignId())
         .creativeId(bid.creativeId())
-        .priceMicro(bid.bidPriceCpmMicro() / 1000)
-        .receivedAt(receivedAt)
+        .priceMicro(bid.impressionPriceMicro())
+        .receivedAt(bid.receivedAt())
         .build();
   }
 
-  private Bid buildBidResult(String auctionId, BidRequest bidRequest, Campaign campaign) {
+  private Bid buildBidResult(String auctionId, BidRequest bidRequest, Campaign campaign, long receivedAt) {
     String adMarkup = buildAdMarkup(auctionId, campaign);
     String winUrl = buildWinUrl(auctionId);
 
@@ -91,6 +95,7 @@ public class BidService implements BidUseCase {
         .campaignId(campaign.id())
         .creativeId(campaign.creative().id())
         .bidPriceCpmMicro(campaign.targetCpmMicro())
+        .receivedAt(receivedAt)
         .adMarkup(adMarkup)
         .winUrl(winUrl)
         .build();

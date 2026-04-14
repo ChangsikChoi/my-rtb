@@ -1,7 +1,8 @@
 package com.example.bidder.domain.port.in;
 
 public record ClickCommand(
-    String auctionId
+    String auctionId,
+    long receivedAt
 ) {
 
 }

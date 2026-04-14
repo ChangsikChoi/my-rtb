@@ -9,7 +9,8 @@ public record BidCommand(
     String requestId,
     Imp imp,
     Device device,
-    User user
+    User user,
+    long receivedAt
 ) {
 
   public BidRequest toDomain() {

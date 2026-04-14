@@ -29,7 +29,8 @@ public class WinService implements WinUseCase {
                 command.auctionId(),
                 tracking.requestId(),
                 tracking.campaignId(),
-                tracking.creativeId()
+                tracking.creativeId(),
+                command.receivedAt()
             )))
         .doOnNext(win -> Mono.fromRunnable(() -> sendWinResultPort.sendWinResult(win))
             .subscribeOn(kafkaScheduler)

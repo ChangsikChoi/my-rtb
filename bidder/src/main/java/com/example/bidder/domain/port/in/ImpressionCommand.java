@@ -1,7 +1,8 @@
 package com.example.bidder.domain.port.in;
 
 public record ImpressionCommand(
-    String auctionId
+    String auctionId,
+    long receivedAt
 ) {
 
 }

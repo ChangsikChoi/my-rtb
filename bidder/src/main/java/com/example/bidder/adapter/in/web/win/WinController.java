@@ -19,7 +19,7 @@ public class WinController {
 
   @GetMapping
   public Mono<ResponseEntity<Object>> handleWin(@RequestParam("aid") String auctionId) {
-    return winUseCase.handleWin(new WinCommand(auctionId))
+    return winUseCase.handleWin(new WinCommand(auctionId, System.currentTimeMillis()))
         .thenReturn(ResponseEntity.noContent().build())
         .onErrorReturn(ResponseEntity.noContent().build());
   }

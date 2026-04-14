@@ -3,9 +3,11 @@
   "type": "record",
   "name": "KafkaBiddingLog",
   "fields": [
+    { "name": "auctionId", "type": "string" },
     { "name": "requestId", "type": "string" },
     { "name": "campaignId", "type": "string" },
     { "name": "creativeId", "type": "string" },
-    { "name": "priceMicro", "type": "long" }
+    { "name": "priceMicro", "type": "long" },
+    { "name": "receivedAt", "type": "long" }
   ]
 }

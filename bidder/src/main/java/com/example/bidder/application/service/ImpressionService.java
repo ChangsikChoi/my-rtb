@@ -27,7 +27,8 @@ public class ImpressionService implements ImpressionUseCase {
                 cmd.auctionId(),
                 tracking.requestId(),
                 tracking.campaignId(),
-                tracking.creativeId()
+                tracking.creativeId(),
+                cmd.receivedAt()
             )))
         .doOnNext(
             impression -> Mono.fromRunnable(() -> sendImpressionPort.sendImpression(impression))

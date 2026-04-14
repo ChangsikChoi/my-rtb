@@ -7,14 +7,7 @@ public record Click(
     String auctionId,
     String requestId,
     String campaignId,
-    String creativeId
+    String creativeId,
+    Long receivedAt
 ) {
-
-  public Click(String requestId, String campaignId, String creativeId) {
-    this(null, requestId, campaignId, creativeId);
-  }
-
-  public String id() {
-    return requestId;
-  }
 }

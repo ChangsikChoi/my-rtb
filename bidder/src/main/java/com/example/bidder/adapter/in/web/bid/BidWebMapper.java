@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BidWebMapper {
 
-  public BidCommand toCommand(BidRequestDto dto) {
+  public BidCommand toCommand(BidRequestDto dto, long receivedAt) {
     if (dto == null) {
       throw new IllegalArgumentException("BidRequestDto must not be null");
     }
@@ -48,7 +48,7 @@ public class BidWebMapper {
     }
     User user = userBuilder.build();
 
-    return new BidCommand(dto.id(), imp, device, user);
+    return new BidCommand(dto.id(), imp, device, user, receivedAt);
   }
 
   public BidResponseDto toDto(Bid domain) {

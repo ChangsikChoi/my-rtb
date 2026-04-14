@@ -43,6 +43,8 @@ import reactor.test.StepVerifier;
 @ExtendWith(MockitoExtension.class)
 class BidServiceTest {
 
+  private static final long RECEIVED_AT = 1_712_966_400_000L;
+
   @Mock
   private BudgetReservePort budgetReservePort;
   @Mock
@@ -108,6 +110,7 @@ class BidServiceTest {
 
     BidCommand command = mock(BidCommand.class);
     when(command.toDomain()).thenReturn(bidRequest);
+    when(command.receivedAt()).thenReturn(RECEIVED_AT);
 
     Mono<Bid> result = bidService.handleBidRequest(command);
 
@@ -116,6 +119,7 @@ class BidServiceTest {
           assertThat(bid.auctionId()).isEqualTo("auction_test");
           assertThat(bid.campaignId()).isEqualTo("camp_test");
           assertThat(bid.bidPriceCpmMicro()).isEqualTo(100_000L);
+          assertThat(bid.receivedAt()).isEqualTo(RECEIVED_AT);
           assertThat(bid.winUrl()).contains("aid=auction_test");
           assertThat(bid.adMarkup()).contains("/dsp/imp?aid=auction_test");
           assertThat(bid.adMarkup()).contains("/dsp/redirect?aid=auction_test");
@@ -130,7 +134,7 @@ class BidServiceTest {
             && "camp_test".equals(tracking.campaignId())
             && "creative_test".equals(tracking.creativeId())
             && Long.valueOf(100L).equals(tracking.priceMicro())
-            && tracking.receivedAt() != null
+            && Long.valueOf(RECEIVED_AT).equals(tracking.receivedAt())
     ));
     verify(sendBidResultPort, times(1)).sendBidResult(any());
   }
@@ -170,6 +174,7 @@ class BidServiceTest {
 
     BidCommand command = mock(BidCommand.class);
     when(command.toDomain()).thenReturn(bidRequest);
+    when(command.receivedAt()).thenReturn(RECEIVED_AT);
 
     Mono<Bid> result = bidService.handleBidRequest(command);
 
@@ -229,6 +234,7 @@ class BidServiceTest {
 
     BidCommand command = mock(BidCommand.class);
     when(command.toDomain()).thenReturn(bidRequest);
+    when(command.receivedAt()).thenReturn(RECEIVED_AT);
 
     Mono<Bid> result = bidService.handleBidRequest(command);
 
@@ -237,6 +243,7 @@ class BidServiceTest {
           assertThat(bid.auctionId()).isEqualTo("auction_test");
           assertThat(bid.campaignId()).isEqualTo("camp_second");
           assertThat(bid.bidPriceCpmMicro()).isEqualTo(150_000L);
+          assertThat(bid.receivedAt()).isEqualTo(RECEIVED_AT);
         })
         .verifyComplete();
 
@@ -248,6 +255,7 @@ class BidServiceTest {
             && "camp_second".equals(tracking.campaignId())
             && "creative_test".equals(tracking.creativeId())
             && Long.valueOf(150L).equals(tracking.priceMicro())
+            && Long.valueOf(RECEIVED_AT).equals(tracking.receivedAt())
     ));
     verify(sendBidResultPort, times(1)).sendBidResult(any());
   }
@@ -299,6 +307,7 @@ class BidServiceTest {
 
     BidCommand command = mock(BidCommand.class);
     when(command.toDomain()).thenReturn(bidRequest);
+    when(command.receivedAt()).thenReturn(RECEIVED_AT);
 
     Mono<Bid> result = bidService.handleBidRequest(command);
 
