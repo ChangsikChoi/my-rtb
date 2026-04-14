@@ -6,6 +6,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
@@ -19,18 +20,24 @@ public class ClickController {
   private final ClickUseCase clickUseCase;
 
   @GetMapping
-  public Mono<Void> handleClick(ServerWebExchange exchange, ClickRequestDto clickRequest) {
-    ClickCommand clickCommand = new ClickCommand(clickRequest.rid(), clickRequest.cid(),
-        clickRequest.crid());
+  public Mono<Void> handleClick(
+      ServerWebExchange exchange,
+      @RequestParam("aid") String auctionId
+  ) {
+    return clickUseCase.handleClick(new ClickCommand(auctionId))
+        .flatMap(clickUrl -> redirect(exchange, clickUrl))
+        .switchIfEmpty(noContent(exchange))
+        .onErrorResume(e -> noContent(exchange));
+  }
 
+  private Mono<Void> redirect(ServerWebExchange exchange, String clickUrl) {
     exchange.getResponse().setStatusCode(HttpStatus.FOUND);
-    exchange.getResponse().getHeaders().setLocation(URI.create(clickRequest.url()));
+    exchange.getResponse().getHeaders().setLocation(URI.create(clickUrl));
+    return exchange.getResponse().setComplete();
+  }
 
-    // TODO: Functional Endpoint 적용 시 사용
-    // ServerResponse.temporaryRedirect(URI.create(clickRequest.url())).build()
-
-    return clickUseCase.handleClick(clickCommand)
-        .onErrorResume(e -> Mono.empty())
-        .then(exchange.getResponse().setComplete());
+  private Mono<Void> noContent(ServerWebExchange exchange) {
+    exchange.getResponse().setStatusCode(HttpStatus.NO_CONTENT);
+    return exchange.getResponse().setComplete();
   }
 }

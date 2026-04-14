@@ -6,10 +6,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.example.bidder.domain.model.Click;
 import com.example.bidder.domain.port.in.ClickCommand;
+import com.example.bidder.domain.port.out.LoadAuctionTrackingPort;
+import com.example.bidder.domain.port.out.LoadClickUrlPort;
 import com.example.bidder.domain.port.out.SendClickPort;
+import com.example.bidder.domain.model.AuctionTracking;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +27,10 @@ import reactor.test.StepVerifier;
 class ClickServiceTest {
 
   @Mock
+  private LoadAuctionTrackingPort loadAuctionTrackingPort;
+  @Mock
+  private LoadClickUrlPort loadClickUrlPort;
+  @Mock
   private SendClickPort sendClickPort;
 
   private final Scheduler kafkaScheduler = Schedulers.immediate();
@@ -32,14 +39,19 @@ class ClickServiceTest {
 
   @BeforeEach
   void setUp() {
-    clickService = new ClickService(sendClickPort, kafkaScheduler);
+    clickService = new ClickService(
+        loadAuctionTrackingPort,
+        loadClickUrlPort,
+        sendClickPort,
+        kafkaScheduler
+    );
   }
 
   @Test
-  void whenRequestIdIsEmpty_thenReturnEmptyMono() {
+  void whenAuctionIdIsEmpty_thenReturnEmptyMono() {
     ClickCommand command = mock(ClickCommand.class);
 
-    Mono<Click> clickMono = clickService.handleClick(command);
+    Mono<String> clickMono = clickService.handleClick(command);
 
     StepVerifier.create(clickMono)
         .expectNextCount(0)
@@ -49,17 +61,54 @@ class ClickServiceTest {
   }
 
   @Test
-  void whenRequestIdNotIsEmpty_thenReturnClickMono() {
-    ClickCommand command = new ClickCommand("rid1", "cid1", "crid1");
+  void whenTrackingAndClickUrlExist_thenReturnClickUrl() {
+    ClickCommand command = new ClickCommand("aid1");
+    when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
+        .thenReturn(Mono.just(AuctionTracking.builder()
+            .auctionId("aid1")
+            .requestId("rid1")
+            .campaignId("cid1")
+            .creativeId("crid1")
+            .priceMicro(100L)
+            .receivedAt(1L)
+            .build()));
+    when(loadClickUrlPort.loadClickUrl("cid1", "crid1")).thenReturn(Mono.just("http://example.com"));
 
-    Mono<Click> clickMono = clickService.handleClick(command);
+    Mono<String> clickMono = clickService.handleClick(command);
 
     StepVerifier.create(clickMono)
-        .assertNext(click -> {
-          assertThat(click.id()).isEqualTo(command.requestId());
-          assertThat(click.campaignId()).isEqualTo(command.campaignId());
-          assertThat(click.creativeId()).isEqualTo(command.creativeId());
-        })
+        .assertNext(clickUrl -> assertThat(clickUrl).isEqualTo("http://example.com"))
+        .verifyComplete();
+
+    verify(sendClickPort, times(1)).sendClick(any());
+  }
+
+  @Test
+  void whenTrackingDoesNotExist_thenReturnEmptyMono() {
+    ClickCommand command = new ClickCommand("aid1");
+    when(loadAuctionTrackingPort.loadAuctionTracking("aid1")).thenReturn(Mono.empty());
+
+    StepVerifier.create(clickService.handleClick(command))
+        .verifyComplete();
+
+    verify(sendClickPort, times(0)).sendClick(any());
+  }
+
+  @Test
+  void whenClickUrlDoesNotExist_thenReturnEmptyMono() {
+    ClickCommand command = new ClickCommand("aid1");
+    when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
+        .thenReturn(Mono.just(AuctionTracking.builder()
+            .auctionId("aid1")
+            .requestId("rid1")
+            .campaignId("cid1")
+            .creativeId("crid1")
+            .priceMicro(100L)
+            .receivedAt(1L)
+            .build()));
+    when(loadClickUrlPort.loadClickUrl("cid1", "crid1")).thenReturn(Mono.empty());
+
+    StepVerifier.create(clickService.handleClick(command))
         .verifyComplete();
 
     verify(sendClickPort, times(1)).sendClick(any());

@@ -82,8 +82,8 @@ public class BidService implements BidUseCase {
   }
 
   private Bid buildBidResult(String auctionId, BidRequest bidRequest, Campaign campaign) {
-    String adMarkup = buildAdMarkup(auctionId, bidRequest, campaign);
-    String winUrl = buildWinUrl(auctionId, bidRequest, campaign);
+    String adMarkup = buildAdMarkup(auctionId, campaign);
+    String winUrl = buildWinUrl(auctionId);
 
     return Bid.builder()
         .auctionId(auctionId)
@@ -96,38 +96,21 @@ public class BidService implements BidUseCase {
         .build();
   }
 
-  private String buildWinUrl(String auctionId, BidRequest bidRequest, Campaign campaign) {
-    return "http://localhost:8080/dsp/win?aid=" + auctionId
-        + "&rid=" + bidRequest.id()
-        + "&cid=" + campaign.id()
-        + "&crid=" + campaign.creative().id();
+  private String buildWinUrl(String auctionId) {
+    return "http://localhost:8080/dsp/win?aid=" + auctionId;
   }
 
-  private String buildAdMarkup(String auctionId, BidRequest bidRequest, Campaign campaign) {
+  private String buildAdMarkup(String auctionId, Campaign campaign) {
     StringBuilder adMarkupBuilder = new StringBuilder();
     // div 태그 오픈
     adMarkupBuilder.append("<div>");
     // div > img 태그 (노출 확인 url 설정)
     adMarkupBuilder.append("<img src='http://localhost:8080/dsp/imp?aid=")
         .append(auctionId)
-        .append("&rid=")
-        .append(bidRequest.id())
-        .append("&cid=")
-        .append(campaign.id())
-        .append("&crid=")
-        .append(campaign.creative().id())
         .append("' height=1 width=1 style='display:none;'/>");
     // div > a 태그 오픈 (클릭 링크 설정)
     adMarkupBuilder.append("<a href='http://localhost:8080/dsp/redirect?aid=")
         .append(auctionId)
-        .append("&url=")
-        .append(campaign.creative().clickUrl())
-        .append("&rid=")
-        .append(bidRequest.id())
-        .append("&cid=")
-        .append(campaign.id())
-        .append("&crid=")
-        .append(campaign.creative().id())
         .append("' target='_blank' >");
     // div > a > img 태그 오픈 (광고 이미지 설정)
     adMarkupBuilder.append("<img src='")

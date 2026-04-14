@@ -2,10 +2,8 @@ package com.example.bidder.adapter.in.web.click;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.example.bidder.domain.model.Click;
 import com.example.bidder.domain.port.in.ClickCommand;
 import com.example.bidder.domain.port.in.ClickUseCase;
 import org.junit.jupiter.api.Test;
@@ -25,15 +23,12 @@ class ClickControllerTest {
   private ClickUseCase clickUseCase;
 
   @Test
-  void shouldReturnFoundWhenHandleClickReturnEmpty() {
-    when(clickUseCase.handleClick(any(ClickCommand.class))).thenReturn(Mono.empty());
+  void shouldReturnFoundWhenHandleClickReturnsClickUrl() {
+    when(clickUseCase.handleClick(any(ClickCommand.class))).thenReturn(Mono.just("http://example.com"));
 
     webTestClient.get().uri(uriBuilder ->
             uriBuilder.path("/dsp/redirect")
-                .queryParam("rid", "request123")
-                .queryParam("cid", "campaign123")
-                .queryParam("crid", "creative123")
-                .queryParam("url", "http://example.com")
+                .queryParam("aid", "auction123")
                 .build())
         .exchange()
         .expectStatus().isFound()
@@ -41,36 +36,27 @@ class ClickControllerTest {
   }
 
   @Test
-  void shouldReturnFoundWhenHandleClickReturnClick() {
-    Click click = mock(Click.class);
-    when(clickUseCase.handleClick(any(ClickCommand.class))).thenReturn(Mono.just(click));
-
-    webTestClient.get().uri(uriBuilder ->
-            uriBuilder.path("/dsp/redirect")
-                .queryParam("rid", "request123")
-                .queryParam("cid", "campaign123")
-                .queryParam("crid", "creative123")
-                .queryParam("url", "http://example.com")
-                .build())
-        .exchange()
-        .expectStatus().isFound()
-        .expectHeader().location("http://example.com");
-  }
-
-  @Test
-  void shouldReturnFoundWhenHandleClickReturnError() {
+  void shouldReturnNoContentWhenHandleClickReturnsError() {
     when(clickUseCase.handleClick(any(ClickCommand.class)))
         .thenReturn(Mono.error(new RuntimeException("Test Exception")));
 
     webTestClient.get().uri(uriBuilder ->
             uriBuilder.path("/dsp/redirect")
-                .queryParam("rid", "request123")
-                .queryParam("cid", "campaign123")
-                .queryParam("crid", "creative123")
-                .queryParam("url", "http://example.com")
+                .queryParam("aid", "auction123")
                 .build())
         .exchange()
-        .expectStatus().isFound()
-        .expectHeader().location("http://example.com");
+        .expectStatus().isNoContent();
+  }
+
+  @Test
+  void shouldReturnNoContentWhenHandleClickReturnsEmpty() {
+    when(clickUseCase.handleClick(any(ClickCommand.class))).thenReturn(Mono.empty());
+
+    webTestClient.get().uri(uriBuilder ->
+            uriBuilder.path("/dsp/redirect")
+                .queryParam("aid", "auction123")
+                .build())
+        .exchange()
+        .expectStatus().isNoContent();
   }
 }

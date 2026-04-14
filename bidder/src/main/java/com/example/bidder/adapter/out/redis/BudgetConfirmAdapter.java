@@ -16,9 +16,9 @@ public class BudgetConfirmAdapter implements BudgetConfirmPort {
   private final DefaultRedisScript<Boolean> confirmBudgetLuaScript;
 
   @Override
-  public Mono<Boolean> confirmBudget(String requestId, String campaignId) {
-    String reservationKey = RedisKeys.reservationKey(requestId);
-    String reservationBackupKey = RedisKeys.reservationBackupKey(requestId);
+  public Mono<Boolean> confirmBudget(String auctionId, String campaignId) {
+    String reservationKey = RedisKeys.reservationKey(auctionId);
+    String reservationBackupKey = RedisKeys.reservationBackupKey(auctionId);
     String budgetReservedKey = RedisKeys.campaignReservedBudgetKey(campaignId);
 
     return redisTemplate.execute(
