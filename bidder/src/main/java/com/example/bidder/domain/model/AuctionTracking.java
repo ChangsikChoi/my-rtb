@@ -3,13 +3,12 @@ package com.example.bidder.domain.model;
 import lombok.Builder;
 
 @Builder
-public record Bid(
+public record AuctionTracking(
     String auctionId,
     String requestId,
     String campaignId,
     String creativeId,
-    Long bidPriceCpmMicro,
-    String adMarkup,
-    String winUrl
+    Long priceMicro,
+    Long receivedAt
 ) {
 }

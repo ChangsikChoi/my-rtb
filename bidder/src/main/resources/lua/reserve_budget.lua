@@ -18,7 +18,7 @@ end
 -- 토탈 예산에서 예약할 예산만큼 차감, 예약 예산은 증가시킴
 redis.call("DECRBY", KEYS[1], reserveAmount)
 redis.call("INCRBY", KEYS[2], reserveAmount)
--- 예약 정보 임시 저장 (예약 데이터 키 = reservation:{requestId})
+-- 예약 정보 임시 저장 (예약 데이터 키 = reservation:{auctionId})
 redis.call("HSET", KEYS[3], "campaignId", ARGV[2], "amount", reserveAmount, "timestamp", ARGV[3])
 redis.call("EXPIRE", KEYS[3], tonumber(ARGV[4]))
 -- 예약 정보 백업 저장 (키 만료 시 내용 조회에 사용)

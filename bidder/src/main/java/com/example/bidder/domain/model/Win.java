@@ -4,8 +4,17 @@ import lombok.Builder;
 
 @Builder
 public record Win(
-    String id,
+    String auctionId,
+    String requestId,
     String campaignId,
     String creativeId
 ) {
+
+  public Win(String requestId, String campaignId, String creativeId) {
+    this(null, requestId, campaignId, creativeId);
+  }
+
+  public String id() {
+    return requestId;
+  }
 }

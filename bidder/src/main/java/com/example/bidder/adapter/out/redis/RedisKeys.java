@@ -8,6 +8,7 @@ public class RedisKeys {
 
     public static final String RESERVATION_PREFIX = "reservation:";
     public static final String RESERVATION_BACKUP_PREFIX = "reservation_backup:";
+    public static final String AUCTION_TRACKING_PREFIX = "auction_tracking:";
 
     public static String campaignKey(String id) {
         return CAMPAIGN_PREFIX + id;
@@ -21,11 +22,15 @@ public class RedisKeys {
         return CAMPAIGN_PREFIX + id + CAMPAIGN_RESERVED_BUDGET_SUFFIX;
     }
 
-    public static String reservationKey(String requestId) {
-        return RESERVATION_PREFIX + requestId;
+    public static String reservationKey(String auctionId) {
+        return RESERVATION_PREFIX + auctionId;
     }
-    public static String reservationBackupKey(String requestId) {
-        return RESERVATION_BACKUP_PREFIX + requestId;
+    public static String reservationBackupKey(String auctionId) {
+        return RESERVATION_BACKUP_PREFIX + auctionId;
+    }
+
+    public static String auctionTrackingKey(String auctionId) {
+        return AUCTION_TRACKING_PREFIX + auctionId;
     }
 
 

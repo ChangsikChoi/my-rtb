@@ -145,7 +145,7 @@ class ImpressionKafkaAdapterTest {
   void shouldProduceMessageWithSchema() {
     // given: Avro로 생성된 도메인 객체
     Impression impression = Impression.builder()
-        .id("req789")
+        .requestId("req789")
         .campaignId("c123")
         .creativeId("cr456")
         .build();
