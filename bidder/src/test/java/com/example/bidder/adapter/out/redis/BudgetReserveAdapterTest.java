@@ -38,21 +38,21 @@ class BudgetReserveAdapterTest {
   @Test
   @DisplayName("예산이 충분하면 Lua 스크립트가 예산을 예약하고 true를 반환한다")
   void reserveBudget_budgetIsSufficient_returnTrue() {
-    String requestId = "r1";
+    String auctionId = "auction_1";
     String campaignId = "c1";
     String reserveBudgetMicro = "150000";
     // 저장 결과 조회용 키 생성
     String totalKey = RedisKeys.campaignTotalBudgetKey(campaignId);
     String reservedKey = RedisKeys.campaignReservedBudgetKey(campaignId);
-    String reservationKey = RedisKeys.reservationKey(requestId);
-    String reservationBackupKey = RedisKeys.reservationBackupKey(requestId);
+    String reservationKey = RedisKeys.reservationKey(auctionId);
+    String reservationBackupKey = RedisKeys.reservationBackupKey(auctionId);
 
     // 초기 예산 설정
     redisTemplate.opsForValue().set(totalKey, "1000000").block();
     redisTemplate.opsForValue().set(reservedKey, "0").block();
 
     // 예산 예약 실행
-    Mono<Boolean> resultMono = budgetReserveAdapter.reserveBudget(campaignId, requestId, 150_000L);
+    Mono<Boolean> resultMono = budgetReserveAdapter.reserveBudget(campaignId, auctionId, 150_000L);
     // 결과 검증용 데이터 조회 mono 생성
     Mono<String> totalBudget = redisTemplate.opsForValue().get(totalKey);
     Mono<String> reservedBudget = redisTemplate.opsForValue().get(reservedKey);
@@ -104,20 +104,20 @@ class BudgetReserveAdapterTest {
   @Test
   @DisplayName("예산이 충분하지 않으면 예산 예약을 하지않고 false를 반환한다")
   void reserveBudget_budgetIsNotSufficient_returnFalse() {
-    String requestId = "r1";
+    String auctionId = "auction_1";
     String campaignId = "c1";
     // 저장 결과 조회용 키 생성
     String totalKey = RedisKeys.campaignTotalBudgetKey(campaignId);
     String reservedKey = RedisKeys.campaignReservedBudgetKey(campaignId);
-    String reservationKey = RedisKeys.reservationKey(requestId);
-    String reservationBackupKey = RedisKeys.reservationBackupKey(requestId);
+    String reservationKey = RedisKeys.reservationKey(auctionId);
+    String reservationBackupKey = RedisKeys.reservationBackupKey(auctionId);
 
     // 초기 예산 설정
     redisTemplate.opsForValue().set(totalKey, "100000").block();
     redisTemplate.opsForValue().set(reservedKey, "0").block();
 
     // 예산 예약 실행
-    Mono<Boolean> resultMono = budgetReserveAdapter.reserveBudget(campaignId, requestId, 200_000L);
+    Mono<Boolean> resultMono = budgetReserveAdapter.reserveBudget(campaignId, auctionId, 200_000L);
     // 결과 검증용 데이터 조회 mono 생성
     Mono<String> totalBudget = redisTemplate.opsForValue().get(totalKey);
     Mono<String> reservedBudget = redisTemplate.opsForValue().get(reservedKey);

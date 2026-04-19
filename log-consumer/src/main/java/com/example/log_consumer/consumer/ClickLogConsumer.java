@@ -23,11 +23,13 @@ public class ClickLogConsumer {
     )
     @KafkaListener(topics = "click-log", groupId = "click-log-group")
     public void consume(KafkaClickLog message) {
-        ClickLog log = new ClickLog(
-                null,
-                message.getRequestId(),
-                message.getCampaignId(),
-                message.getCreativeId());
+        ClickLog log = ClickLog.builder()
+                .auctionId(message.getAuctionId())
+                .requestId(message.getRequestId())
+                .campaignId(message.getCampaignId())
+                .creativeId(message.getCreativeId())
+                .receivedAt(message.getReceivedAt())
+                .build();
 
         System.out.println("message = " + message);
         ClickLog save = clickLogRepository.save(log);

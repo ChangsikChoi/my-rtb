@@ -23,13 +23,15 @@ public class ImpressionKafkaAdapter implements SendImpressionPort {
   @Override
   public void sendImpression(Impression impression) {
     KafkaImpressionLog message = KafkaImpressionLog.newBuilder()
-        .setRequestId(impression.id())
+        .setAuctionId(impression.auctionId())
+        .setRequestId(impression.requestId())
         .setCampaignId(impression.campaignId())
         .setCreativeId(impression.creativeId())
+        .setReceivedAt(impression.receivedAt())
         .build();
 
     CompletableFuture<SendResult<String, SpecificRecordBase>> future =
-        kafkaTemplate.send(topicName, impression.id(), message);
+        kafkaTemplate.send(topicName, impression.auctionId(), message);
 
     future.whenComplete((result, ex) -> {
       SpecificRecordBase logMessage = result != null && result.getProducerRecord() != null

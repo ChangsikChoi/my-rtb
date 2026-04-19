@@ -4,8 +4,10 @@ import lombok.Builder;
 
 @Builder
 public record Click(
-    String id,
+    String auctionId,
+    String requestId,
     String campaignId,
-    String creativeId
+    String creativeId,
+    Long receivedAt
 ) {
 }

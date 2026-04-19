@@ -23,13 +23,15 @@ public class ClickKafkaAdapter implements SendClickPort {
   @Override
   public void sendClick(Click click) {
     KafkaClickLog message = KafkaClickLog.newBuilder()
-        .setRequestId(click.id())
+        .setAuctionId(click.auctionId())
+        .setRequestId(click.requestId())
         .setCampaignId(click.campaignId())
         .setCreativeId(click.creativeId())
+        .setReceivedAt(click.receivedAt())
         .build();
 
     CompletableFuture<SendResult<String, SpecificRecordBase>> future =
-        kafkaTemplate.send(topicName, click.id(), message);
+        kafkaTemplate.send(topicName, click.auctionId(), message);
 
     future.whenComplete((result, ex) -> {
       SpecificRecordBase logMessage = result != null && result.getProducerRecord() != null

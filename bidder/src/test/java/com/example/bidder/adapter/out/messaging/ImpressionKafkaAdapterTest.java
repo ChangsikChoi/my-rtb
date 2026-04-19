@@ -97,9 +97,11 @@ class ImpressionKafkaAdapterTest {
         + "  \"type\": \"record\","
         + "  \"name\": \"KafkaImpressionLog\","
         + "  \"fields\": ["
+        + "    { \"name\": \"auctionId\", \"type\": \"string\" },"
         + "    { \"name\": \"requestId\", \"type\": \"string\" },"
         + "    { \"name\": \"campaignId\", \"type\": \"string\" },"
-        + "    { \"name\": \"creativeId\", \"type\": \"string\" }"
+        + "    { \"name\": \"creativeId\", \"type\": \"string\" },"
+        + "    { \"name\": \"receivedAt\", \"type\": \"long\" }"
         + "  ]"
         + "}";
     try (CachedSchemaRegistryClient schemaRegistryClient = new CachedSchemaRegistryClient(
@@ -143,11 +145,15 @@ class ImpressionKafkaAdapterTest {
   @Test
   @DisplayName("Adapter가 Avro 스키마를 포함한 메시지를 Kafka에 성공적으로 발행한다")
   void shouldProduceMessageWithSchema() {
+    long receivedAt = 1_712_966_400_000L;
+
     // given: Avro로 생성된 도메인 객체
     Impression impression = Impression.builder()
-        .id("req789")
+        .auctionId("aid123")
+        .requestId("req789")
         .campaignId("c123")
         .creativeId("cr456")
+        .receivedAt(receivedAt)
         .build();
 
     // when: 테스트 대상 어댑터의 send 메서드 호출
@@ -159,8 +165,11 @@ class ImpressionKafkaAdapterTest {
     assertThat(records.isEmpty()).isFalse();
 
     ConsumerRecord<String, KafkaImpressionLog> receivedRecord = records.iterator().next();
+    assertThat(receivedRecord.key()).isEqualTo("aid123");
+    assertThat(receivedRecord.value().getAuctionId()).isEqualTo("aid123");
     assertThat(receivedRecord.value().getRequestId()).isEqualTo("req789");
     assertThat(receivedRecord.value().getCampaignId()).isEqualTo("c123");
     assertThat(receivedRecord.value().getCreativeId()).isEqualTo("cr456");
+    assertThat(receivedRecord.value().getReceivedAt()).isEqualTo(receivedAt);
   }
 }

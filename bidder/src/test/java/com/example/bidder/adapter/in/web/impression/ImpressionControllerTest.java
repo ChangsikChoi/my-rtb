@@ -31,9 +31,7 @@ class ImpressionControllerTest {
 
     webTestClient.get().uri(uriBuilder ->
             uriBuilder.path("/dsp/imp")
-                .queryParam("rid", "request123")
-                .queryParam("cid", "campaign123")
-                .queryParam("crid", "creative123")
+                .queryParam("aid", "auction123")
                 .build())
         .exchange()
         .expectStatus().isNoContent();
@@ -47,9 +45,7 @@ class ImpressionControllerTest {
 
     webTestClient.get().uri(uriBuilder ->
             uriBuilder.path("/dsp/imp")
-                .queryParam("rid", "request123")
-                .queryParam("cid", "campaign123")
-                .queryParam("crid", "creative123")
+                .queryParam("aid", "auction123")
                 .build())
         .exchange()
         .expectStatus().isNoContent();

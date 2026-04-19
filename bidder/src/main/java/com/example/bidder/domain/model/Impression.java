@@ -4,8 +4,10 @@ import lombok.Builder;
 
 @Builder
 public record Impression(
-    String id,
+    String auctionId,
+    String requestId,
     String campaignId,
-    String creativeId
+    String creativeId,
+    Long receivedAt
 ) {
 }

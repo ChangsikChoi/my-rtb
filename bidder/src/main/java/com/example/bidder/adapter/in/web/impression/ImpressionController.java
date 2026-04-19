@@ -5,6 +5,7 @@ import com.example.bidder.domain.port.in.ImpressionUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -17,11 +18,8 @@ public class ImpressionController {
   private final ImpressionUseCase impressionUseCase;
 
   @GetMapping
-  public Mono<ResponseEntity<Object>> handleImpression(ImpressionRequestDto impressionRequest) {
-    ImpressionCommand command = new ImpressionCommand(impressionRequest.rid(),
-        impressionRequest.cid(), impressionRequest.crid());
-
-    return impressionUseCase.handleImpression(command)
+  public Mono<ResponseEntity<Object>> handleImpression(@RequestParam("aid") String auctionId) {
+    return impressionUseCase.handleImpression(new ImpressionCommand(auctionId, System.currentTimeMillis()))
         .thenReturn(ResponseEntity.noContent().build())
         .onErrorReturn(ResponseEntity.noContent().build());
 

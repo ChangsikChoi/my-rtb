@@ -9,9 +9,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.bidder.domain.model.AuctionTracking;
 import com.example.bidder.domain.model.Win;
 import com.example.bidder.domain.port.in.WinCommand;
 import com.example.bidder.domain.port.out.BudgetConfirmPort;
+import com.example.bidder.domain.port.out.LoadAuctionTrackingPort;
 import com.example.bidder.domain.port.out.SendWinResultPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,8 +28,12 @@ import reactor.test.StepVerifier;
 @ExtendWith(MockitoExtension.class)
 class WinServiceTest {
 
+  private static final long RECEIVED_AT = 1_712_966_400_000L;
+
   @Mock
   private BudgetConfirmPort budgetConfirmPort;
+  @Mock
+  private LoadAuctionTrackingPort loadAuctionTrackingPort;
   @Mock
   private SendWinResultPort sendWinResultPort;
 
@@ -37,13 +43,27 @@ class WinServiceTest {
 
   @BeforeEach
   void setUp() {
-    winService = new WinService(budgetConfirmPort, sendWinResultPort, kafkaScheduler);
+    winService = new WinService(
+        budgetConfirmPort,
+        loadAuctionTrackingPort,
+        sendWinResultPort,
+        kafkaScheduler
+    );
   }
 
   @Test
   void whenConfirmBudgetSuccess_thenReturnWinAndSendResult() {
-    WinCommand command = new WinCommand("rid1", "cid1", "crid1");
+    WinCommand command = new WinCommand("aid1", RECEIVED_AT);
 
+    when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
+        .thenReturn(Mono.just(AuctionTracking.builder()
+            .auctionId("aid1")
+            .requestId("rid1")
+            .campaignId("cid1")
+            .creativeId("crid1")
+            .priceMicro(100L)
+            .receivedAt(1L)
+            .build()));
     when(budgetConfirmPort.confirmBudget(any(), any())).thenReturn(Mono.just(true));
     doNothing().when(sendWinResultPort).sendWinResult(any());
 
@@ -51,9 +71,11 @@ class WinServiceTest {
 
     StepVerifier.create(winResult)
         .assertNext(win -> {
-          assertThat(win.id()).isEqualTo(command.requestId());
-          assertThat(win.campaignId()).isEqualTo(command.campaignId());
-          assertThat(win.creativeId()).isEqualTo(command.creativeId());
+          assertThat(win.auctionId()).isEqualTo("aid1");
+          assertThat(win.requestId()).isEqualTo("rid1");
+          assertThat(win.campaignId()).isEqualTo("cid1");
+          assertThat(win.creativeId()).isEqualTo("crid1");
+          assertThat(win.receivedAt()).isEqualTo(RECEIVED_AT);
         })
         .verifyComplete();
 
@@ -62,14 +84,35 @@ class WinServiceTest {
 
   @Test
   void whenConfirmBudgetFailed_thenReturnEmptyMono() {
-    WinCommand command = mock(WinCommand.class);
+    WinCommand command = new WinCommand("aid1", RECEIVED_AT);
 
+    when(loadAuctionTrackingPort.loadAuctionTracking("aid1"))
+        .thenReturn(Mono.just(AuctionTracking.builder()
+            .auctionId("aid1")
+            .requestId("rid1")
+            .campaignId("cid1")
+            .creativeId("crid1")
+            .priceMicro(100L)
+            .receivedAt(1L)
+            .build()));
     when(budgetConfirmPort.confirmBudget(any(), any())).thenReturn(Mono.just(false));
 
     Mono<Win> winResult = winService.handleWin(command);
 
     StepVerifier.create(winResult)
         .expectNextCount(0)
+        .verifyComplete();
+
+    verify(sendWinResultPort, times(0)).sendWinResult(any());
+  }
+
+  @Test
+  void whenTrackingDoesNotExist_thenReturnEmptyMono() {
+    WinCommand command = new WinCommand("aid1", RECEIVED_AT);
+
+    when(loadAuctionTrackingPort.loadAuctionTracking("aid1")).thenReturn(Mono.empty());
+
+    StepVerifier.create(winService.handleWin(command))
         .verifyComplete();
 
     verify(sendWinResultPort, times(0)).sendWinResult(any());

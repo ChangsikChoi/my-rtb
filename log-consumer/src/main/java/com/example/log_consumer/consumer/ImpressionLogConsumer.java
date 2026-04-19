@@ -23,11 +23,13 @@ public class ImpressionLogConsumer {
     )
     @KafkaListener(topics = "impression-log", groupId = "impression-log-group")
     public void consume(KafkaImpressionLog message) {
-        ImpressionLog log = new ImpressionLog(
-                null,
-                message.getRequestId(),
-                message.getCampaignId(),
-                message.getCreativeId());
+        ImpressionLog log = ImpressionLog.builder()
+                .auctionId(message.getAuctionId())
+                .requestId(message.getRequestId())
+                .campaignId(message.getCampaignId())
+                .creativeId(message.getCreativeId())
+                .receivedAt(message.getReceivedAt())
+                .build();
 
         System.out.println("message = " + message);
         ImpressionLog save = impressionLogRepository.save(log);

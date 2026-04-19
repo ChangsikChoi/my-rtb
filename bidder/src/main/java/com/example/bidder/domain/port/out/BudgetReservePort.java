@@ -4,5 +4,5 @@ import reactor.core.publisher.Mono;
 
 public interface BudgetReservePort {
 
-  Mono<Boolean> reserveBudget(String campaignId, String requestId, Long reserveAmountMicro);
+  Mono<Boolean> reserveBudget(String campaignId, String auctionId, Long reserveAmountMicro);
 }

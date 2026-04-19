@@ -23,11 +23,13 @@ public class WinLogConsumer {
     )
     @KafkaListener(topics = "win-log", groupId = "win-log-group")
     public void consume(KafkaWinLog message) {
-        WinLog log = new WinLog(
-                null,
-                message.getRequestId(),
-                message.getCampaignId(),
-                message.getCreativeId());
+        WinLog log = WinLog.builder()
+                .auctionId(message.getAuctionId())
+                .requestId(message.getRequestId())
+                .campaignId(message.getCampaignId())
+                .creativeId(message.getCreativeId())
+                .receivedAt(message.getReceivedAt())
+                .build();
 
         System.out.println("message = " + message);
         WinLog save = winLogRepository.save(log);

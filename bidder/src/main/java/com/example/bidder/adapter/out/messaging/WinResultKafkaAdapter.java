@@ -23,13 +23,15 @@ public class WinResultKafkaAdapter implements SendWinResultPort {
   @Override
   public void sendWinResult(Win winResult) {
     KafkaWinLog message = KafkaWinLog.newBuilder()
-        .setRequestId(winResult.id())
+        .setAuctionId(winResult.auctionId())
+        .setRequestId(winResult.requestId())
         .setCampaignId(winResult.campaignId())
         .setCreativeId(winResult.creativeId())
+        .setReceivedAt(winResult.receivedAt())
         .build();
 
     CompletableFuture<SendResult<String, SpecificRecordBase>> future =
-        kafkaTemplate.send("win-log", winResult.id(), message);
+        kafkaTemplate.send(topicName, winResult.auctionId(), message);
 
     future.whenComplete((result, ex) -> {
       SpecificRecordBase logMessage = result != null && result.getProducerRecord() != null

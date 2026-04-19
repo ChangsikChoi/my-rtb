@@ -18,11 +18,11 @@ public class BudgetReserveAdapter implements BudgetReservePort {
   private final DefaultRedisScript<Boolean> reserveBudgetLuaScript;
 
   @Override
-  public Mono<Boolean> reserveBudget(String campaignId, String requestId, Long reserveAmountMicro) {
+  public Mono<Boolean> reserveBudget(String campaignId, String auctionId, Long reserveAmountMicro) {
     String totalKey = RedisKeys.campaignTotalBudgetKey(campaignId);
     String reservedKey = RedisKeys.campaignReservedBudgetKey(campaignId);
-    String reservationKey = RedisKeys.reservationKey(requestId);
-    String reservationBackupKey = RedisKeys.reservationBackupKey(requestId);
+    String reservationKey = RedisKeys.reservationKey(auctionId);
+    String reservationBackupKey = RedisKeys.reservationBackupKey(auctionId);
 
     return redisTemplate.execute(
             // 레디스 스크립트
