@@ -4,6 +4,8 @@ import com.example.KafkaBiddingLog;
 import com.example.log_consumer.model.BiddingLog;
 import com.example.log_consumer.repository.BiddingLogRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BiddingLogConsumer {
+    private static final Logger dltLogger = LoggerFactory.getLogger("dlt.bidding-log");
+
     private final BiddingLogRepository biddingLogRepository;
 
     @RetryableTopic(
@@ -32,13 +36,11 @@ public class BiddingLogConsumer {
                 .receivedAt(message.getReceivedAt())
                 .build();
 
-        System.out.println("message = " + message);
         BiddingLog save = biddingLogRepository.save(log);
-        System.out.println("save = " + save);
     }
 
     @DltHandler
     public void dltConsume(KafkaBiddingLog message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        System.out.println("DLT message = " + message);
+        dltLogger.warn("DLT topic={}, message={}", topic, message);
     }
 }

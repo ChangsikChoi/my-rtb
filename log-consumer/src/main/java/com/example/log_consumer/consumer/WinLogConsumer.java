@@ -4,6 +4,8 @@ import com.example.KafkaWinLog;
 import com.example.log_consumer.model.WinLog;
 import com.example.log_consumer.repository.WinLogRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WinLogConsumer {
+    private static final Logger dltLogger = LoggerFactory.getLogger("dlt.win-log");
+
     private final WinLogRepository winLogRepository;
 
     @RetryableTopic(
@@ -31,13 +35,11 @@ public class WinLogConsumer {
                 .receivedAt(message.getReceivedAt())
                 .build();
 
-        System.out.println("message = " + message);
         WinLog save = winLogRepository.save(log);
-        System.out.println("save = " + save);
     }
 
     @DltHandler
     public void dltConsume(KafkaWinLog message, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        System.out.println("DLT message = " + message);
+        dltLogger.warn("DLT topic={}, message={}", topic, message);
     }
 }

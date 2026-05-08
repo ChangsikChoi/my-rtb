@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="DLT_BIDDING_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/dlt/bidding-log.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/dlt/bidding-log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>14</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="DLT_IMPRESSION_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/dlt/impression-log.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/dlt/impression-log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>14</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="DLT_CLICK_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/dlt/click-log.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/dlt/click-log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>14</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="DLT_WIN_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/dlt/win-log.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/dlt/win-log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>14</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="dlt.bidding-log" level="WARN" additivity="false">
+    <appender-ref ref="DLT_BIDDING_LOG_FILE" />
+  </logger>
+
+  <logger name="dlt.impression-log" level="WARN" additivity="false">
+    <appender-ref ref="DLT_IMPRESSION_LOG_FILE" />
+  </logger>
+
+  <logger name="dlt.click-log" level="WARN" additivity="false">
+    <appender-ref ref="DLT_CLICK_LOG_FILE" />
+  </logger>
+
+  <logger name="dlt.win-log" level="WARN" additivity="false">
+    <appender-ref ref="DLT_WIN_LOG_FILE" />
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+</configuration>
