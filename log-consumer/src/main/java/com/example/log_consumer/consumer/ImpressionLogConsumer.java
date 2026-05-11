@@ -35,7 +35,7 @@ public class ImpressionLogConsumer {
                 .receivedAt(message.getReceivedAt())
                 .build();
 
-        ImpressionLog save = impressionLogRepository.save(log);
+        impressionLogRepository.save(log);
     }
 
     @DltHandler

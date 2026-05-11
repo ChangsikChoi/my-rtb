@@ -35,7 +35,7 @@ public class WinLogConsumer {
                 .receivedAt(message.getReceivedAt())
                 .build();
 
-        WinLog save = winLogRepository.save(log);
+        winLogRepository.save(log);
     }
 
     @DltHandler

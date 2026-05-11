@@ -36,7 +36,7 @@ public class BiddingLogConsumer {
                 .receivedAt(message.getReceivedAt())
                 .build();
 
-        BiddingLog save = biddingLogRepository.save(log);
+        biddingLogRepository.save(log);
     }
 
     @DltHandler

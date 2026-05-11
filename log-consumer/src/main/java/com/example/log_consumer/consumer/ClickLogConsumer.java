@@ -35,7 +35,7 @@ public class ClickLogConsumer {
                 .receivedAt(message.getReceivedAt())
                 .build();
 
-        ClickLog save = clickLogRepository.save(log);
+        clickLogRepository.save(log);
     }
 
     @DltHandler
