@@ -27,6 +27,9 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.schema-registry.url}")
     private String schemaRegistryUrl;
 
+    @Value("${spring.kafka.listener.auto-startup:true}")
+    private boolean listenerAutoStartup;
+
     @Bean
     public ConsumerFactory<String, SpecificRecordBase> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -46,6 +49,7 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.setAutoStartup(listenerAutoStartup);
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }
