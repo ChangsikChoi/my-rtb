@@ -47,6 +47,9 @@ public abstract class LogConsumerKafkaIntegrationTestSupport {
     registry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
     registry.add("spring.kafka.schema-registry.url", LogConsumerKafkaIntegrationTestSupport::schemaRegistryUrl);
     registry.add("spring.kafka.listener.auto-startup", () -> "true");
+    registry.add("log-consumer.kafka.retry.attempts", () -> "3");
+    registry.add("log-consumer.kafka.retry.delay-ms", () -> "100");
+    registry.add("log-consumer.kafka.retry.multiplier", () -> "1");
   }
 
   protected static String schemaRegistryUrl() {

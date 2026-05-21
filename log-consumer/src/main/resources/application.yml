@@ -17,3 +17,10 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     schema-registry:
       url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+
+log-consumer:
+  kafka:
+    retry:
+      attempts: ${KAFKA_RETRY_ATTEMPTS:3}
+      delay-ms: ${KAFKA_RETRY_DELAY_MS:1000}
+      multiplier: ${KAFKA_RETRY_MULTIPLIER:2}
