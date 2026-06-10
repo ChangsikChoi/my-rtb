@@ -3,7 +3,6 @@ package com.example.log_consumer.consumer;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
@@ -60,7 +60,17 @@ class BiddingLogKafkaRetryDltTest extends LogConsumerKafkaIntegrationTestSupport
           verify(dltLogHandler).handle(
               argThat(record -> record instanceof KafkaBiddingLog biddingLog
                   && auctionId.equals(biddingLog.getAuctionId())),
-              eq("bidding-log-dlt")
+              argThat(headers ->
+                  "bidding-log-dlt".equals(headers.get(KafkaHeaders.RECEIVED_TOPIC))
+                      && auctionId.equals(headers.get(KafkaHeaders.RECEIVED_KEY))
+                      && headers.containsKey(KafkaHeaders.RECEIVED_PARTITION)
+                      && headers.containsKey(KafkaHeaders.OFFSET)
+                      && headers.containsKey(KafkaHeaders.ORIGINAL_TOPIC)
+                      && headers.containsKey(KafkaHeaders.ORIGINAL_PARTITION)
+                      && headers.containsKey(KafkaHeaders.ORIGINAL_OFFSET)
+                      && headers.containsKey(KafkaHeaders.EXCEPTION_FQCN)
+                      && headers.containsKey(KafkaHeaders.EXCEPTION_MESSAGE)
+              )
           );
         });
   }
