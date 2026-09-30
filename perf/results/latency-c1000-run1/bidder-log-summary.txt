@@ -1,0 +1,8 @@
+lines: 9262
+levels:
+  INFO: 5787
+  WARN: 3
+warn/error lines:
+  2026-09-30 23:48:43 [reactor-http-nio-4] WARN  reactor.netty.channel.FluxReceive  - [c032c521-1, L:/172.19.0.7:8080 - R:/192.168.65.1:55028] An exception has been observed post termination, use DEBUG level to see the full stack: java.lang.NoClassDefFoundError: Could not initialize class ch.qos.logback.classic.spi.ThrowableProxy
+  2026-09-30 23:48:43 [reactor-http-nio-1] WARN  reactor.netty.channel.FluxReceive  - [1570fe7e-1, L:/172.19.0.7:8080 - R:/192.168.65.1:57419] An exception has been observed post termination, use DEBUG level to see the full stack: java.lang.NoClassDefFoundError: Could not initialize class ch.qos.logback.classic.spi.ThrowableProxy
+  2026-09-30 23:48:43 [reactor-http-nio-3] WARN  reactor.netty.channel.FluxReceive  - [410b4fd7-1, L:/172.19.0.7:8080 - R:/192.168.65.1:48766] An exception has been observed post termination, use DEBUG level to see the full stack: java.lang.NoClassDefFoundError: Could not initialize class ch.qos.logback.classic.spi.ThrowableProxy

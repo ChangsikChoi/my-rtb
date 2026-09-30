@@ -1,0 +1,4 @@
+rate	achieved_rps	p50_ms	p95_ms	p99_ms	dropped	errors	redis_calls_per_bid	hgetall_per_bid	redis_cores	bidder_cpu_avg_pct	bidder_cpu_max_pct	sla_ok	saturated
+100	100.02	4.21	4.82	6.56	0	0	114.3	100	0.08	45.3	61.2	true	false
+250	250	3.43	4.78	10.85	0	0	112.2	100	0.17	86.0	101.3	true	false
+500	245.48	4123.46	4258.85	4311.58	15271	0	114.2	100	0.15	160.6	182.8	false	true

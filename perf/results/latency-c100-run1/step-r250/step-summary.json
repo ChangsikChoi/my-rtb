@@ -1,0 +1,53 @@
+{
+  "rate": 250,
+  "campaigns": 100,
+  "achievedRps": 250,
+  "bidLatencyMs": {
+    "avg": 3.78,
+    "min": 3.13,
+    "p(50)": 3.43,
+    "p(90)": 3.89,
+    "p(95)": 4.78,
+    "p(99)": 10.85,
+    "max": 38.32
+  },
+  "counts": {
+    "bidOk": 15000,
+    "bidNoBid": 0,
+    "bidError": 0,
+    "winSent": 0,
+    "droppedIterations": 0
+  },
+  "droppedRatio": 0,
+  "redis": {
+    "totalCalls": 1683075,
+    "callsPerBid": 112.2,
+    "hgetallPerBid": 100,
+    "commands": {
+      "config|resetstat": 1,
+      "hmset": 15000,
+      "smembers": 15000,
+      "evalsha": 20512,
+      "info": 2,
+      "hget": 11024,
+      "expire": 30000,
+      "del": 5512,
+      "incrby": 20512,
+      "get": 15000,
+      "hgetall": 1500000,
+      "decrby": 20512,
+      "hset": 30000
+    },
+    "cpuCoresUsed": 0.17,
+    "usedMemoryMiB": 15.6
+  },
+  "bidder": {
+    "cpu": {
+      "avgPercent": 86.0,
+      "maxPercent": 101.3,
+      "samples": 30
+    }
+  },
+  "slaOk": true,
+  "saturated": false
+}
