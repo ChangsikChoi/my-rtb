@@ -1,0 +1,36 @@
+{
+  "scenario": "oversell",
+  "note": "k6 handleSummary가 결과 디렉토리 부재로 저장에 실패하여 k6 stdout 출력값으로 복원함. settledAfterSec는 복원 시각 기준이라 의미 없음.",
+  "runId": "perf-20260930135553",
+  "campaignId": "4eb52c88-6e1e-46c1-8e4f-cad93c6a1600",
+  "config": {
+    "rate": 500,
+    "durationSec": 20,
+    "winRatio": 0.5,
+    "bidderUrl": "http://localhost:8080"
+  },
+  "seed": {
+    "budgetMicro": 100000000,
+    "impressionPriceMicro": 1000000,
+    "capacity": 100
+  },
+  "counts": {
+    "bidOk": 100,
+    "bidNoBid": 9779,
+    "bidError": 0,
+    "winSent": 48,
+    "winError": 0,
+    "droppedIterations": 122
+  },
+  "bidLatencyMs": {
+    "p(50)": 0.9,
+    "p(95)": 942.6,
+    "p(99)": 1307.3
+  },
+  "oversold": false,
+  "expected": {
+    "maxBidOk": 100,
+    "finalReservedMicro": 0,
+    "finalTotalMicro": 52000000
+  }
+}

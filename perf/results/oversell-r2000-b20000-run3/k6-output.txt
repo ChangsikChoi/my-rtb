@@ -1,0 +1,15 @@
+time="2026-09-30T16:17:14+09:00" level=warning msg="Insufficient VUs, reached 4000 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=oversell
+
+=== oversell 결과 ===
+부하        : 2000 req/s × 20s (win 비율 0.5)
+예산 용량   : 20000회
+입찰 성공   : 20000  ✅ 예산 정확히 소진
+입찰 없음   : 12454
+입찰 오류   : 0
+win 호출    : 9975 (오류 0)
+드롭된 요청 : 7546  ⚠️ VU 부족으로 목표 RPS 미달
+입찰 지연   : p50 1224.6ms / p95 2300.8ms / p99 2592.3ms
+
+다음 단계: 30초 이상 기다린 뒤 Redis에서 확인
+  campaign:39038c4b-62a9-4a0c-a489-7fac23eff457:budget_reserved == 0
+  campaign:39038c4b-62a9-4a0c-a489-7fac23eff457:budget_total    == 10025000000

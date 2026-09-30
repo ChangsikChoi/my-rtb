@@ -1,0 +1,57 @@
+{
+  "campaignId": "9441709a-21fa-49e9-a628-c3de206320ca",
+  "passed": true,
+  "checks": [
+    {
+      "name": "성공 입찰 수 ≤ 예산 용량",
+      "passed": true,
+      "actual": "100",
+      "expected": "≤ 100"
+    },
+    {
+      "name": "budget_reserved == 0",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "남은 reservation 키",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "남은 reservation_backup 키",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "name": "budget_total ≥ 0",
+      "passed": true,
+      "actual": "55000000",
+      "expected": "≥ 0"
+    },
+    {
+      "name": "budget_total == 초기 − win × 예약액",
+      "passed": true,
+      "actual": "55000000",
+      "expected": "55000000"
+    }
+  ],
+  "redis": {
+    "budgetMicro": 100000000,
+    "totalMicro": 55000000,
+    "reservedMicro": 0
+  },
+  "derived": {
+    "confirmed": 45,
+    "winSent": 45,
+    "bidOk": 100,
+    "settledAfterSec": 12
+  },
+  "eventRows": {
+    "biddingLog": 100,
+    "winLog": 45
+  }
+}

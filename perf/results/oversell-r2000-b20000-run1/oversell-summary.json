@@ -1,0 +1,37 @@
+{
+  "scenario": "oversell",
+  "runId": "perf-20260930161404",
+  "campaignId": "915800f7-931a-46b0-a8a0-744a73979b69",
+  "config": {
+    "rate": 2000,
+    "durationSec": 20,
+    "winRatio": 0.5,
+    "bidderUrl": "http://localhost:8080"
+  },
+  "seed": {
+    "budgetMicro": 20000000000,
+    "impressionPriceMicro": 1000000,
+    "capacity": 20000
+  },
+  "counts": {
+    "bidOk": 20000,
+    "bidNoBid": 13433,
+    "bidError": 0,
+    "winSent": 10020,
+    "winError": 0,
+    "droppedIterations": 6568
+  },
+  "bidLatencyMs": {
+    "p(95)": 2393.0458,
+    "p(99)": 2675.16644,
+    "max": 2848.601,
+    "avg": 1069.8840064207413,
+    "p(50)": 1128.307
+  },
+  "oversold": false,
+  "expected": {
+    "maxBidOk": 20000,
+    "finalReservedMicro": 0,
+    "finalTotalMicro": 9980000000
+  }
+}

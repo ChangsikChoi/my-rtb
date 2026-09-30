@@ -1,0 +1,4 @@
+.state/
+# 원본 bidder 로그는 Kafka 발행 INFO 로그로 수십 MB가 되므로 커밋하지 않는다.
+# 레벨별 건수와 WARN/ERROR 줄은 bidder-log-summary.txt로 남긴다.
+results/**/bidder.log

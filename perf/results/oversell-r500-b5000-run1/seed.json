@@ -1,0 +1,12 @@
+{
+  "runId": "perf-20260930160538",
+  "adManagerUrl": "http://localhost:8088",
+  "campaigns": [
+    "779c7306-8021-4d48-9b48-ec2079c9fe0e"
+  ],
+  "targetCpm": 1000,
+  "budget": 5000,
+  "budgetMicro": 5000000000,
+  "impressionPriceMicro": 1000000,
+  "capacityPerCampaign": 5000
+}

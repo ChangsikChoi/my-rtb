@@ -1,0 +1,21 @@
+[verify] 캠페인 39038c4b-62a9-4a0c-a489-7fac23eff457 의 예약이 모두 확정·환불될 때까지 대기 (최대 90초)
+[verify]   대기 중: reserved=10025000000, reservation 키 10025개, backup 키 10025개
+[verify]   대기 중: reserved=10022000000, reservation 키 9332개, backup 키 9332개
+[verify]   대기 중: reserved=4129000000, reservation 키 1871개, backup 키 2188개
+[verify] 예약 정리 완료 (부하 종료 후 약 28초)
+
+=== 예산 정합성 검증 ===
+  ✅ 성공 입찰 수 ≤ 예산 용량: 실제 20000 (기대 ≤ 20000)
+  ✅ budget_reserved == 0: 실제 0 (기대 0)
+  ✅ 남은 reservation 키: 실제 0 (기대 0)
+  ✅ 남은 reservation_backup 키: 실제 0 (기대 0)
+  ✅ budget_total ≥ 0: 실제 10025000000 (기대 ≥ 0)
+  ✅ budget_total == 초기 − win × 예약액: 실제 10025000000 (기대 10025000000)
+
+  확정 차감액 9975000000 micro → 확정 9975회 (win 호출 9975회)
+
+=== 참고: 이벤트 저장 건수 (Kafka 비동기 발행이라 판정 제외) ===
+  bidding_log 20000    (성공 입찰 20000)
+  win_log     9975     (확정 9975)
+
+[verify] ✅ 모든 판정 통과 → perf/results/oversell-r2000-b20000-run3/verify-result.json
