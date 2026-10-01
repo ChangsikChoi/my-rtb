@@ -61,11 +61,15 @@ wait_ready() {
 }
 
 # record_env <결과 디렉토리> <회차 표시> <파라미터 JSON>
-# 커밋, 호스트, 컨테이너 리소스 제한과 측정 파라미터를 env.json으로 남긴다.
+# 커밋, 호스트, 컨테이너 리소스 제한, 실행 중인 이미지와 측정 파라미터를 env.json으로 남긴다.
+#
+# env.json의 git.commit은 측정 시점의 HEAD일 뿐, 실행 중인 이미지가 그 코드로 빌드됐다는 보장은 없다.
+# 그래서 서비스별 이미지 ID·생성 시각과 앱 디렉토리의 git tree 해시(작업 트리 변경 여부 포함)를 함께 남긴다.
+# 이미지 생성 시각이 마지막 앱 코드 변경보다 이전이면 이미지가 오래된 코드로 빌드됐다는 뜻이다.
 record_env() {
   local dir="$1" run_label="$2" params="$3"
-  local limits='{}'
-  local svc id
+  local limits='{}' images='{}' sources='{}'
+  local svc id image_id
   for svc in bidder redis kafka schema-registry postgres ad-manager log-consumer; do
     id="$("${COMPOSE[@]}" ps -q "$svc")"
     limits="$(jq -c \
@@ -75,6 +79,30 @@ record_env() {
       --arg java "$(docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$id" | sed -n 's/^JAVA_TOOL_OPTIONS=//p')" \
       '. + {($svc): {cpus: ($nano / 1e9), memoryMiB: ($mem / 1048576), javaToolOptions: (if $java == "" then null else $java end)}}' \
       <<<"$limits")"
+
+    image_id="$(docker inspect -f '{{.Image}}' "$id")"
+    images="$(jq -c \
+      --arg svc "$svc" \
+      --arg ref "$(docker inspect -f '{{.Config.Image}}' "$id")" \
+      --arg imageId "$image_id" \
+      --arg created "$(docker image inspect -f '{{.Created}}' "$image_id")" \
+      '. + {($svc): {ref: $ref, id: $imageId, created: $created}}' \
+      <<<"$images")"
+  done
+
+  # 직접 빌드하는 앱 서비스의 소스 상태 (compose 서비스명 → 디렉토리)
+  local app path
+  for app in bidder:bidder ad-manager:ad_manager log-consumer:log-consumer; do
+    svc="${app%%:*}"
+    path="${app#*:}"
+    sources="$(jq -c \
+      --arg svc "$svc" \
+      --arg path "$path" \
+      --arg tree "$(git -C "$ROOT_DIR" rev-parse "HEAD:$path")" \
+      --arg lastCommit "$(git -C "$ROOT_DIR" log -1 --format='%h %cI' -- "$path")" \
+      --argjson dirty "$([[ -n "$(git -C "$ROOT_DIR" status --porcelain -- "$path")" ]] && echo true || echo false)" \
+      '. + {($svc): {path: $path, headTree: $tree, lastCommit: $lastCommit, workingTreeDirty: $dirty}}' \
+      <<<"$sources")"
   done
 
   jq -n \
@@ -87,6 +115,9 @@ record_env() {
     --arg dockerVm "$(docker info --format '{{.NCPU}} CPU / {{.MemTotal}} bytes')" \
     --arg k6 "$(k6 version | head -1)" \
     --argjson limits "$limits" \
+    --argjson images "$images" \
+    --argjson sources "$sources" \
+    --argjson rebuilt "$([[ "$BUILD" == "1" ]] && echo true || echo false)" \
     --argjson params "$params" \
     '{
       startedAt: $startedAt,
@@ -94,6 +125,9 @@ record_env() {
       git: {commit: $commit, trackedChanges: $trackedChanges},
       host: {cpu: $hostCpu, cores: $hostCores, dockerVm: $dockerVm, k6: $k6},
       containerLimits: $limits,
+      images: $images,
+      imagesRebuiltThisRun: $rebuilt,
+      appSources: $sources,
       params: $params
     }' >"$dir/env.json"
 }

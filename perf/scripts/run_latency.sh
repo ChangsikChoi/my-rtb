@@ -14,7 +14,7 @@
 #   RATES               측정할 초당 요청 수 목록, 공백 구분, 오름차순 (기본 "100 250 500 750 1000")
 #   STEP_SEC            단계별 측정 시간 (기본 60)
 #   COOLDOWN_SEC        단계 사이 대기 시간 (기본 10)
-#   WARMUP_RATE         워밍업 요청률 (기본 RATES의 첫 값)
+#   WARMUP_RATE         워밍업 요청률 (기본 RATES의 첫 값과 250 중 작은 값)
 #   WARMUP_SEC          워밍업 시간, 캠페인 시드 후 입찰 성공 경로까지 데운다 (기본 60)
 #   WIN_RATIO           성공 입찰 중 win 호출 비율 (기본 0: 모든 예약은 30초 뒤 만료 환불)
 #   BUDGET              캠페인당 예산, 정수 원 (기본 100000000: 측정 중 소진되지 않는 크기)
@@ -44,7 +44,10 @@ RATES="${RATES:-100 250 500 750 1000}"
 STEP_SEC="${STEP_SEC:-60}"
 COOLDOWN_SEC="${COOLDOWN_SEC:-10}"
 read -r -a RATE_LIST <<<"$RATES"
-WARMUP_RATE="${WARMUP_RATE:-${RATE_LIST[0]}}"
+# 워밍업은 처리 한계보다 충분히 낮은 요청률로 한다. 콜드 JVM에 한계 근처 부하를 바로 주면
+# JIT 컴파일 전 쌓인 대기열이 해소되지 못해 이후 단계까지 포화 상태로 남는다.
+WARMUP_MAX_RATE=250
+WARMUP_RATE="${WARMUP_RATE:-$((RATE_LIST[0] < WARMUP_MAX_RATE ? RATE_LIST[0] : WARMUP_MAX_RATE))}"
 WARMUP_SEC="${WARMUP_SEC:-60}"
 WIN_RATIO="${WIN_RATIO:-0}"
 BUDGET="${BUDGET:-100000000}"

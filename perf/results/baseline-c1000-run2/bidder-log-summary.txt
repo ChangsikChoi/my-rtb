@@ -1,0 +1,31 @@
+lines: 18223
+levels:
+  ERROR: 5
+  INFO: 11606
+  WARN: 20
+warn/error lines:
+  2026-10-01 01:01:00 [reactor-http-nio-1] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:00 [reactor-http-nio-2] WARN  reactor.core.Exceptions 8c16ea9ff49e9cbdd49d76863dbc77e8 - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:00 [lettuce-nioEventLoop-5-2] WARN  i.n.c.AbstractChannelHandlerContext  - An exception 'java.lang.OutOfMemoryError: Java heap space' [enable DEBUG level for full stacktrace] was thrown by a user handler's exceptionCaught() method while handling the following exception:
+  2026-10-01 01:01:00 [reactor-http-nio-1] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:00 [reactor-http-nio-2] WARN  reactor.core.Exceptions 8c16ea9ff49e9cbdd49d76863dbc77e8 - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:00 [reactor-http-nio-2] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:00 [reactor-http-nio-1] ERROR r.netty.http.server.HttpServer  - [405f9cd5-1, L:/172.19.0.7:8080 - R:/192.168.65.1:41917] 
+  2026-10-01 01:01:00 [reactor-http-nio-2] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:00 [reactor-http-nio-2] ERROR r.netty.http.server.HttpServer  - [dd2c25af-1, L:/172.19.0.7:8080 - R:/192.168.65.1:57634] 
+  2026-10-01 01:01:01 [reactor-http-nio-3] ERROR r.n.http.server.HttpServerOperations 0e19f9e151d37abe0b8280a66b7b2df6 - [21f88f5a-1, L:/172.19.0.7:8080 - R:/192.168.65.1:29847] Error starting response. Replying error status
+  2026-10-01 01:01:06 [redisMessageListenerContainer-5947] WARN  o.s.d.r.l.RedisMessageListenerContainer  - Execution of message listener failed, and no ErrorHandler has been set
+  2026-10-01 01:01:06 [redisMessageListenerContainer-5948] WARN  o.s.d.r.l.RedisMessageListenerContainer  - Execution of message listener failed, and no ErrorHandler has been set
+  2026-10-01 01:01:12 [lettuce-nioEventLoop-5-1] WARN  reactor.core.Exceptions 4a98d4d94e58d90518c58ed0d7ab2730 - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [reactor-http-nio-1] WARN  reactor.core.Exceptions 3281809673d8ed4b3fafe6696046b907 - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [reactor-http-nio-1] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [reactor-http-nio-1] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [reactor-http-nio-2] WARN  reactor.core.Exceptions da749c2d43b564e248cb94da982c3ab7 - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [lettuce-nioEventLoop-5-2] WARN  i.n.c.AbstractChannelHandlerContext  - An exception 'java.lang.OutOfMemoryError: Java heap space' [enable DEBUG level for full stacktrace] was thrown by a user handler's exceptionCaught() method while handling the following exception:
+  2026-10-01 01:01:12 [reactor-http-nio-2] WARN  reactor.core.Exceptions da749c2d43b564e248cb94da982c3ab7 - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [reactor-http-nio-2] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [reactor-http-nio-2] WARN  reactor.core.Exceptions  - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [lettuce-nioEventLoop-5-1] WARN  reactor.core.Exceptions 4a98d4d94e58d90518c58ed0d7ab2730 - throwIfFatal detected a jvm fatal exception, which is thrown and logged below:
+  2026-10-01 01:01:12 [reactor-http-nio-1] ERROR r.netty.http.server.HttpServer  - [8382414d-1, L:/172.19.0.7:8080 - R:/192.168.65.1:29869] 
+  2026-10-01 01:01:12 [reactor-http-nio-2] ERROR r.netty.http.server.HttpServer  - [41a8552a-1, L:/172.19.0.7:8080 - R:/192.168.65.1:42351] 
+  2026-10-01 01:01:12 [lettuce-nioEventLoop-5-1] WARN  i.n.c.AbstractChannelHandlerContext  - An exception 'java.lang.OutOfMemoryError: Java heap space' [enable DEBUG level for full stacktrace] was thrown by a user handler's exceptionCaught() method while handling the following exception:
