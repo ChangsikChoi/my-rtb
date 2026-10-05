@@ -113,6 +113,7 @@ record_env() {
     --arg hostCpu "$(sysctl -n machdep.cpu.brand_string 2>/dev/null || grep -m1 'model name' /proc/cpuinfo | cut -d: -f2- || echo unknown)" \
     --arg hostCores "$(sysctl -n hw.ncpu 2>/dev/null || nproc)" \
     --arg dockerVm "$(docker info --format '{{.NCPU}} CPU / {{.MemTotal}} bytes')" \
+    --arg lowPowerMode "$(pmset -g 2>/dev/null | awk '/lowpowermode/ { print $2 }')" \
     --arg k6 "$(k6 version | head -1)" \
     --argjson limits "$limits" \
     --argjson images "$images" \
@@ -123,11 +124,50 @@ record_env() {
       startedAt: $startedAt,
       run: $run,
       git: {commit: $commit, trackedChanges: $trackedChanges},
-      host: {cpu: $hostCpu, cores: $hostCores, dockerVm: $dockerVm, k6: $k6},
+      host: {cpu: $hostCpu, cores: $hostCores, dockerVm: $dockerVm, k6: $k6,
+             lowPowerMode: (if $lowPowerMode == "" then null else ($lowPowerMode == "1") end)},
       containerLimits: $limits,
       images: $images,
       imagesRebuiltThisRun: $rebuilt,
       appSources: $sources,
       params: $params
     }' >"$dir/env.json"
+}
+
+redis_cli() {
+  "${COMPOSE[@]}" exec -T redis redis-cli "$@" | tr -d '\r'
+}
+
+# macOS 발열 상태 (NSProcessInfo.thermalState: 0 정상, 1 약간 높음, 2 심각, 3 위험). macOS가 아니면 0.
+thermal_state() {
+  osascript -l JavaScript -e 'ObjC.import("Foundation"); $.NSProcessInfo.processInfo.thermalState' 2>/dev/null || echo 0
+}
+
+# bidder JVM(PID 1)의 스레드별 누적 CPU tick을 "tid|이름|tick" 형식으로 남긴다.
+bidder_thread_snapshot() {
+  "${COMPOSE[@]}" exec -T bidder sh -c '
+    for t in /proc/1/task/*; do
+      name=$(cat "$t/comm" 2>/dev/null) || continue
+      ticks=$(cut -d")" -f2- "$t/stat" 2>/dev/null | awk "{print \$12 + \$13}") || continue
+      echo "${t##*/}|$name|$ticks"
+    done' | tr -d '\r' >"$1"
+}
+
+# bidder_thread_cores <이전 스냅샷> <이후 스냅샷> <초> <CLK_TCK>
+# 출력: "가장 바쁜 Lettuce 스레드 코어<TAB>두 스냅샷에 모두 있는 스레드의 합계 코어"
+bidder_thread_cores() {
+  awk -F'|' -v secs="$3" -v hz="$4" '
+    NR == FNR { base[$1] = $3; next }
+    ($1 in base) {
+      d = $3 - base[$1]; if (d <= 0) next
+      total += d
+      if ($2 ~ /^lettuce/ && d > top) top = d
+    }
+    END { printf "%.3f\t%.3f\n", top / hz / secs, total / hz / secs }' "$1" "$2"
+}
+
+bidder_clk_tck() {
+  local v
+  v="$("${COMPOSE[@]}" exec -T bidder getconf CLK_TCK 2>/dev/null | tr -d '\r' || true)"
+  [[ "$v" =~ ^[0-9]+$ ]] && echo "$v" || echo 100
 }
