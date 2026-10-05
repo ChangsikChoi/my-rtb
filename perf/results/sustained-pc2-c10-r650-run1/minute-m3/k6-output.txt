@@ -1,0 +1,3 @@
+
+=== latency 결과 ===
+rate 650/s → 실제 650/s | p50 1.15ms p95 3.73ms p99 27.28ms max 69.45ms | 200:39000 204:0 err:0 drop:0

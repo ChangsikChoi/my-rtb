@@ -1,0 +1,5 @@
+lines: 965664
+levels:
+  INFO: 587410
+warn/error lines:
+  (없음)

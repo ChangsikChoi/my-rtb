@@ -1,6 +1,6 @@
 # 성능 개선 작업 인계 노트
 
-2026-10-01 작성. `performance-measure` 브랜치에서 성능 측정 도구를 만들고 개선 전 기준선을 확정한 뒤, 개선 작업을 다른 PC에서 이어가기 위해 남기는 노트다. 다음 세션은 이 문서와 [`results/BASELINE.md`](results/BASELINE.md)를 먼저 읽고 시작한다.
+2026-10-01 작성, 2026-10-04 갱신(PC2 기준선 측정 완료). `performance-measure` 브랜치에서 성능 측정 도구를 만들고 개선 전 기준선을 확정한 뒤, 개선 작업을 다른 PC에서 이어가기 위해 남기는 노트다. 다음 세션은 이 문서와 [`results/BASELINE.md`](results/BASELINE.md)(PC1), [`results/BASELINE-pc2.md`](results/BASELINE-pc2.md)(PC2, 개선 작업의 비교 기준)를 먼저 읽고 시작한다.
 
 ## 1. 현재 상태
 
@@ -10,6 +10,8 @@
 - **시나리오 B (처리 용량·병목 측정)**: 캠페인 10/100/1,000개에서 p99 ≤ 100ms 처리 용량을 3회씩 측정했다. 기준값은 각각 1,000 / 250 / 25 req/s. 병목은 요청마다 전체 캠페인을 조회·매핑하는 작업이 단일 Lettuce I/O 스레드에서 실행되는 것(요청당 `0.2ms + N × 0.032ms`).
 - **시나리오 C (과부하·장애 내성)**: 미구현. B에서 한계를 넘으면 대기열 폭주와 힙 OOM으로 무너지는 것을 관찰했다.
 - 자세한 결과·해석·측정 조건·비교 규칙은 `results/BASELINE.md`(해석 원문 `results/BASELINE.notes.md`)에 있다.
+- **PC2 기준선 (2026-10-04, 개선 작업은 이 값과 비교)**: Apple M4 MacBook Air, **저전력 모드**. 시나리오 B 기준값은 c10 750 / c100 200 / c1000 18 req/s, 회차 간 요청당 CPU 편차 ±1~2.5%. 같은 병목 구조가 재현됐다. 결과·해석·비교 규칙은 [`results/BASELINE-pc2.md`](results/BASELINE-pc2.md)(해석 원문 `BASELINE-pc2.notes.md`).
+- **만료 환불 경로 문제 (PC2에서 발견)**: 같은 요청률을 계속 유지하면 환불이 붙는 순간 bidder CPU가 두 배가 되고(환불마다 새 스레드), 미환불 예약이 멈추지 않고 늘어난다. 60초 단계 측정에는 거의 드러나지 않아 지속 측정(`run_sustained.sh`)으로 확인했다. `BASELINE-pc2.md` 해석 3.
 
 ### 주요 파일
 
@@ -18,8 +20,13 @@
 | `perf/docker-compose.perf.yml` | 측정용 리소스 제한 (bidder 2 vCPU / 1 GiB / 힙 512 MiB 고정 / G1) |
 | `perf/scripts/run_oversell.sh` | 시나리오 A 실행 (초기화 → 워밍업 → 시드 → 부하 → Redis 검증) |
 | `perf/scripts/run_latency.sh` | 시나리오 B 실행 (초기화 → 캠페인 N개 시드 → 워밍업 → 요청률 단계별 측정) |
+| `perf/scripts/run_latency_cooled.sh` | PC2용 시나리오 B 실행. 회차마다 시작 전 확인 → `run_latency.sh` 1회 → 스택 내림, 회차 사이 휴지, 3회 후 이상 회차 검사 |
+| `perf/scripts/run_sustained.sh` | 시나리오 B-지속: 고정 요청률을 10분 유지하며 분마다 p99·bidder CPU·미환불 예약 기록 (진입 구간 미구현, 4장 참고) |
+| `perf/scripts/host_gate.sh` | 시작 전 확인: 발열 상태 0, 단일 스레드 프로브가 유휴 기준값의 5% 이내, 저전력 모드가 기준값과 같음 (`init`으로 기준값 측정) |
+| `perf/scripts/host_probe.sh`, `host_monitor.sh` | 단일 스레드 속도 프로브(호스트·Docker VM), 측정 중 발열 상태·CPU 상위 프로세스 기록 |
+| `perf/scripts/thermal_profile.sh` | 발열 특성 측정 (고정 부하 유지 중 분 단위 요청당 CPU, 멈춘 뒤 회복 시간) |
 | `perf/scripts/summarize.sh` | 결과 디렉토리를 조건별 중앙값 표(Markdown)로 요약 |
-| `perf/scripts/lib.sh` | 공통 함수 (스택 초기화, 준비 대기, `env.json` 기록) |
+| `perf/scripts/lib.sh` | 공통 함수 (스택 초기화, 준비 대기, `env.json` 기록, 발열 상태, bidder 스레드별 CPU) |
 | `perf/scripts/seed.sh`, `verify_budget.sh`, `summarize_bidder_log.sh` | 시드, 예산 검증, 로그 요약 |
 | `perf/k6/oversell.js`, `latency.js`, `warmup.js` | k6 부하 스크립트 |
 | `perf/results/` | 회차별 결과 (`env.json`에 커밋·이미지 ID·리소스 제한·파라미터 기록) |
@@ -70,6 +77,11 @@
    ```
    해석 노트가 필요하면 `BASELINE.notes.md`를 참고해 PC별 노트를 따로 만들고 `-n`으로 넘긴다.
 
+> **PC2(M4 MacBook Air) 측정 완료 (2026-10-04)**: [`results/BASELINE-pc2.md`](results/BASELINE-pc2.md). 위 순서로 시작했지만 두 번 실패한 뒤 측정 환경을 바꿨다. 같은 실수를 하지 않도록 남긴다.
+> - **워밍업 요청률은 RATES의 첫 값(최대 250)으로 정해진다.** RATES를 한계 근처로 잡으면 콜드 JVM이 워밍업에서 무너진다. `WARMUP_RATE`를 낮게 고정하고 `WARMUP_SEC=120`으로 늘린다.
+> - **팬 없는 노트북은 측정 도중 열 스로틀링이 생긴다.** 발열 상태가 1로 오르고 1~2분 뒤부터 같은 일에 CPU를 20~25% 더 쓴다. 회차 사이 휴지나 시작 전 확인으로는 막을 수 없어, **저전력 모드**로 CPU 속도를 낮게 고정하고 측정했다(절대값은 약 절반, 회차 간 편차 ±1~2.5%).
+> - PC2에서 측정할 때의 절차와 명령은 `BASELINE-pc2.md`의 "PC2에서 개선 결과와 비교할 때의 규칙"을 따른다. 시도별 원본 결과는 `results/archive-pc2-attempt1/`(일반 모드, 워밍업 실수·연속 측정 발열), `archive-pc2-attempt2/`(일반 모드, 측정 도중 발열)에 있다.
+
 ## 3. 측정 실행 가이드
 
 ### 반드시 지킬 것
@@ -97,6 +109,7 @@
 3. 한 번에 하나만 바꾼다. 트레이싱 샘플링 100%, Kafka 메시지마다 INFO 로그는 기준선의 일부이므로 바꾸려면 별도 측정으로 분리한다.
 4. 개선마다 시나리오 A 회귀 검사를 돌린다: `REPEAT=3 BUDGET=5000 perf/scripts/run_oversell.sh <개선이름>-oversell-b5000`
 5. 결과 이름은 `<개선이름>-<pc>-c<N>` 형식으로 하고, 요약은 `summarize.sh -o perf/results/<개선이름>.md <접두사>`로 만든다.
+6. **PC2에서는 저전력 모드를 켜고 `run_latency_cooled.sh`와 `host_monitor.sh`로 측정한다.** 명령과 실패 회차 판단 기준은 `BASELINE-pc2.md`의 비교 규칙에 있다. 모드가 기준과 다르면 `host_gate.sh`가 측정을 시작하지 않는다.
 
 ## 4. 개선 작업 계획
 
@@ -107,8 +120,10 @@
 | 1 | **캠페인 로컬 캐시** | 요청마다 `SMEMBERS` + `HGETALL` N회, 단일 Lettuce 스레드 포화 | 요청당 `HGETALL` N → 0, 처리 용량이 N에 거의 무관해짐 (메모리 내 필터링 O(N)은 남음) | B 전 조건 + A 회귀 | `bidder/.../adapter/out/redis/CampaignAdapter.java` |
 | 2 | **요청 타임아웃·부하 차단** | 한계 초과 시 대기열 폭주, c1000에서 힙 OOM | 한계를 넘어도 p99 상한 유지, 초과분은 빠르게 204, OOM 없음 | **시나리오 C 필요** | `BidController`, `BidService`, Lettuce 요청 대기열 설정 |
 | 3 | 매핑을 I/O 스레드에서 분리 (`publishOn`) | 2 vCPU 중 1코어만 사용 | 최다 스레드 사용량 감소, bidder CPU를 200%까지 사용 | B (최다 스레드 코어, 처리 용량) | `CampaignAdapter.loadCampaign` |
-| 4 | 만료 리스너 스레드 풀 지정 | 메시지마다 새 스레드 생성 (`redisMessageListenerContainer-154284`) | 환불 처리 비용 감소, 스레드 생성 중단 | B (`WIN_RATIO=0`) + **A 회귀 필수** (환불 경로) | `bidder/.../config/RedisKeyExpirationConfig.java` (`container.setTaskExecutor`) |
+| 4 | 만료 리스너 스레드 풀 지정 | 메시지마다 새 스레드 생성 (`redisMessageListenerContainer-154284`). PC2 지속 측정에서 환불이 붙으면 bidder CPU가 두 배(20분에 스레드 96만 개) | 환불 처리 비용 감소, 스레드 생성 중단 | **B-지속 고정 요청률 비교** (단계 측정에는 거의 안 보임) + **A 회귀 필수** (환불 경로) | `bidder/.../config/RedisKeyExpirationConfig.java` (`container.setTaskExecutor`) |
+| 5 | 환불 구조 재설계 (후보) | PC2 지속 측정에서 미환불 예약이 멈추지 않고 증가(만료 감지 지연). 만료 알림은 pub/sub이라 인스턴스 수만큼 중복 처리, 재시작 중 유실, 1시간 뒤 추적 키 만료 알림까지 수신 | 예: 예약을 만료 시각 순 ZSET에 넣고 주기 작업이 묶음 환불. 알림 유실·중복 없음, 예산 묶임 시간 단축 | B-지속(미환불 예약 추이) + A 회귀 + 장애 주입(시나리오 C) | `RedisExpiredKeyHandler`, `RedisKeyExpirationConfig`, `refund_budget.lua` |
 
+- 4·5를 측정하기 전에 `run_sustained.sh`에 진입 구간(워밍업 요청률에서 목표 요청률까지 60초 동안 서서히 올리고 판정에서 제외)을 추가한다. 지금은 한 번에 올려 첫 1분이 불리하다. 그 뒤 c10 600 req/s 10분 유지를 개선 전후로 각 3회 비교한다(bidder CPU, 미환불 예약 추이, p99).
 - 1과 3은 둘 다 Lettuce 스레드 부담을 줄이므로, 효과를 구분하려면 따로 적용해 각각 측정한다. 3을 먼저 단독으로 측정하면 "스레드 분리만으로 얻는 효과"와 "조회 자체를 없애는 효과"를 비교할 수 있다.
 - 1의 설계 시 고려할 것: 캐시 갱신 방식(ad_manager 활성화·비활성화 시 Redis pub/sub 무효화 + 주기적 전체 재적재 등), 비활성화된 캠페인이 캐시에 남아 있는 동안의 입찰 허용 범위. 예산 예약은 계속 Redis Lua로 하므로 예산 정합성은 캐시와 무관하다.
 
@@ -165,4 +180,6 @@
 
 - 스레드별 CPU 측정은 측정 시작과 끝에 모두 살아 있는 스레드만 집계해, 수명이 짧은 스레드(만료 리스너 스레드)의 CPU가 빠진다. JVM 프로세스 전체 CPU(`/proc/1/stat`)를 함께 기록해 차이를 별도 항목으로 남기도록 `run_latency.sh`의 `thread_snapshot`을 보완한다(측정값에는 영향 없음).
 - `perf/results/latency-*`는 측정 방법을 정하기 전의 예비 측정이다. 기준선에 포함하지 않는다.
+- `run_sustained.sh`에 진입 구간 추가 (4장 참고). `summarize.sh`는 지속 측정 결과(`sustained-summary.json`)를 요약하지 못하므로 필요하면 함께 확장한다.
+- PC2 지속 측정 결과(`perf/results/sustained-pc2-c10-r*`, 저전력 모드, 진입 구간 없음, 요청률당 1회)는 참고 자료다. c100 지속 측정은 하지 않았다.
 - README와 포트폴리오 문서는 별도로 새로 작성할 예정이다. 이 브랜치의 README 커밋(`8921aec`)을 `main`에 어떻게 합칠지도 그때 정한다.

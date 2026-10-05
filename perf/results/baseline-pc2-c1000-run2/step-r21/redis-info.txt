@@ -1,0 +1,5 @@
+used_memory:4425104
+used_memory_human:4.22M
+used_memory_peak_human:22.38M
+# Keyspace
+db0:keys=9728,expires=6092,avg_ttl=3167355,subexpiry=0
