@@ -1,0 +1,748 @@
+=== 1791017664 17:54:24
+2026/10/03 17:54:26
+CPU usage: 27.76% user, 9.44% sys, 62.79% idle 
+32578  mediaanalysisd   65.7
+159    WindowServer     39.7
+0      kernel_task      26.0
+13198  Google Chrome    13.6
+14021  com.apple.Virtua 13.1
+13204  Google Chrome He 11.7
+12943  Claude Helper    8.0 
+13205  Google Chrome He 5.4 
+=== 1791017694 17:54:54
+2026/10/03 17:54:55
+CPU usage: 15.20% user, 10.50% sys, 74.28% idle 
+159    WindowServer     50.3
+39886  Google Chrome He 36.9
+0      kernel_task      35.6
+12943  Claude Helper    22.4
+13204  Google Chrome He 19.0
+14021  com.apple.Virtua 17.6
+13198  Google Chrome    8.4 
+13000  Claude Helper (R 7.4 
+=== 1791017723 17:55:23
+2026/10/03 17:55:25
+CPU usage: 12.42% user, 5.83% sys, 81.73% idle 
+159    WindowServer     35.1
+12943  Claude Helper    23.5
+14021  com.apple.Virtua 20.3
+13198  Google Chrome    13.1
+0      kernel_task      8.4 
+37657  Google Chrome He 7.8 
+13000  Claude Helper (R 6.5 
+13204  Google Chrome He 6.3 
+=== 1791017753 17:55:53
+2026/10/03 17:55:54
+CPU usage: 16.11% user, 3.65% sys, 80.22% idle 
+14021  com.apple.Virtua 97.5
+159    WindowServer     19.5
+12943  Claude Helper    18.2
+0      kernel_task      8.2 
+13000  Claude Helper (R 5.7 
+33073  Codex (Renderer) 5.0 
+37815  top              4.8 
+33019  Codex (Service)  4.4 
+=== 1791017782 17:56:22
+2026/10/03 17:56:24
+CPU usage: 22.80% user, 5.56% sys, 71.63% idle 
+14021  com.apple.Virtua 184.0
+159    WindowServer     22.3 
+0      kernel_task      11.6 
+33019  Codex (Service)  10.9 
+12943  Claude Helper    10.5 
+13985  com.docker.backe 7.6  
+38232  k6               7.2  
+13000  Claude Helper (R 5.3  
+=== 1791017812 17:56:52
+2026/10/03 17:56:53
+CPU usage: 24.81% user, 9.38% sys, 65.79% idle 
+14021  com.apple.Virtua 136.0
+159    WindowServer     34.1 
+33073  Codex (Renderer) 23.1 
+0      kernel_task      20.4 
+12943  Claude Helper    15.8 
+32990  ChatGPT          12.9 
+38232  k6               11.1 
+33019  Codex (Service)  10.1 
+=== 1791017841 17:57:21
+2026/10/03 17:57:23
+CPU usage: 43.87% user, 16.90% sys, 39.22% idle 
+14021  com.apple.Virtua 320.9
+0      kernel_task      42.2 
+159    WindowServer     34.7 
+12943  Claude Helper    22.9 
+33073  Codex (Renderer) 21.2 
+13985  com.docker.backe 20.1 
+38459  k6               18.4 
+32990  ChatGPT          9.1  
+=== 1791017871 17:57:51
+2026/10/03 17:57:52
+CPU usage: 26.33% user, 11.40% sys, 62.26% idle 
+14021  com.apple.Virtua 228.9
+0      kernel_task      24.4 
+159    WindowServer     22.4 
+12943  Claude Helper    20.2 
+13985  com.docker.backe 16.3 
+38459  k6               13.7 
+13000  Claude Helper (R 5.6  
+38565  top              4.6  
+=== 1791017900 17:58:20
+2026/10/03 17:58:22
+CPU usage: 41.42% user, 16.28% sys, 42.28% idle 
+14021  com.apple.Virtua 341.7
+0      kernel_task      28.2 
+159    WindowServer     25.7 
+13985  com.docker.backe 21.7 
+38670  k6               20.5 
+12943  Claude Helper    20.4 
+33073  Codex (Renderer) 11.1 
+32990  ChatGPT          5.8  
+=== 1791017930 17:58:50
+2026/10/03 17:58:52
+CPU usage: 42.50% user, 19.16% sys, 38.33% idle 
+14021  com.apple.Virtua 289.6
+0      kernel_task      54.8 
+38670  k6               39.8 
+159    WindowServer     25.4 
+13985  com.docker.backe 25.1 
+12943  Claude Helper    17.4 
+33073  Codex (Renderer) 15.1 
+38889  top              5.3  
+=== 1791017960 17:59:20
+2026/10/03 17:59:22
+CPU usage: 50.0% user, 19.15% sys, 30.84% idle 
+14021  com.apple.Virtua 322.6
+32578  mediaanalysisd   60.4 
+0      kernel_task      37.0 
+13985  com.docker.backe 28.9 
+159    WindowServer     22.3 
+12943  Claude Helper    20.9 
+38993  k6               13.0 
+33073  Codex (Renderer) 8.5  
+=== 1791017990 17:59:50
+2026/10/03 17:59:52
+CPU usage: 43.99% user, 16.75% sys, 39.24% idle 
+14021  com.apple.Virtua 363.0
+13985  com.docker.backe 27.1 
+159    WindowServer     20.4 
+12943  Claude Helper    20.3 
+0      kernel_task      19.3 
+38993  k6               16.0 
+33019  Codex (Service)  7.5  
+39094  top              7.0  
+=== 1791018020 18:00:20
+2026/10/03 18:00:22
+CPU usage: 54.21% user, 27.36% sys, 18.41% idle 
+14021  com.apple.Virtua 302.2
+0      kernel_task      71.5 
+33073  Codex (Renderer) 54.8 
+159    WindowServer     48.8 
+32578  mediaanalysisd   41.5 
+13985  com.docker.backe 35.8 
+39203  k6               28.1 
+33019  Codex (Service)  26.2 
+=== 1791018050 18:00:50
+2026/10/03 18:00:52
+CPU usage: 38.99% user, 12.77% sys, 48.22% idle 
+14021  com.apple.Virtua 280.9
+39203  k6               36.0 
+0      kernel_task      28.6 
+13985  com.docker.backe 21.2 
+159    WindowServer     18.8 
+12943  Claude Helper    17.0 
+33073  Codex (Renderer) 9.6  
+39295  top              5.1  
+=== 1791018080 18:01:20
+2026/10/03 18:01:21
+CPU usage: 38.45% user, 14.12% sys, 47.42% idle 
+14021  com.apple.Virtua 253.0
+13985  com.docker.backe 26.4 
+12943  Claude Helper    13.2 
+159    WindowServer     11.9 
+0      kernel_task      10.4 
+13114  iTerm2           7.9  
+39393  top              4.5  
+13000  Claude Helper (R 3.8  
+=== 1791018109 18:01:49
+2026/10/03 18:01:51
+CPU usage: 36.17% user, 15.71% sys, 48.10% idle 
+14021  com.apple.Virtua 331.7
+0      kernel_task      30.3 
+13985  com.docker.backe 21.5 
+159    WindowServer     14.7 
+12943  Claude Helper    14.6 
+39413  k6               14.3 
+13114  iTerm2           6.2  
+13000  Claude Helper (R 4.8  
+=== 1791018139 18:02:19
+2026/10/03 18:02:21
+CPU usage: 30.79% user, 13.8% sys, 56.12% idle 
+14021  com.apple.Virtua 308.4
+13985  com.docker.backe 24.7 
+0      kernel_task      22.2 
+12943  Claude Helper    12.3 
+159    WindowServer     11.4 
+39641  top              4.5  
+13000  Claude Helper (R 4.0  
+13114  iTerm2           1.7  
+=== 1791018169 18:02:49
+2026/10/03 18:02:51
+CPU usage: 46.16% user, 21.80% sys, 32.2% idle 
+14021  com.apple.Virtua 299.9
+0      kernel_task      50.8 
+159    WindowServer     45.6 
+13985  com.docker.backe 28.5 
+33019  Codex (Service)  26.8 
+33073  Codex (Renderer) 22.6 
+12943  Claude Helper    19.3 
+32990  ChatGPT          16.2 
+=== 1791018199 18:03:19
+2026/10/03 18:03:21
+CPU usage: 41.7% user, 14.66% sys, 44.26% idle 
+14021  com.apple.Virtua 310.3
+13985  com.docker.backe 27.5 
+159    WindowServer     25.8 
+0      kernel_task      23.5 
+12943  Claude Helper    21.3 
+39666  k6               14.2 
+13000  Claude Helper (R 6.3  
+39858  top              4.6  
+=== 1791018229 18:03:49
+2026/10/03 18:03:51
+CPU usage: 37.14% user, 13.33% sys, 49.52% idle 
+14021  com.apple.Virtua 307.1
+0      kernel_task      27.6 
+13985  com.docker.backe 23.7 
+12943  Claude Helper    17.8 
+159    WindowServer     17.8 
+39888  k6               14.8 
+13000  Claude Helper (R 5.3  
+13114  iTerm2           5.0  
+=== 1791018259 18:04:19
+2026/10/03 18:04:21
+CPU usage: 36.18% user, 13.10% sys, 50.71% idle 
+14021  com.apple.Virtua 337.0
+13985  com.docker.backe 22.3 
+12943  Claude Helper    14.4 
+39888  k6               13.9 
+0      kernel_task      13.2 
+159    WindowServer     11.7 
+13114  iTerm2           9.4  
+40061  top              4.7  
+=== 1791018289 18:04:49
+2026/10/03 18:04:50
+CPU usage: 39.5% user, 14.49% sys, 46.44% idle 
+14021  com.apple.Virtua 356.8
+13985  com.docker.backe 23.8 
+159    WindowServer     17.1 
+0      kernel_task      16.6 
+12943  Claude Helper    15.9 
+40093  k6               15.0 
+13114  iTerm2           11.1 
+13000  Claude Helper (R 4.8  
+=== 1791018318 18:05:18
+2026/10/03 18:05:20
+CPU usage: 44.52% user, 18.89% sys, 36.57% idle 
+14021  com.apple.Virtua 347.4
+0      kernel_task      28.0 
+13985  com.docker.backe 27.7 
+12943  Claude Helper    21.5 
+159    WindowServer     20.4 
+40093  k6               16.6 
+33073  Codex (Renderer) 15.1 
+13000  Claude Helper (R 5.9  
+=== 1791018348 18:05:48
+2026/10/03 18:05:50
+CPU usage: 34.83% user, 19.30% sys, 45.86% idle 
+14021  com.apple.Virtua 233.7
+0      kernel_task      73.0 
+159    WindowServer     36.4 
+40357  k6               34.0 
+12943  Claude Helper    24.4 
+13198  Google Chrome    16.3 
+13985  com.docker.backe 13.5 
+13204  Google Chrome He 11.8 
+=== 1791018378 18:06:18
+2026/10/03 18:06:20
+CPU usage: 41.69% user, 16.3% sys, 42.26% idle 
+14021  com.apple.Virtua 351.2
+0      kernel_task      39.0 
+13985  com.docker.backe 27.7 
+12943  Claude Helper    21.8 
+159    WindowServer     16.9 
+40357  k6               16.1 
+13114  iTerm2           9.3  
+13000  Claude Helper (R 5.5  
+=== 1791018408 18:06:48
+2026/10/03 18:06:50
+CPU usage: 52.81% user, 19.85% sys, 27.33% idle 
+14021  com.apple.Virtua 277.9
+33073  Codex (Renderer) 98.7 
+0      kernel_task      51.0 
+159    WindowServer     32.8 
+12943  Claude Helper    24.6 
+13985  com.docker.backe 24.2 
+40604  k6               13.2 
+32990  ChatGPT          11.4 
+=== 1791018438 18:07:18
+2026/10/03 18:07:20
+CPU usage: 42.68% user, 15.58% sys, 41.73% idle 
+14021  com.apple.Virtua 367.7
+159    WindowServer     40.0 
+13985  com.docker.backe 25.9 
+40604  k6               16.4 
+12943  Claude Helper    15.4 
+0      kernel_task      13.8 
+13114  iTerm2           8.0  
+13000  Claude Helper (R 5.8  
+=== 1791018468 18:07:48
+2026/10/03 18:07:50
+CPU usage: 49.55% user, 29.80% sys, 20.64% idle 
+14021  com.apple.Virtua 258.1
+0      kernel_task      95.7 
+33073  Codex (Renderer) 61.6 
+159    WindowServer     45.0 
+13985  com.docker.backe 31.9 
+40964  k6               21.0 
+34538  Google Chrome He 18.5 
+12943  Claude Helper    17.6 
+=== 1791018498 18:08:18
+2026/10/03 18:08:20
+CPU usage: 42.30% user, 17.9% sys, 40.60% idle 
+14021  com.apple.Virtua 363.8
+0      kernel_task      30.3 
+13985  com.docker.backe 27.0 
+159    WindowServer     25.1 
+12943  Claude Helper    17.4 
+40964  k6               16.2 
+13000  Claude Helper (R 6.0  
+41161  top              4.9  
+=== 1791018528 18:08:48
+2026/10/03 18:08:50
+CPU usage: 45.7% user, 16.51% sys, 38.41% idle 
+14021  com.apple.Virtua 309.2
+159    WindowServer     37.7 
+0      kernel_task      34.5 
+13985  com.docker.backe 26.6 
+41233  k6               20.6 
+12943  Claude Helper    18.3 
+13198  Google Chrome    15.1 
+34538  Google Chrome He 10.3 
+=== 1791018558 18:09:18
+2026/10/03 18:09:20
+CPU usage: 43.42% user, 17.85% sys, 38.72% idle 
+14021  com.apple.Virtua 330.3
+0      kernel_task      38.1 
+159    WindowServer     35.8 
+13985  com.docker.backe 26.3 
+12943  Claude Helper    18.6 
+41233  k6               14.6 
+13198  Google Chrome    10.7 
+34538  Google Chrome He 7.3  
+=== 1791018588 18:09:48
+2026/10/03 18:09:49
+CPU usage: 35.70% user, 16.58% sys, 47.70% idle 
+14021  com.apple.Virtua 286.0
+0      kernel_task      58.0 
+159    WindowServer     26.3 
+12943  Claude Helper    23.1 
+13985  com.docker.backe 19.1 
+33074  codex            17.2 
+12416  trustd           9.0  
+41486  k6               8.0  
+=== 1791018617 18:10:17
+2026/10/03 18:10:19
+CPU usage: 43.89% user, 16.7% sys, 40.3% idle 
+14021  com.apple.Virtua 356.6
+0      kernel_task      38.0 
+13985  com.docker.backe 27.4 
+159    WindowServer     27.1 
+12943  Claude Helper    22.4 
+41486  k6               16.2 
+33073  Codex (Renderer) 9.6  
+13000  Claude Helper (R 7.0  
+=== 1791018647 18:10:47
+2026/10/03 18:10:49
+CPU usage: 43.95% user, 16.11% sys, 39.92% idle 
+14021  com.apple.Virtua 366.8
+159    WindowServer     32.0 
+13985  com.docker.backe 25.9 
+0      kernel_task      21.1 
+12943  Claude Helper    20.0 
+41756  k6               16.4 
+33019  Codex (Service)  9.1  
+33073  Codex (Renderer) 7.7  
+=== 1791018677 18:11:17
+2026/10/03 18:11:19
+CPU usage: 52.91% user, 19.40% sys, 27.68% idle 
+14021  com.apple.Virtua 264.0
+0      kernel_task      64.9 
+159    WindowServer     49.7 
+325    mds_stores       47.5 
+33073  Codex (Renderer) 35.8 
+12943  Claude Helper    34.4 
+33019  Codex (Service)  24.4 
+13985  com.docker.backe 15.3 
+=== 1791018708 18:11:48
+2026/10/03 18:11:49
+CPU usage: 46.12% user, 23.90% sys, 29.97% idle 
+14021  com.apple.Virtua 296.7
+0      kernel_task      72.8 
+41960  k6               50.5 
+159    WindowServer     37.9 
+33073  Codex (Renderer) 26.7 
+13985  com.docker.backe 26.3 
+12943  Claude Helper    20.7 
+33019  Codex (Service)  8.4  
+=== 1791018737 18:12:17
+2026/10/03 18:12:19
+CPU usage: 41.74% user, 12.61% sys, 45.64% idle 
+14021  com.apple.Virtua 264.5
+33073  Codex (Renderer) 40.9 
+159    WindowServer     33.4 
+0      kernel_task      24.4 
+12943  Claude Helper    20.3 
+13985  com.docker.backe 17.8 
+41960  k6               13.6 
+13000  Claude Helper (R 6.4  
+=== 1791018767 18:12:47
+2026/10/03 18:12:50
+CPU usage: 46.92% user, 28.7% sys, 25.0% idle 
+14021  com.apple.Virtua 229.0
+0      kernel_task      125.8
+159    WindowServer     62.5 
+12943  Claude Helper    40.5 
+33019  Codex (Service)  34.5 
+33073  Codex (Renderer) 28.9 
+13000  Claude Helper (R 13.9 
+32990  ChatGPT          10.0 
+=== 1791018798 18:13:18
+2026/10/03 18:13:20
+CPU usage: 40.68% user, 16.68% sys, 42.63% idle 
+14021  com.apple.Virtua 305.9
+159    WindowServer     35.6 
+0      kernel_task      27.7 
+12943  Claude Helper    21.6 
+13985  com.docker.backe 20.5 
+33073  Codex (Renderer) 16.2 
+42166  k6               13.0 
+32990  ChatGPT          8.4  
+=== 1791018828 18:13:48
+2026/10/03 18:13:50
+CPU usage: 38.10% user, 16.39% sys, 45.49% idle 
+14021  com.apple.Virtua 295.7
+0      kernel_task      34.5 
+159    WindowServer     24.1 
+13985  com.docker.backe 22.9 
+12943  Claude Helper    21.6 
+42428  k6               13.6 
+13000  Claude Helper (R 5.9  
+13114  iTerm2           4.5  
+=== 1791018858 18:14:18
+2026/10/03 18:14:19
+CPU usage: 36.28% user, 11.2% sys, 52.68% idle 
+14021  com.apple.Virtua 283.2
+159    WindowServer     27.2 
+13985  com.docker.backe 24.8 
+12943  Claude Helper    23.5 
+42428  k6               14.3 
+0      kernel_task      11.7 
+33073  Codex (Renderer) 6.8  
+13000  Claude Helper (R 6.7  
+=== 1791018887 18:14:47
+2026/10/03 18:14:49
+CPU usage: 40.47% user, 18.68% sys, 40.83% idle 
+14021  com.apple.Virtua 269.5
+0      kernel_task      65.5 
+159    WindowServer     40.4 
+33073  Codex (Renderer) 34.3 
+12943  Claude Helper    26.2 
+13985  com.docker.backe 19.3 
+32990  ChatGPT          13.7 
+42738  k6               10.0 
+=== 1791018917 18:15:17
+2026/10/03 18:15:19
+CPU usage: 43.24% user, 13.60% sys, 43.15% idle 
+14021  com.apple.Virtua 304.1
+159    WindowServer     35.5 
+0      kernel_task      35.1 
+12943  Claude Helper    22.8 
+33073  Codex (Renderer) 19.3 
+42738  k6               12.9 
+13985  com.docker.backe 11.4 
+32990  ChatGPT          8.3  
+=== 1791018947 18:15:47
+2026/10/03 18:15:49
+CPU usage: 50.17% user, 27.28% sys, 22.54% idle 
+14021  com.apple.Virtua 311.7
+0      kernel_task      66.3 
+159    WindowServer     44.4 
+43069  k6               43.6 
+13985  com.docker.backe 37.7 
+33073  Codex (Renderer) 25.5 
+12943  Claude Helper    22.2 
+32990  ChatGPT          10.8 
+=== 1791018977 18:16:17
+2026/10/03 18:16:19
+CPU usage: 51.9% user, 31.81% sys, 17.8% idle 
+14021  com.apple.Virtua 243.1
+0      kernel_task      140.3
+33073  Codex (Renderer) 97.5 
+159    WindowServer     58.0 
+33019  Codex (Service)  37.3 
+12943  Claude Helper    31.0 
+32990  ChatGPT          19.4 
+13985  com.docker.backe 13.6 
+=== 1791019007 18:16:47
+2026/10/03 18:16:50
+CPU usage: 38.69% user, 22.53% sys, 38.77% idle 
+14021  com.apple.Virtua 213.4
+0      kernel_task      90.6 
+159    WindowServer     58.7 
+33019  Codex (Service)  41.4 
+12943  Claude Helper    32.7 
+33073  Codex (Renderer) 24.2 
+32578  mediaanalysisd   15.7 
+43400  k6               13.1 
+=== 1791019038 18:17:18
+2026/10/03 18:17:20
+CPU usage: 50.12% user, 24.72% sys, 25.14% idle 
+14021  com.apple.Virtua 281.2
+0      kernel_task      68.9 
+159    WindowServer     66.7 
+33073  Codex (Renderer) 48.0 
+33019  Codex (Service)  27.3 
+12943  Claude Helper    26.0 
+32990  ChatGPT          24.8 
+13985  com.docker.backe 16.3 
+=== 1791019068 18:17:48
+2026/10/03 18:17:50
+CPU usage: 29.58% user, 15.60% sys, 54.81% idle 
+14021  com.apple.Virtua 142.5
+159    WindowServer     55.5 
+0      kernel_task      42.9 
+33019  Codex (Service)  32.5 
+12943  Claude Helper    29.1 
+33073  Codex (Renderer) 17.1 
+13985  com.docker.backe 14.7 
+14076  Docker Desktop H 11.9 
+=== 1791019098 18:18:18
+2026/10/03 18:18:20
+CPU usage: 23.43% user, 11.30% sys, 65.25% idle 
+33073  Codex (Renderer) 74.8
+14021  com.apple.Virtua 66.0
+159    WindowServer     43.2
+0      kernel_task      33.0
+12943  Claude Helper    18.5
+33019  Codex (Service)  15.8
+13000  Claude Helper (R 7.2 
+43934  top              6.6 
+=== 1791019128 18:18:48
+2026/10/03 18:18:49
+CPU usage: 19.94% user, 5.69% sys, 74.35% idle 
+14021  com.apple.Virtua 130.1
+159    WindowServer     47.2 
+12943  Claude Helper    20.0 
+0      kernel_task      8.8  
+13000  Claude Helper (R 7.0  
+33073  Codex (Renderer) 6.4  
+33019  Codex (Service)  5.6  
+44070  top              4.3  
+=== 1791019157 18:19:17
+2026/10/03 18:19:19
+CPU usage: 14.92% user, 7.98% sys, 77.9% idle 
+14021  com.apple.Virtua 58.1
+159    WindowServer     41.2
+12943  Claude Helper    25.4
+0      kernel_task      15.4
+33073  Codex (Renderer) 9.8 
+13000  Claude Helper (R 8.5 
+33019  Codex (Service)  6.9 
+44189  top              4.0 
+=== 1791019187 18:19:47
+2026/10/03 18:19:48
+CPU usage: 18.46% user, 6.25% sys, 75.28% idle 
+14021  com.apple.Virtua 109.3
+159    WindowServer     25.3 
+0      kernel_task      17.9 
+12943  Claude Helper    12.3 
+33073  Codex (Renderer) 7.4  
+33019  Codex (Service)  5.5  
+13000  Claude Helper (R 4.9  
+44286  top              4.6  
+=== 1791019216 18:20:16
+2026/10/03 18:20:18
+CPU usage: 9.55% user, 4.59% sys, 85.85% idle 
+14021  com.apple.Virtua 44.7
+159    WindowServer     28.8
+33073  Codex (Renderer) 9.4 
+33019  Codex (Service)  8.9 
+0      kernel_task      7.7 
+44390  top              6.6 
+12943  Claude Helper    5.8 
+13000  Claude Helper (R 4.2 
+=== 1791019246 18:20:46
+2026/10/03 18:20:47
+CPU usage: 17.46% user, 4.48% sys, 78.5% idle 
+14021  com.apple.Virtua 129.0
+159    WindowServer     39.8 
+14076  Docker Desktop H 19.2 
+12943  Claude Helper    16.1 
+0      kernel_task      7.6  
+33073  Codex (Renderer) 7.4  
+13000  Claude Helper (R 5.9  
+33019  Codex (Service)  5.4  
+=== 1791019275 18:21:15
+2026/10/03 18:21:16
+CPU usage: 13.16% user, 6.94% sys, 79.89% idle 
+159    WindowServer     51.2
+14021  com.apple.Virtua 34.0
+12943  Claude Helper    30.7
+33073  Codex (Renderer) 12.9
+33019  Codex (Service)  12.9
+0      kernel_task      11.3
+13000  Claude Helper (R 9.8 
+44620  top              7.1 
+=== 1791019304 18:21:44
+2026/10/03 18:21:46
+CPU usage: 25.70% user, 6.71% sys, 67.58% idle 
+14021  com.apple.Virtua 70.8
+159    WindowServer     44.9
+14076  Docker Desktop H 22.1
+0      kernel_task      8.4 
+13985  com.docker.backe 7.8 
+12943  Claude Helper    7.2 
+33019  Codex (Service)  4.9 
+14018  Docker Desktop   4.7 
+=== 1791019334 18:22:14
+2026/10/03 18:22:15
+CPU usage: 13.27% user, 6.41% sys, 80.31% idle 
+14021  com.apple.Virtua 33.5
+159    WindowServer     31.6
+12943  Claude Helper    23.4
+33073  Codex (Renderer) 14.2
+33019  Codex (Service)  14.1
+0      kernel_task      8.5 
+13000  Claude Helper (R 7.9 
+44871  top              6.8 
+=== 1791019363 18:22:43
+2026/10/03 18:22:45
+CPU usage: 17.14% user, 4.9% sys, 78.76% idle 
+33073  Codex (Renderer) 52.5
+14021  com.apple.Virtua 47.8
+159    WindowServer     26.5
+0      kernel_task      12.6
+33019  Codex (Service)  8.3 
+12943  Claude Helper    4.2 
+45001  top              3.4 
+13985  com.docker.backe 2.1 
+=== 1791019393 18:23:13
+2026/10/03 18:23:14
+CPU usage: 9.96% user, 5.40% sys, 84.63% idle 
+14021  com.apple.Virtua 41.7
+159    WindowServer     36.7
+12943  Claude Helper    16.4
+0      kernel_task      9.5 
+33073  Codex (Renderer) 7.7 
+13000  Claude Helper (R 7.0 
+33019  Codex (Service)  6.9 
+45145  top              5.6 
+=== 1791019422 18:23:42
+2026/10/03 18:23:44
+CPU usage: 21.56% user, 8.49% sys, 69.94% idle 
+14021  com.apple.Virtua 51.1
+159    WindowServer     44.1
+32578  mediaanalysisd   38.8
+0      kernel_task      16.9
+12943  Claude Helper    11.8
+37061  spotlightknowled 8.8 
+33073  Codex (Renderer) 6.1 
+33019  Codex (Service)  5.4 
+=== 1791019452 18:24:12
+2026/10/03 18:24:13
+CPU usage: 16.19% user, 11.40% sys, 72.39% idle 
+159    WindowServer     50.8
+14021  com.apple.Virtua 41.4
+0      kernel_task      37.5
+12943  Claude Helper    29.5
+33073  Codex (Renderer) 14.3
+33019  Codex (Service)  13.6
+13000  Claude Helper (R 8.8 
+45445  top              7.3 
+=== 1791019481 18:24:41
+2026/10/03 18:24:43
+CPU usage: 29.7% user, 9.29% sys, 61.62% idle 
+325    mds_stores       116.7
+45511  ANECompilerServi 72.2 
+159    WindowServer     34.4 
+12943  Claude Helper    30.3 
+0      kernel_task      22.8 
+14021  com.apple.Virtua 22.0 
+33073  Codex (Renderer) 11.0 
+13000  Claude Helper (R 9.0  
+=== 1791019511 18:25:11
+2026/10/03 18:25:12
+CPU usage: 17.49% user, 8.88% sys, 73.62% idle 
+32578  mediaanalysisd   79.8
+14021  com.apple.Virtua 34.3
+0      kernel_task      28.1
+188    mobileassetd     26.5
+159    WindowServer     23.0
+12943  Claude Helper    13.8
+33073  Codex (Renderer) 8.2 
+33019  Codex (Service)  7.0 
+=== 1791019540 18:25:40
+2026/10/03 18:25:41
+CPU usage: 20.65% user, 10.9% sys, 69.25% idle 
+32578  mediaanalysisd   106.3
+14021  com.apple.Virtua 33.1 
+159    WindowServer     31.3 
+0      kernel_task      26.5 
+33019  Codex (Service)  18.6 
+33073  Codex (Renderer) 14.1 
+188    mobileassetd     13.2 
+12943  Claude Helper    10.5 
+=== 1791019570 18:26:10
+2026/10/03 18:26:11
+CPU usage: 19.88% user, 11.14% sys, 68.96% idle 
+32578  mediaanalysisd   71.6
+159    WindowServer     45.1
+14021  com.apple.Virtua 29.9
+325    mds_stores       29.6
+12943  Claude Helper    25.2
+0      kernel_task      19.4
+33073  Codex (Renderer) 10.0
+13000  Claude Helper (R 7.9 
+=== 1791019599 18:26:39
+2026/10/03 18:26:40
+CPU usage: 20.27% user, 11.46% sys, 68.25% idle 
+32578  mediaanalysisd   74.1
+159    WindowServer     44.3
+325    mds_stores       34.7
+12943  Claude Helper    32.3
+14021  com.apple.Virtua 25.9
+0      kernel_task      12.5
+1      launchd          11.4
+13000  Claude Helper (R 9.1 
+=== 1791019628 18:27:08
+2026/10/03 18:27:10
+CPU usage: 22.40% user, 12.3% sys, 65.55% idle 
+32578  mediaanalysisd   72.8
+159    WindowServer     46.1
+325    mds_stores       32.5
+14021  com.apple.Virtua 29.6
+12943  Claude Helper    28.6
+0      kernel_task      22.0
+33019  Codex (Service)  15.4
+33073  Codex (Renderer) 13.6
+=== 1791019658 18:27:38
+2026/10/03 18:27:39
+CPU usage: 18.85% user, 10.2% sys, 71.11% idle 
+32578  mediaanalysisd   71.1
+14021  com.apple.Virtua 33.6
+325    mds_stores       32.9
+12943  Claude Helper    26.5
+159    WindowServer     25.9
+0      kernel_task      11.2
+33073  Codex (Renderer) 9.2 
+13000  Claude Helper (R 8.7 

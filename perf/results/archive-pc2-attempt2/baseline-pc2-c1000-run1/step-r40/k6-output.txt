@@ -1,0 +1,4 @@
+time="2026-10-03T20:00:45+09:00" level=warning msg="Request Failed" error="Post \"http://localhost:8080/dsp/bid\": request timeout"
+
+=== latency 결과 ===
+rate 40/s → 실제 15.98/s | p50 6259.16ms p95 18035.88ms p99 23860.63ms max 60001.78ms | 200:958 204:0 err:1 drop:698

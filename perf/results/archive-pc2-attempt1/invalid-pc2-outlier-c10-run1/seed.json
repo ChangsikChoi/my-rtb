@@ -1,0 +1,21 @@
+{
+  "runId": "perf-20261002155808",
+  "adManagerUrl": "http://localhost:8088",
+  "campaigns": [
+    "5c80f47a-49a3-4861-90e0-52040010c656",
+    "14a88c36-9155-4cb7-ac94-3eed10771539",
+    "21dbff9e-c73c-4115-9715-e4ebf9535d43",
+    "5311043d-48d6-43f3-b331-c67ff933f36a",
+    "2d668517-f8cf-4934-8af7-35f20161468a",
+    "c15de349-a3c6-4c46-8736-65e5822e8ab1",
+    "e62e1b56-4196-4dd4-90f0-b4876e8ecdd6",
+    "de36b1e4-99e6-46d4-b4a1-a2df112f4830",
+    "340a973b-8038-4682-b1ac-cbc798e11596",
+    "a2eb178b-e4e0-4c9e-a987-bb177beaebac"
+  ],
+  "targetCpm": 1000,
+  "budget": 100000000,
+  "budgetMicro": 100000000000000,
+  "impressionPriceMicro": 1000000,
+  "capacityPerCampaign": 100000000
+}

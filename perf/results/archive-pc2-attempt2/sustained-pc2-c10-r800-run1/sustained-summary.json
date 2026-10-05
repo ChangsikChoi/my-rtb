@@ -1,0 +1,322 @@
+{
+  "campaigns": 10,
+  "rate": 800,
+  "holdMin": 10,
+  "slaP99Ms": 100,
+  "aborted": false,
+  "minutesMeasured": 10,
+  "sustainedOk": true,
+  "worstP99Ms": 4.45,
+  "minutes": [
+    {
+      "minute": 1,
+      "startEpoch": 1791033595,
+      "endEpoch": 1791033655,
+      "rate": 800,
+      "achievedRps": 800.02,
+      "bidLatencyMs": {
+        "avg": 0.74,
+        "min": 0.56,
+        "p(50)": 0.67,
+        "p(90)": 0.8,
+        "p(95)": 1.04,
+        "p(99)": 2.47,
+        "max": 18.79
+      },
+      "counts": {
+        "bidOk": 48001,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.308,
+      "perReqLettuceMs": 0.385,
+      "bidderThreadCores": 0.488,
+      "bidderCpuPercent": 52.1,
+      "pendingReservations": 47288,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 2,
+      "startEpoch": 1791033656,
+      "endEpoch": 1791033716,
+      "rate": 800,
+      "achievedRps": 800,
+      "bidLatencyMs": {
+        "avg": 0.78,
+        "min": 0.56,
+        "p(50)": 0.68,
+        "p(90)": 1.01,
+        "p(95)": 1.22,
+        "p(99)": 2.66,
+        "max": 12.54
+      },
+      "counts": {
+        "bidOk": 48000,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.324,
+      "perReqLettuceMs": 0.405,
+      "bidderThreadCores": 0.543,
+      "bidderCpuPercent": 65.0,
+      "pendingReservations": 52524,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 3,
+      "startEpoch": 1791033717,
+      "endEpoch": 1791033777,
+      "rate": 800,
+      "achievedRps": 800.02,
+      "bidLatencyMs": {
+        "avg": 0.79,
+        "min": 0.56,
+        "p(50)": 0.68,
+        "p(90)": 1.01,
+        "p(95)": 1.22,
+        "p(99)": 2.87,
+        "max": 31.12
+      },
+      "counts": {
+        "bidOk": 48001,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.325,
+      "perReqLettuceMs": 0.406,
+      "bidderThreadCores": 0.543,
+      "bidderCpuPercent": 64.9,
+      "pendingReservations": 59089,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 4,
+      "startEpoch": 1791033777,
+      "endEpoch": 1791033837,
+      "rate": 800,
+      "achievedRps": 800.02,
+      "bidLatencyMs": {
+        "avg": 0.87,
+        "min": 0.56,
+        "p(50)": 0.67,
+        "p(90)": 0.96,
+        "p(95)": 1.19,
+        "p(99)": 3.26,
+        "max": 93.4
+      },
+      "counts": {
+        "bidOk": 48001,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.318,
+      "perReqLettuceMs": 0.398,
+      "bidderThreadCores": 0.530,
+      "bidderCpuPercent": 63.5,
+      "pendingReservations": 69363,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 5,
+      "startEpoch": 1791033838,
+      "endEpoch": 1791033898,
+      "rate": 800,
+      "achievedRps": 800.02,
+      "bidLatencyMs": {
+        "avg": 0.8,
+        "min": 0.56,
+        "p(50)": 0.7,
+        "p(90)": 0.98,
+        "p(95)": 1.22,
+        "p(99)": 2.9,
+        "max": 21.93
+      },
+      "counts": {
+        "bidOk": 48001,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.337,
+      "perReqLettuceMs": 0.421,
+      "bidderThreadCores": 0.556,
+      "bidderCpuPercent": 65.3,
+      "pendingReservations": 80145,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 6,
+      "startEpoch": 1791033898,
+      "endEpoch": 1791033958,
+      "rate": 800,
+      "achievedRps": 800,
+      "bidLatencyMs": {
+        "avg": 0.85,
+        "min": 0.6,
+        "p(50)": 0.72,
+        "p(90)": 1.13,
+        "p(95)": 1.34,
+        "p(99)": 3.35,
+        "max": 22.85
+      },
+      "counts": {
+        "bidOk": 48000,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.356,
+      "perReqLettuceMs": 0.445,
+      "bidderThreadCores": 0.596,
+      "bidderCpuPercent": 71.8,
+      "pendingReservations": 84259,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 7,
+      "startEpoch": 1791033959,
+      "endEpoch": 1791034019,
+      "rate": 800,
+      "achievedRps": 800,
+      "bidLatencyMs": {
+        "avg": 0.94,
+        "min": 0.62,
+        "p(50)": 0.77,
+        "p(90)": 1.27,
+        "p(95)": 1.57,
+        "p(99)": 3.83,
+        "max": 33.01
+      },
+      "counts": {
+        "bidOk": 48000,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.382,
+      "perReqLettuceMs": 0.478,
+      "bidderThreadCores": 0.639,
+      "bidderCpuPercent": 76.6,
+      "pendingReservations": 92824,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 8,
+      "startEpoch": 1791034020,
+      "endEpoch": 1791034080,
+      "rate": 800,
+      "achievedRps": 800.02,
+      "bidLatencyMs": {
+        "avg": 0.94,
+        "min": 0.62,
+        "p(50)": 0.76,
+        "p(90)": 1.21,
+        "p(95)": 1.5,
+        "p(99)": 4.06,
+        "max": 30.04
+      },
+      "counts": {
+        "bidOk": 48001,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.376,
+      "perReqLettuceMs": 0.47,
+      "bidderThreadCores": 0.626,
+      "bidderCpuPercent": 72.1,
+      "pendingReservations": 106002,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 9,
+      "startEpoch": 1791034080,
+      "endEpoch": 1791034140,
+      "rate": 800,
+      "achievedRps": 800.02,
+      "bidLatencyMs": {
+        "avg": 0.96,
+        "min": 0.64,
+        "p(50)": 0.77,
+        "p(90)": 1.31,
+        "p(95)": 1.61,
+        "p(99)": 3.92,
+        "max": 27.37
+      },
+      "counts": {
+        "bidOk": 48001,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.387,
+      "perReqLettuceMs": 0.484,
+      "bidderThreadCores": 0.648,
+      "bidderCpuPercent": 74.3,
+      "pendingReservations": 112844,
+      "slaOk": true,
+      "saturated": false
+    },
+    {
+      "minute": 10,
+      "startEpoch": 1791034141,
+      "endEpoch": 1791034201,
+      "rate": 800,
+      "achievedRps": 800,
+      "bidLatencyMs": {
+        "avg": 0.99,
+        "min": 0.63,
+        "p(50)": 0.78,
+        "p(90)": 1.31,
+        "p(95)": 1.62,
+        "p(99)": 4.45,
+        "max": 33.83
+      },
+      "counts": {
+        "bidOk": 48000,
+        "bidNoBid": 0,
+        "bidError": 0,
+        "winSent": 0,
+        "droppedIterations": 0
+      },
+      "droppedRatio": 0,
+      "lettuceCores": 0.390,
+      "perReqLettuceMs": 0.488,
+      "bidderThreadCores": 0.653,
+      "bidderCpuPercent": 78.1,
+      "pendingReservations": 119845,
+      "slaOk": true,
+      "saturated": false
+    }
+  ]
+}

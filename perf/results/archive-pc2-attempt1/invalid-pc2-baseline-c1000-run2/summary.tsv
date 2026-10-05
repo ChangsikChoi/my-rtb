@@ -1,0 +1,5 @@
+rate	achieved_rps	p50_ms	p95_ms	p99_ms	dropped	errors	redis_calls_per_bid	hgetall_per_bid	redis_cores	bidder_cpu_avg_pct	bidder_cpu_max_pct	busiest_thread	busiest_thread_cores	sla_ok	saturated
+20	20.02	29.56	33.22	39.77	0	0	1015	1000	0.22	63.0	85.5	lettuce-nioEven	0.552	true	false
+25	25.02	29.19	33.17	35.41	0	0	1014.3	1000	0.28	75.6	89.1	lettuce-nioEven	0.681	true	false
+30	30	28.58	33.1	74.01	0	0	1014.1	1000	0.3	88.6	106.4	lettuce-nioEven	0.801	true	false
+35	17.73	2379.64	19884.32	26877.24	502	0	1321.5	1299.1	0.25	171.9	199.1	lettuce-nioEven	0.488	false	true

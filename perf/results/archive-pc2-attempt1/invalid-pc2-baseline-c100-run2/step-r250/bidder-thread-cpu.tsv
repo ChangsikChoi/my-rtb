@@ -1,0 +1,19 @@
+thread_group	cores	threads	busiest_thread_cores
+lettuce-nioEven	0.879	2	0.868
+GC Thread	0.075	2	0.038
+reactor-http-ni	0.066	4	0.017
+C2 CompilerThre	0.035	1	0.035
+kafka-producer-	0.033	1	0.033
+kafka-log-pool-	0.018	12	0.003
+AsyncAppender-W	0.013	2	0.009
+G1 Conc	0.012	1	0.012
+lettuce-timer	0.002	1	0.002
+VM Thread	0.001	1	0.001
+Service Thread	0.001	1	0.001
+Notification Th	0.001	1	0.001
+C1 CompilerThre	0.001	1	0.001
+VM Periodic Tas	0.000	1	0.000
+Sweeper thread	0.000	1	0.000
+G1 Service	0.000	1	0.000
+G1 Refine	0.000	1	0.000
+BatchSpanProces	0.000	1	0.000

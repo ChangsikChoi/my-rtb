@@ -1,0 +1,26 @@
+{
+  "scenario": "latency",
+  "rate": 15,
+  "durationSec": 60,
+  "winRatio": 0,
+  "expectedRequests": 900,
+  "bidRequests": 900,
+  "achievedRps": 15,
+  "counts": {
+    "bidOk": 900,
+    "bidNoBid": 0,
+    "bidError": 0,
+    "winSent": 0,
+    "droppedIterations": 0
+  },
+  "droppedRatio": 0,
+  "bidLatencyMs": {
+    "avg": 30.97,
+    "min": 27.96,
+    "p(50)": 30.64,
+    "p(90)": 32.84,
+    "p(95)": 33.43,
+    "p(99)": 34.16,
+    "max": 41.36
+  }
+}

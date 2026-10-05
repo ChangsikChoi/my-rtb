@@ -1,0 +1,4 @@
+time="2026-10-02T09:28:12+09:00" level=warning msg="Insufficient VUs, reached 2000 active VUs and cannot initialize more" executor=constant-arrival-rate scenario=latency
+
+=== latency 결과 ===
+rate 1000/s → 실제 897.82/s | p50 23.27ms p95 2996.39ms p99 5323.46ms max 5825.52ms | 200:53869 204:0 err:0 drop:6131

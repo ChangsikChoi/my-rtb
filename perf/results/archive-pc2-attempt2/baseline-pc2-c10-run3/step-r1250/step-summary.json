@@ -1,0 +1,185 @@
+{
+  "rate": 1250,
+  "campaigns": 10,
+  "achievedRps": 1009.42,
+  "bidLatencyMs": {
+    "avg": 1729.95,
+    "min": 0.58,
+    "p(50)": 2258.39,
+    "p(90)": 2692.59,
+    "p(95)": 2758.53,
+    "p(99)": 2843.69,
+    "max": 3067.51
+  },
+  "counts": {
+    "bidOk": 60565,
+    "bidNoBid": 0,
+    "bidError": 0,
+    "winSent": 0,
+    "droppedIterations": 14435
+  },
+  "droppedRatio": 0.19,
+  "redis": {
+    "totalCalls": 1439627,
+    "callsPerBid": 23.8,
+    "hgetallPerBid": 10,
+    "commands": {
+      "hset": 121130,
+      "evalsha": 98619,
+      "decrby": 98619,
+      "smembers": 60565,
+      "config|resetstat": 1,
+      "hget": 76108,
+      "expire": 121130,
+      "info": 2,
+      "get": 60565,
+      "incrby": 98619,
+      "del": 38054,
+      "hgetall": 605650,
+      "hmset": 60565
+    },
+    "cpuCoresUsed": 0.21,
+    "usedMemoryMiB": 109.1
+  },
+  "bidder": {
+    "cpu": {
+      "avgPercent": 181.8,
+      "maxPercent": 210.6,
+      "samples": 30
+    },
+    "threadGroups": [
+      {
+        "group": "lettuce-nioEven",
+        "cores": 0.679,
+        "threads": 2,
+        "busiestThreadCores": 0.617
+      },
+      {
+        "group": "GC Thread",
+        "cores": 0.343,
+        "threads": 2,
+        "busiestThreadCores": 0.171
+      },
+      {
+        "group": "reactor-http-ni",
+        "cores": 0.188,
+        "threads": 4,
+        "busiestThreadCores": 0.049
+      },
+      {
+        "group": "G1 Conc",
+        "cores": 0.106,
+        "threads": 1,
+        "busiestThreadCores": 0.106
+      },
+      {
+        "group": "kafka-producer-",
+        "cores": 0.058,
+        "threads": 1,
+        "busiestThreadCores": 0.058
+      },
+      {
+        "group": "C2 CompilerThre",
+        "cores": 0.041,
+        "threads": 1,
+        "busiestThreadCores": 0.041
+      },
+      {
+        "group": "G1 Refine",
+        "cores": 0.034,
+        "threads": 2,
+        "busiestThreadCores": 0.031
+      },
+      {
+        "group": "AsyncAppender-W",
+        "cores": 0.027,
+        "threads": 2,
+        "busiestThreadCores": 0.021
+      },
+      {
+        "group": "kafka-log-pool-",
+        "cores": 0.024,
+        "threads": 7,
+        "busiestThreadCores": 0.005
+      },
+      {
+        "group": "Service Thread",
+        "cores": 0.004,
+        "threads": 1,
+        "busiestThreadCores": 0.004
+      },
+      {
+        "group": "lettuce-timer",
+        "cores": 0.002,
+        "threads": 1,
+        "busiestThreadCores": 0.002
+      },
+      {
+        "group": "VM Thread",
+        "cores": 0.002,
+        "threads": 1,
+        "busiestThreadCores": 0.002
+      },
+      {
+        "group": "C1 CompilerThre",
+        "cores": 0.002,
+        "threads": 1,
+        "busiestThreadCores": 0.002
+      },
+      {
+        "group": "BatchSpanProces",
+        "cores": 0.002,
+        "threads": 1,
+        "busiestThreadCores": 0.002
+      },
+      {
+        "group": "Sweeper thread",
+        "cores": 0.001,
+        "threads": 1,
+        "busiestThreadCores": 0.001
+      },
+      {
+        "group": "Notification Th",
+        "cores": 0.001,
+        "threads": 1,
+        "busiestThreadCores": 0.001
+      },
+      {
+        "group": "VM Periodic Tas",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      },
+      {
+        "group": "Monitor Deflati",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      },
+      {
+        "group": "G1 Service",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      },
+      {
+        "group": "G1 Main Marker",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      },
+      {
+        "group": "BatchLogRecordP",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      }
+    ],
+    "busiestThread": {
+      "group": "lettuce-nioEven",
+      "cores": 0.617
+    }
+  },
+  "slaOk": false,
+  "saturated": true
+}

@@ -1,0 +1,167 @@
+{
+  "rate": 375,
+  "campaigns": 100,
+  "achievedRps": 281.37,
+  "bidLatencyMs": {
+    "avg": 3132.05,
+    "min": 29.59,
+    "p(50)": 3669.8,
+    "p(90)": 3795.4,
+    "p(95)": 3821.81,
+    "p(99)": 3859.74,
+    "max": 3921.14
+  },
+  "counts": {
+    "bidOk": 16882,
+    "bidNoBid": 0,
+    "bidError": 0,
+    "winSent": 0,
+    "droppedIterations": 5619
+  },
+  "droppedRatio": 0.25,
+  "redis": {
+    "totalCalls": 1949051,
+    "callsPerBid": 115.5,
+    "hgetallPerBid": 100,
+    "commands": {
+      "config|resetstat": 1,
+      "smembers": 16882,
+      "hget": 30676,
+      "del": 15338,
+      "evalsha": 32220,
+      "get": 16882,
+      "incrby": 32220,
+      "expire": 33764,
+      "info": 2,
+      "decrby": 32220,
+      "hmset": 16882,
+      "hset": 33764,
+      "hgetall": 1688200
+    },
+    "cpuCoresUsed": 0.14,
+    "usedMemoryMiB": 42.1
+  },
+  "bidder": {
+    "cpu": {
+      "avgPercent": 163.0,
+      "maxPercent": 176.1,
+      "samples": 30
+    },
+    "threadGroups": [
+      {
+        "group": "lettuce-nioEven",
+        "cores": 0.720,
+        "threads": 2,
+        "busiestThreadCores": 0.708
+      },
+      {
+        "group": "GC Thread",
+        "cores": 0.510,
+        "threads": 2,
+        "busiestThreadCores": 0.255
+      },
+      {
+        "group": "G1 Conc",
+        "cores": 0.214,
+        "threads": 1,
+        "busiestThreadCores": 0.214
+      },
+      {
+        "group": "reactor-http-ni",
+        "cores": 0.038,
+        "threads": 4,
+        "busiestThreadCores": 0.010
+      },
+      {
+        "group": "kafka-producer-",
+        "cores": 0.015,
+        "threads": 1,
+        "busiestThreadCores": 0.015
+      },
+      {
+        "group": "AsyncAppender-W",
+        "cores": 0.009,
+        "threads": 2,
+        "busiestThreadCores": 0.007
+      },
+      {
+        "group": "kafka-log-pool-",
+        "cores": 0.007,
+        "threads": 8,
+        "busiestThreadCores": 0.001
+      },
+      {
+        "group": "G1 Refine",
+        "cores": 0.007,
+        "threads": 1,
+        "busiestThreadCores": 0.007
+      },
+      {
+        "group": "C2 CompilerThre",
+        "cores": 0.007,
+        "threads": 1,
+        "busiestThreadCores": 0.007
+      },
+      {
+        "group": "VM Thread",
+        "cores": 0.004,
+        "threads": 1,
+        "busiestThreadCores": 0.004
+      },
+      {
+        "group": "lettuce-timer",
+        "cores": 0.002,
+        "threads": 1,
+        "busiestThreadCores": 0.002
+      },
+      {
+        "group": "Service Thread",
+        "cores": 0.002,
+        "threads": 1,
+        "busiestThreadCores": 0.002
+      },
+      {
+        "group": "Notification Th",
+        "cores": 0.002,
+        "threads": 1,
+        "busiestThreadCores": 0.002
+      },
+      {
+        "group": "C1 CompilerThre",
+        "cores": 0.001,
+        "threads": 1,
+        "busiestThreadCores": 0.001
+      },
+      {
+        "group": "VM Periodic Tas",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      },
+      {
+        "group": "Sweeper thread",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      },
+      {
+        "group": "Monitor Deflati",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      },
+      {
+        "group": "BatchSpanProces",
+        "cores": 0.000,
+        "threads": 1,
+        "busiestThreadCores": 0.000
+      }
+    ],
+    "busiestThread": {
+      "group": "lettuce-nioEven",
+      "cores": 0.708
+    }
+  },
+  "slaOk": false,
+  "saturated": true
+}

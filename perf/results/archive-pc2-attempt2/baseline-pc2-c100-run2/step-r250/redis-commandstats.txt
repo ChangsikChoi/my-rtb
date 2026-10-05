@@ -1,0 +1,14 @@
+# Commandstats
+cmdstat_info:calls=2,usec=22,usec_per_call=11.00,rejected_calls=0,failed_calls=0
+cmdstat_del:calls=8245,usec=2267,usec_per_call=0.27,rejected_calls=0,failed_calls=0
+cmdstat_get:calls=15000,usec=5369,usec_per_call=0.36,rejected_calls=0,failed_calls=0
+cmdstat_decrby:calls=23245,usec=5276,usec_per_call=0.23,rejected_calls=0,failed_calls=0
+cmdstat_smembers:calls=15000,usec=58534,usec_per_call=3.90,rejected_calls=0,failed_calls=0
+cmdstat_expire:calls=30000,usec=16554,usec_per_call=0.55,rejected_calls=0,failed_calls=0
+cmdstat_evalsha:calls=23245,usec=175942,usec_per_call=7.57,rejected_calls=0,failed_calls=0
+cmdstat_hgetall:calls=1500000,usec=1312353,usec_per_call=0.87,rejected_calls=0,failed_calls=0
+cmdstat_hget:calls=16490,usec=8527,usec_per_call=0.52,rejected_calls=0,failed_calls=0
+cmdstat_incrby:calls=23245,usec=4885,usec_per_call=0.21,rejected_calls=0,failed_calls=0
+cmdstat_hmset:calls=15000,usec=27402,usec_per_call=1.83,rejected_calls=0,failed_calls=0
+cmdstat_hset:calls=30000,usec=32528,usec_per_call=1.08,rejected_calls=0,failed_calls=0
+cmdstat_config|resetstat:calls=1,usec=45,usec_per_call=45.00,rejected_calls=0,failed_calls=0
