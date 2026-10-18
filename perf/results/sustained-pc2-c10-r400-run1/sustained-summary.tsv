@@ -1,0 +1,11 @@
+minute	achieved_rps	p50_ms	p95_ms	p99_ms	dropped	errors	bidder_cpu_pct	lettuce_cores	per_req_lettuce_ms	bidder_thread_cores	pending_reservations	sla_ok	saturated
+1	400.02	1.26	1.9	3.27	0	0	57.5	0.300	0.75	0.497	21807	true	false
+2	400.02	1.27	1.97	3.07	0	0	59.8	0.305	0.763	0.505	24516	true	false
+3	400.02	1.27	2.03	3.44	0	0	58.0	0.309	0.773	0.516	26805	true	false
+4	400	1.25	1.98	3.3	0	0	59.9	0.303	0.758	0.505	31582	true	false
+5	400	1.25	1.97	3.16	0	0	60.9	0.305	0.763	0.502	33902	true	false
+6	400.02	1.26	1.96	3.1	0	0	57.3	0.304	0.76	0.496	37944	true	false
+7	400.02	1.26	2.02	3.35	0	0	58.0	0.305	0.763	0.501	42709	true	false
+8	400.02	1.27	1.98	3.36	0	0	58.7	0.305	0.763	0.509	45764	true	false
+9	400.02	1.24	2.01	3.18	0	0	58.4	0.298	0.745	0.491	48551	true	false
+10	400	1.26	1.94	2.99	0	0	58.3	0.304	0.76	0.499	52856	true	false
