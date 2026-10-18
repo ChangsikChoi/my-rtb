@@ -1,0 +1,67 @@
+# 성능 측정용 리소스 제한. 기본 docker-compose.yml 위에 덮어써서 사용한다.
+#
+#   docker compose -f docker-compose.yml -f perf/docker-compose.perf.yml up -d
+#
+# 측정 대상인 bidder와 핫패스 의존성인 redis는 측정 조건으로 고정하고,
+# 나머지 서비스는 bidder와 CPU를 다투지 않을 정도로만 제한한다.
+# 합계 CPU 9 / 메모리 약 5.8GB로, Docker VM(16 CPU / 7.6GB) 안에 들어가고
+# 호스트에서 실행되는 k6에도 여유 코어가 남는다.
+
+services:
+  bidder:
+    environment:
+      # 힙 크기를 고정해 GC 동작이 측정마다 달라지지 않게 한다.
+      # 메모리 2GB 미만 컨테이너에서는 JVM이 Serial GC를 자동 선택하므로 운영 기본값인 G1을 명시한다.
+      JAVA_TOOL_OPTIONS: "-Xms512m -Xmx512m -XX:+UseG1GC"
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1g
+
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512m
+
+  kafka:
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          # cp-kafka 기본 힙 1GB + 여유
+          memory: 1536m
+
+  schema-registry:
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 768m
+
+  postgres:
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512m
+
+  ad-manager:
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx384m -XX:+UseG1GC"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 768m
+
+  log-consumer:
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx384m -XX:+UseG1GC"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 768m
